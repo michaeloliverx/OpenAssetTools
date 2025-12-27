@@ -194,6 +194,12 @@ ZoneCode.Assets = {
         "FootstepTableDef",
         "FootstepFXTableDef",
         "ZBarrierDef"
+    },
+
+    IW3Xenon = {
+        "LocalizeEntry",
+        "RawFile",
+        "StringTable"
     }
 }
 
@@ -352,5 +358,9 @@ function ZoneCode:project()
         
         filter "files:**/T6.gen"
             self:outputForAssets(self.Assets.T6)
+        filter {}
+
+        filter "files:**/IW3Xenon.gen"
+            self:outputForAssets(self.Assets.IW3Xenon)
         filter {}
 end

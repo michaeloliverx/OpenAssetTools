@@ -1,6 +1,7 @@
 #include "ZoneLoaderFactoryIW3.h"
 
 #include "ContentLoaderIW3.h"
+#include "Game/IW3Xenon/ContentLoaderIW3Xenon.h"
 #include "Game/GameLanguage.h"
 #include "Game/IW3/GameAssetPoolIW3.h"
 #include "Game/IW3/GameIW3.h"
@@ -217,11 +218,22 @@ std::unique_ptr<ZoneLoader> ZoneLoaderFactory::CreateLoaderForHeader(const ZoneH
     }
     else
     {
-        fs::path dumpFileNamePath = fs::path(fileName).filename();
-        dumpFileNamePath.replace_extension(".dat");
-        std::string dumpFileName = dumpFileNamePath.string();
-        con::warn("Dumping xbox assets is not supported, making a full fastfile data dump to {}", dumpFileName);
-        zoneLoader->AddLoadingStep(step::CreateStepDumpData(dumpFileName, 0xFFFFFFFF));
+        // Xenon (Xbox 360) zone loading
+        // Start of the XFile struct
+        zoneLoader->AddLoadingStep(step::CreateStepLoadZoneSizes());
+        zoneLoader->AddLoadingStep(step::CreateStepAllocXBlocks());
+
+        // Start of the zone content using Xenon content loader
+        zoneLoader->AddLoadingStep(step::CreateStepLoadZoneContent(
+            [zonePtr](ZoneInputStream& stream)
+            {
+                return std::make_unique<IW3Xenon::ContentLoader>(*zonePtr, stream);
+            },
+            32u,
+            ZoneConstants::OFFSET_BLOCK_BIT_COUNT,
+            ZoneConstants::INSERT_BLOCK,
+            zonePtr->Memory(),
+            std::move(progressCallback)));
     }
 
     return zoneLoader;

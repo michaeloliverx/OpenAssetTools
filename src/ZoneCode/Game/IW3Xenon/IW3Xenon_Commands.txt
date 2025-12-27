@@ -1,0 +1,21 @@
+// Game: Modern Warfare (IW3) - Xenon (Xbox 360)
+game IW3Xenon;
+architecture x86;
+
+// Game Assets (starting with simple assets first)
+asset LocalizeEntry AssetLocalize;
+asset RawFile AssetRawFile;
+asset StringTable AssetStringTable;
+
+// Setup blocks (Xenon has different block indices than PC)
+block temp    XFILE_BLOCK_TEMP              default;
+block runtime XFILE_BLOCK_RUNTIME           default;
+block runtime XFILE_BLOCK_LARGE_RUNTIME;
+block runtime XFILE_BLOCK_PHYSICAL_RUNTIME;
+block normal  XFILE_BLOCK_VIRTUAL           default;
+block normal  XFILE_BLOCK_LARGE;
+block normal  XFILE_BLOCK_PHYSICAL;
+
+#include "XAssets/LocalizeEntry.txt"
+#include "XAssets/RawFile.txt"
+#include "XAssets/StringTable.txt"
