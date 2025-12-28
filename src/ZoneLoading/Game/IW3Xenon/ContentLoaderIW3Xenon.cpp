@@ -5,6 +5,7 @@
 #include "Game/IW3Xenon/XAssets/rawfile/rawfile_load_db.h"
 #include "Game/IW3Xenon/XAssets/stringtable/stringtable_load_db.h"
 #include "Loading/Exception/UnsupportedAssetTypeException.h"
+#include "Utils/Endianness.h"
 
 #include <cassert>
 
@@ -26,7 +27,7 @@ void ContentLoader::LoadScriptStringList(const bool atStreamStart)
     {
         assert(GetZonePointerType(varScriptStringList->strings) == ZonePointerType::FOLLOWING);
 
-        varScriptStringList->strings = m_stream.AllocOutOfBlock<const char*>(4, varScriptStringList->count);
+        varScriptStringList->strings = m_stream.Alloc<const char*>(4);
         varXString = varScriptStringList->strings;
         LoadXStringArray(true, varScriptStringList->count);
 
@@ -77,15 +78,13 @@ void ContentLoader::LoadXAssetArray(const bool atStreamStart, const size_t count
 
     if (atStreamStart)
     {
-        const auto fill = m_stream.LoadWithFill(8u * count);
-
+        m_stream.Load<XAsset>(varXAsset, count);
         for (size_t index = 0; index < count; index++)
         {
-            fill.Fill(varXAsset[index].type, 8u * index);
-            fill.FillPtr(varXAsset[index].header.data, 8u * index + 4u);
-            m_stream.AddPointerLookup(&varXAsset[index].header.data, fill.BlockBuffer(8u * index + 4u));
+            varXAsset[index].type = static_cast<XAssetType>(endianness::FromBigEndian(static_cast<int>(varXAsset[index].type)));
         }
     }
+
 
     for (size_t index = 0; index < count; index++)
     {
@@ -103,13 +102,11 @@ void ContentLoader::Load()
     XAssetList assetList{};
     varXAssetList = &assetList;
 
-    const auto fillAccessor = m_stream.LoadWithFill(16u);
-    varScriptStringList = &varXAssetList->stringList;
-    fillAccessor.Fill(varScriptStringList->count, 0u);
-    fillAccessor.FillPtr(varScriptStringList->strings, 4u);
+    m_stream.LoadDataRaw(&assetList, sizeof(assetList));
 
-    fillAccessor.Fill(varXAssetList->assetCount, 8u);
-    fillAccessor.FillPtr(varXAssetList->assets, 12u);
+    // Endian swap the loaded data
+    varXAssetList->stringList.count = endianness::FromBigEndian(varXAssetList->stringList.count);
+    varXAssetList->assetCount = endianness::FromBigEndian(varXAssetList->assetCount);
 
     m_stream.PushBlock(XFILE_BLOCK_VIRTUAL);
 
@@ -120,7 +117,7 @@ void ContentLoader::Load()
     {
         assert(GetZonePointerType(assetList.assets) == ZonePointerType::FOLLOWING);
 
-        assetList.assets = m_stream.AllocOutOfBlock<XAsset>(4, assetList.assetCount);
+        assetList.assets = m_stream.Alloc<XAsset>(4);
         varXAsset = assetList.assets;
         LoadXAssetArray(true, assetList.assetCount);
     }
