@@ -1,12 +1,13 @@
 #include "ZoneLoaderFactoryIW3.h"
 
 #include "ContentLoaderIW3.h"
-#include "Game/IW3Xenon/ContentLoaderIW3Xenon.h"
 #include "Game/GameLanguage.h"
 #include "Game/IW3/GameAssetPoolIW3.h"
 #include "Game/IW3/GameIW3.h"
 #include "Game/IW3/IW3.h"
 #include "Game/IW3/ZoneConstantsIW3.h"
+#include "Game/IW3Xenon/ContentLoaderIW3Xenon.h"
+#include "Game/IW3Xenon/IW3Xenon.h"
 #include "Loading/Processor/ProcessorAuthedBlocks.h"
 #include "Loading/Processor/ProcessorCaptureData.h"
 #include "Loading/Processor/ProcessorInflate.h"
@@ -37,19 +38,32 @@ namespace fs = std::filesystem;
 
 namespace
 {
-    void SetupBlock(ZoneLoader& zoneLoader)
+    void SetupBlock(ZoneLoader& zoneLoader, GamePlatform platform)
     {
 #define XBLOCK_DEF(name, type) std::make_unique<XBlock>(STR(name), name, type)
 
-        zoneLoader.AddXBlock(XBLOCK_DEF(IW3::XFILE_BLOCK_TEMP, XBlockType::BLOCK_TYPE_TEMP));
-        zoneLoader.AddXBlock(XBLOCK_DEF(IW3::XFILE_BLOCK_RUNTIME, XBlockType::BLOCK_TYPE_RUNTIME));
-        zoneLoader.AddXBlock(XBLOCK_DEF(IW3::XFILE_BLOCK_LARGE_RUNTIME, XBlockType::BLOCK_TYPE_RUNTIME));
-        zoneLoader.AddXBlock(XBLOCK_DEF(IW3::XFILE_BLOCK_PHYSICAL_RUNTIME, XBlockType::BLOCK_TYPE_RUNTIME));
-        zoneLoader.AddXBlock(XBLOCK_DEF(IW3::XFILE_BLOCK_VIRTUAL, XBlockType::BLOCK_TYPE_NORMAL));
-        zoneLoader.AddXBlock(XBLOCK_DEF(IW3::XFILE_BLOCK_LARGE, XBlockType::BLOCK_TYPE_NORMAL));
-        zoneLoader.AddXBlock(XBLOCK_DEF(IW3::XFILE_BLOCK_PHYSICAL, XBlockType::BLOCK_TYPE_NORMAL));
-        zoneLoader.AddXBlock(XBLOCK_DEF(IW3::XFILE_BLOCK_VERTEX, XBlockType::BLOCK_TYPE_NORMAL));
-        zoneLoader.AddXBlock(XBLOCK_DEF(IW3::XFILE_BLOCK_INDEX, XBlockType::BLOCK_TYPE_NORMAL));
+        if (platform == GamePlatform::PC)
+        {
+            zoneLoader.AddXBlock(XBLOCK_DEF(IW3::XFILE_BLOCK_TEMP, XBlockType::BLOCK_TYPE_TEMP));
+            zoneLoader.AddXBlock(XBLOCK_DEF(IW3::XFILE_BLOCK_RUNTIME, XBlockType::BLOCK_TYPE_RUNTIME));
+            zoneLoader.AddXBlock(XBLOCK_DEF(IW3::XFILE_BLOCK_LARGE_RUNTIME, XBlockType::BLOCK_TYPE_RUNTIME));
+            zoneLoader.AddXBlock(XBLOCK_DEF(IW3::XFILE_BLOCK_PHYSICAL_RUNTIME, XBlockType::BLOCK_TYPE_RUNTIME));
+            zoneLoader.AddXBlock(XBLOCK_DEF(IW3::XFILE_BLOCK_VIRTUAL, XBlockType::BLOCK_TYPE_NORMAL));
+            zoneLoader.AddXBlock(XBLOCK_DEF(IW3::XFILE_BLOCK_LARGE, XBlockType::BLOCK_TYPE_NORMAL));
+            zoneLoader.AddXBlock(XBLOCK_DEF(IW3::XFILE_BLOCK_PHYSICAL, XBlockType::BLOCK_TYPE_NORMAL));
+            zoneLoader.AddXBlock(XBLOCK_DEF(IW3::XFILE_BLOCK_VERTEX, XBlockType::BLOCK_TYPE_NORMAL));
+            zoneLoader.AddXBlock(XBLOCK_DEF(IW3::XFILE_BLOCK_INDEX, XBlockType::BLOCK_TYPE_NORMAL));
+        }
+        else if (platform == GamePlatform::XBOX)
+        {
+            zoneLoader.AddXBlock(XBLOCK_DEF(IW3Xenon::XFILE_BLOCK_TEMP, XBlockType::BLOCK_TYPE_TEMP));
+            zoneLoader.AddXBlock(XBLOCK_DEF(IW3Xenon::XFILE_BLOCK_RUNTIME, XBlockType::BLOCK_TYPE_RUNTIME));
+            zoneLoader.AddXBlock(XBLOCK_DEF(IW3Xenon::XFILE_BLOCK_LARGE_RUNTIME, XBlockType::BLOCK_TYPE_RUNTIME));
+            zoneLoader.AddXBlock(XBLOCK_DEF(IW3Xenon::XFILE_BLOCK_PHYSICAL_RUNTIME, XBlockType::BLOCK_TYPE_RUNTIME));
+            zoneLoader.AddXBlock(XBLOCK_DEF(IW3Xenon::XFILE_BLOCK_VIRTUAL, XBlockType::BLOCK_TYPE_NORMAL));
+            zoneLoader.AddXBlock(XBLOCK_DEF(IW3Xenon::XFILE_BLOCK_LARGE, XBlockType::BLOCK_TYPE_NORMAL));
+            zoneLoader.AddXBlock(XBLOCK_DEF(IW3Xenon::XFILE_BLOCK_PHYSICAL, XBlockType::BLOCK_TYPE_NORMAL));
+        }
 
 #undef XBLOCK_DEF
     }
@@ -191,7 +205,7 @@ std::unique_ptr<ZoneLoader> ZoneLoaderFactory::CreateLoaderForHeader(const ZoneH
     // File is supported. Now setup all required steps for loading this file.
     auto zoneLoader = std::make_unique<ZoneLoader>(std::move(zone));
 
-    SetupBlock(*zoneLoader);
+    SetupBlock(*zoneLoader, inspectResult->m_platform);
 
     // Add steps for loading the auth header which also contain the signature of the zone if it is signed.
     AddAuthHeaderSteps(*inspectResult, *zoneLoader, fileName);
@@ -218,10 +232,9 @@ std::unique_ptr<ZoneLoader> ZoneLoaderFactory::CreateLoaderForHeader(const ZoneH
     }
     else
     {
-        // Xenon (Xbox 360) zone loading
         // Start of the XFile struct
-        zoneLoader->AddLoadingStep(step::CreateStepLoadZoneSizes());
-        zoneLoader->AddLoadingStep(step::CreateStepAllocXBlocks());
+        zoneLoader->AddLoadingStep(step::CreateStepLoadZoneSizes(GameEndianness::BE));
+        zoneLoader->AddLoadingStep(step::CreateStepAllocXBlocks(GameEndianness::BE));
 
         // Start of the zone content using Xenon content loader
         zoneLoader->AddLoadingStep(step::CreateStepLoadZoneContent(
