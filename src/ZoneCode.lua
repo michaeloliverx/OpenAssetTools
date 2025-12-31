@@ -29,6 +29,13 @@ ZoneCode.Assets = {
         "StringTable"
     },
 
+    IW3Xenon = {
+        "MaterialTechniqueSet",
+        "LocalizeEntry",
+        "RawFile",
+        "StringTable"
+    },
+
     IW4 = {
         "PhysPreset",
         "PhysCollmap",
@@ -196,11 +203,6 @@ ZoneCode.Assets = {
         "ZBarrierDef"
     },
 
-    IW3Xenon = {
-        "LocalizeEntry",
-        "RawFile",
-        "StringTable"
-    }
 }
 
 function ZoneCode:outputForAssets(assetList)

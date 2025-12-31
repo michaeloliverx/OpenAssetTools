@@ -2,6 +2,7 @@
 
 #include "Game/IW3Xenon/IW3Xenon.h"
 #include "Game/IW3Xenon/XAssets/localizeentry/localizeentry_load_db.h"
+#include "Game/IW3Xenon/XAssets/materialtechniqueset/materialtechniqueset_load_db.h"
 #include "Game/IW3Xenon/XAssets/rawfile/rawfile_load_db.h"
 #include "Game/IW3Xenon/XAssets/stringtable/stringtable_load_db.h"
 #include "Loading/Exception/UnsupportedAssetTypeException.h"
@@ -58,6 +59,7 @@ void ContentLoader::LoadXAsset(const bool atStreamStart) const
 
     switch (varXAsset->type)
     {
+        LOAD_ASSET(ASSET_TYPE_TECHNIQUE_SET, MaterialTechniqueSet, techniqueSet)
         LOAD_ASSET(ASSET_TYPE_LOCALIZE_ENTRY, LocalizeEntry, localize)
         LOAD_ASSET(ASSET_TYPE_RAWFILE, RawFile, rawfile)
         LOAD_ASSET(ASSET_TYPE_STRINGTABLE, StringTable, stringTable)
@@ -84,7 +86,6 @@ void ContentLoader::LoadXAssetArray(const bool atStreamStart, const size_t count
             varXAsset[index].type = static_cast<XAssetType>(endianness::FromBigEndian(static_cast<int>(varXAsset[index].type)));
         }
     }
-
 
     for (size_t index = 0; index < count; index++)
     {
