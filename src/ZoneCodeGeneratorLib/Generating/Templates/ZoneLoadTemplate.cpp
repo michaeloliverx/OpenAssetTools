@@ -1077,9 +1077,20 @@ namespace
 
             if (info->m_has_matching_cross_platform_structure)
             {
+                LINE("{")
                 m_intendation++;
                 LINEF("m_stream.Load<{0}>({1}, count);", info->m_definition->GetFullName(), MakeTypeVarName(def))
+                if (m_env.m_game == "IW3Xenon")
+                {
+                    LINE("for (size_t index = 0; index < count; index++)")
+                    LINE("{")
+                    m_intendation++;
+                    LINEF("EndianFixup_{0}(&{1}[index]);", MakeSafeTypeName(info->m_definition), MakeTypeVarName(info->m_definition))
+                    m_intendation--;
+                    LINE("}")
+                }
                 m_intendation--;
+                LINE("}")
             }
             else
             {
@@ -1918,6 +1929,7 @@ namespace
             {
                 LINE("")
                 LINE("if (atStreamStart)")
+                LINE("{")
 
                 m_intendation++;
                 if (info->m_has_matching_cross_platform_structure)
@@ -1928,6 +1940,10 @@ namespace
                               info->m_definition->GetFullName(),
                               MakeTypeVarName(info->m_definition),
                               info->m_definition->GetSize())
+                        if (m_env.m_game == "IW3Xenon")
+                        {
+                            LINEF("EndianFixup_{0}({1});", MakeSafeTypeName(info->m_definition), MakeTypeVarName(info->m_definition))
+                        }
                     }
                     else
                     {
@@ -1935,6 +1951,14 @@ namespace
                               info->m_definition->GetFullName(),
                               MakeTypeVarName(info->m_definition),
                               dynamicMember->m_member->m_name)
+                        if (m_env.m_game == "IW3Xenon")
+                        {
+                            LINEF("EndianFixup_{0}_Partial({1}, offsetof({2}, {3}));",
+                                  MakeSafeTypeName(info->m_definition),
+                                  MakeTypeVarName(info->m_definition),
+                                  info->m_definition->GetFullName(),
+                                  dynamicMember->m_member->m_name);
+                        }
                     }
                 }
                 else
@@ -1953,6 +1977,7 @@ namespace
                     }
                 }
                 m_intendation--;
+                LINE("}")
             }
             else if (!m_env.m_architecture_mismatch)
             {
