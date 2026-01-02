@@ -243,8 +243,8 @@ std::unique_ptr<ZoneLoader> ZoneLoaderFactory::CreateLoaderForHeader(const ZoneH
                 return std::make_unique<IW3Xenon::ContentLoader>(*zonePtr, stream);
             },
             32u,
-            ZoneConstants::OFFSET_BLOCK_BIT_COUNT,
-            ZoneConstants::INSERT_BLOCK,
+            ZoneConstants::OFFSET_BLOCK_BIT_COUNT_XENON,
+            ZoneConstants::INSERT_BLOCK_XENON,
             zonePtr->Memory(),
             std::move(progressCallback)));
     }

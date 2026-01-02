@@ -40,5 +40,8 @@ namespace IW3
 
         static constexpr unsigned OFFSET_BLOCK_BIT_COUNT = 4u;
         static constexpr block_t INSERT_BLOCK = XFILE_BLOCK_VIRTUAL;
+
+        static constexpr unsigned OFFSET_BLOCK_BIT_COUNT_XENON = 3u;
+        static constexpr block_t INSERT_BLOCK_XENON = 4;
     };
 } // namespace IW3
