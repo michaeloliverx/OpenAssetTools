@@ -1,0 +1,25 @@
+// =========================================
+// GfxImage
+// =========================================
+use GfxImage;
+set block XFILE_BLOCK_TEMP;
+set string name;
+reorder:
+    name
+    pixels
+    texture;
+
+set allocalign pixels 4096;
+set count pixels cardMemory::platform[0];
+
+// pixels – default when delayLoadPixels == false
+// set block delayLoadPixels XFILE_BLOCK_LARGE;
+
+// pixels – override when delayLoadPixels == true
+// set condition pixels delayLoadPixels;
+// set block pixels XFILE_BLOCK_LARGE_RUNTIME;
+
+// GfxTexture
+use GfxTexture;
+set reusable loadDef;
+set block loadDef XFILE_BLOCK_TEMP;

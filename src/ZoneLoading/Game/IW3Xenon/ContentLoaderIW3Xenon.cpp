@@ -1,7 +1,9 @@
 #include "ContentLoaderIW3Xenon.h"
 
 #include "Game/IW3Xenon/IW3Xenon.h"
+#include "Game/IW3Xenon/XAssets/gfximage/gfximage_load_db.h"
 #include "Game/IW3Xenon/XAssets/localizeentry/localizeentry_load_db.h"
+#include "Game/IW3Xenon/XAssets/material/material_load_db.h"
 #include "Game/IW3Xenon/XAssets/materialtechniqueset/materialtechniqueset_load_db.h"
 #include "Game/IW3Xenon/XAssets/rawfile/rawfile_load_db.h"
 #include "Game/IW3Xenon/XAssets/stringtable/stringtable_load_db.h"
@@ -59,7 +61,9 @@ void ContentLoader::LoadXAsset(const bool atStreamStart) const
 
     switch (varXAsset->type)
     {
+        LOAD_ASSET(ASSET_TYPE_MATERIAL, Material, material)
         LOAD_ASSET(ASSET_TYPE_TECHNIQUE_SET, MaterialTechniqueSet, techniqueSet)
+        LOAD_ASSET(ASSET_TYPE_IMAGE, GfxImage, image)
         LOAD_ASSET(ASSET_TYPE_LOCALIZE_ENTRY, LocalizeEntry, localize)
         LOAD_ASSET(ASSET_TYPE_RAWFILE, RawFile, rawfile)
         LOAD_ASSET(ASSET_TYPE_STRINGTABLE, StringTable, stringTable)

@@ -30,6 +30,8 @@ ZoneCode.Assets = {
     },
 
     IW3Xenon = {
+        "Material",
+        "GfxImage",
         "MaterialTechniqueSet",
         "LocalizeEntry",
         "RawFile",
