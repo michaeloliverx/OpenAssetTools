@@ -49,6 +49,11 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Setup ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: linux-${{ matrix.build_arch }}-${{ hashFiles('**/premake5.lua') }}
+
       - name: Premake generate
         working-directory: ${{ github.workspace }}
         env:
@@ -64,6 +69,9 @@ jobs:
 
       - name: Build
         working-directory: ${{ github.workspace }}
+        env:
+          CC: ccache gcc-13
+          CXX: ccache g++-13
         run: |
           [[ "${{ matrix.build_arch }}" == "x86" ]] && export PKG_CONFIG_PATH=/usr/lib/i386-linux-gnu/pkgconfig:$PKG_CONFIG_PATH || true
           echo "Package config path: $PKG_CONFIG_PATH"
@@ -107,6 +115,12 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Setup sccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          variant: sccache
+          key: windows-${{ matrix.build_arch }}-${{ hashFiles('**/premake5.lua') }}
+
       - name: Premake generate
         working-directory: ${{ github.workspace }}
         env:
@@ -122,8 +136,11 @@ jobs:
 
       - name: Build
         working-directory: ${{ github.workspace }}
+        env:
+          CC: sccache cl
+          CXX: sccache cl
         run: |
-          msbuild /m /p:Configuration=Release /p:Platform=${{ matrix.msbuild_config }} build
+          msbuild /m /p:Configuration=Release /p:Platform=${{ matrix.msbuild_config }} /p:CLToolExe=sccache.exe /p:CLToolPath=C:\Users\runneradmin\.cargo\bin\ /p:TrackFileAccess=false build
 
       - name: Test
         working-directory: ${{ github.workspace }}/build/lib/Release_${{ matrix.build_arch }}/tests
