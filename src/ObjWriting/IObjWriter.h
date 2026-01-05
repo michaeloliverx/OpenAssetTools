@@ -14,5 +14,5 @@ public:
 
     virtual bool DumpZone(AssetDumpingContext& assetDumpingContext) const = 0;
 
-    static const IObjWriter* GetObjWriterForGame(GameId game);
+    static const IObjWriter* GetObjWriterForGame(GameId game, GamePlatform platform);
 };

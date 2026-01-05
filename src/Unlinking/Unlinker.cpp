@@ -191,7 +191,7 @@ namespace
 
                 UpdateAssetIncludesAndExcludes(context);
 
-                const auto* objWriter = IObjWriter::GetObjWriterForGame(zone.m_game_id);
+                const auto* objWriter = IObjWriter::GetObjWriterForGame(zone.m_game_id, zone.m_platform);
 
                 auto result = objWriter->DumpZone(context);
 

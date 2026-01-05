@@ -1,6 +1,7 @@
 #include "IObjWriter.h"
 
 #include "Game/IW3/ObjWriterIW3.h"
+#include "Game/IW3Xenon/ObjWriterIW3Xenon.h"
 #include "Game/IW4/ObjWriterIW4.h"
 #include "Game/IW5/ObjWriterIW5.h"
 #include "Game/T5/ObjWriterT5.h"
@@ -8,7 +9,7 @@
 
 #include <cassert>
 
-const IObjWriter* IObjWriter::GetObjWriterForGame(GameId game)
+const IObjWriter* IObjWriter::GetObjWriterForGame(GameId game, GamePlatform platform)
 {
     static const IObjWriter* zoneCreators[static_cast<unsigned>(GameId::COUNT)]{
         new IW3::ObjWriter(),
@@ -18,6 +19,12 @@ const IObjWriter* IObjWriter::GetObjWriterForGame(GameId game)
         new T6::ObjWriter(),
     };
     static_assert(std::extent_v<decltype(zoneCreators)> == static_cast<unsigned>(GameId::COUNT));
+
+    // TODO: hack for now
+    if (game == GameId::IW3 && platform == GamePlatform::XBOX)
+    {
+        return new IW3Xenon::ObjWriter();
+    }
 
     assert(static_cast<unsigned>(game) < static_cast<unsigned>(GameId::COUNT));
     const auto* result = zoneCreators[static_cast<unsigned>(game)];
