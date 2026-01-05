@@ -7,6 +7,7 @@
 #include "Game/IW3/IW3.h"
 #include "Game/IW3/ZoneConstantsIW3.h"
 #include "Game/IW3Xenon/ContentLoaderIW3Xenon.h"
+#include "Game/IW3Xenon/GameAssetPoolIW3Xenon.h"
 #include "Game/IW3Xenon/IW3Xenon.h"
 #include "Loading/Processor/ProcessorAuthedBlocks.h"
 #include "Loading/Processor/ProcessorCaptureData.h"
@@ -199,7 +200,15 @@ std::unique_ptr<ZoneLoader> ZoneLoaderFactory::CreateLoaderForHeader(const ZoneH
     // Create new zone
     auto zone = std::make_unique<Zone>(fileName, 0, GameId::IW3, inspectResult->m_platform);
     auto* zonePtr = zone.get();
-    zone->m_pools = std::make_unique<GameAssetPoolIW3>(zonePtr, 0);
+    if (inspectResult->m_platform == GamePlatform::XBOX)
+    {
+        zone->m_pools = std::make_unique<GameAssetPoolIW3Xenon>(zonePtr, 0);
+    }
+    else
+    {
+        zone->m_pools = std::make_unique<GameAssetPoolIW3>(zonePtr, 0);
+    }
+
     zone->m_language = GameLanguage::LANGUAGE_NONE;
 
     // File is supported. Now setup all required steps for loading this file.
