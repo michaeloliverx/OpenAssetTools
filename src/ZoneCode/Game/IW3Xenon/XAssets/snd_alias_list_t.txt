@@ -1,0 +1,38 @@
+// =========================================
+// snd_alias_list_t
+// =========================================
+
+use snd_alias_list_t;
+set block XFILE_BLOCK_TEMP;
+set string aliasName;
+set reusable head;
+set count head count;
+
+// snd_alias_t
+use snd_alias_t;
+set string aliasName;
+set string subtitle;
+set string secondaryAliasName;
+set string chainAliasName;
+set reusable soundFile;
+set reusable speakerMap;
+
+// SoundFile
+use SoundFile;
+set condition SoundFile::u::loadSnd type == SAT_LOADED;
+
+// SpeakerMap
+use SpeakerMap;
+set string name;
+
+// XAUDIOCHANNELMAP
+use XAUDIOCHANNELMAP;
+set reusable paEntries;
+set allocalign paEntries 4;
+set count paEntries EntryCount;
+
+// StreamedSound
+use StreamedSound;
+set condition StreamedSound::filename::info::raw StreamedSound::filename::fileIndex == 0;
+set string StreamedSound::filename::info::raw::dir;
+set string StreamedSound::filename::info::raw::name;

@@ -1,0 +1,15 @@
+// =========================================
+// MaterialPixelShader
+// =========================================
+use MaterialPixelShader;
+set block XFILE_BLOCK_TEMP;
+set string name;
+
+// MaterialPixelShader
+set string MaterialPixelShader::name;
+
+set count GfxPixelShaderLoadDef::cachedPart cachedPartSize;
+set count GfxPixelShaderLoadDef::physicalPart physicalPartSize;
+
+// MaterialPixelShaderProgram
+set condition MaterialPixelShaderProgram::ps never;

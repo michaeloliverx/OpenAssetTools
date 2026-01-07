@@ -3,9 +3,19 @@ game IW3Xenon;
 architecture x86;
 
 // Game Assets
+asset PhysPreset AssetPhysPreset;
 asset Material AssetMaterial;
+asset XAnimParts AssetXAnim;
 asset MaterialTechniqueSet AssetTechniqueSet;
 asset GfxImage AssetImage;
+asset snd_alias_list_t AssetSound;
+asset SndCurve AssetSoundCurve;
+asset LoadedSound AssetLoadedSound;
+asset MapEnts AssetMapEnts;
+asset GfxLightDef AssetLightDef;
+asset Font_s AssetFont;
+asset MenuList AssetMenuList;
+asset menuDef_t AssetMenu;
 asset LocalizeEntry AssetLocalize;
 asset RawFile AssetRawFile;
 asset StringTable AssetStringTable;
@@ -19,9 +29,19 @@ block normal  XFILE_BLOCK_VIRTUAL           default;
 block normal  XFILE_BLOCK_LARGE;
 block normal  XFILE_BLOCK_PHYSICAL;
 
+#include "XAssets/PhysPreset.txt"
+#include "XAssets/XAnimParts.txt"
 #include "XAssets/Material.txt"
 #include "XAssets/MaterialTechniqueSet.txt"
 #include "XAssets/GfxImage.txt"
+#include "XAssets/snd_alias_list_t.txt"
+#include "XAssets/SndCurve.txt"
+#include "XAssets/MapEnts.txt"
+#include "XAssets/LoadedSound.txt"
+#include "XAssets/GfxLightDef.txt"
+#include "XAssets/Font_s.txt"
+#include "XAssets/MenuList.txt"
+#include "XAssets/menuDef_t.txt"
 #include "XAssets/LocalizeEntry.txt"
 #include "XAssets/RawFile.txt"
 #include "XAssets/StringTable.txt"

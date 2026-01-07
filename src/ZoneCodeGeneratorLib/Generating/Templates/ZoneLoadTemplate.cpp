@@ -1043,9 +1043,20 @@ namespace
             }
             else
             {
+                LINE("{")
                 m_intendation++;
                 LINEF("m_stream.Load<{0}*>({1}, count);", def->GetFullName(), MakeTypePtrVarName(def))
+                if (m_env.m_game == "IW3Xenon")
+                {
+                    LINE("for (size_t index = 0; index < count; index++)")
+                    LINE("{")
+                    m_intendation++;
+                    LINEF("SwapBigEndianPtr32({0}[index]);", MakeTypePtrVarName(def))
+                    m_intendation--;
+                    LINE("}")
+                }
                 m_intendation--;
+                LINE("}")
             }
 
             LINE("")

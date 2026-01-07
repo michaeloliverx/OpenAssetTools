@@ -1,12 +1,22 @@
 #include "ContentLoaderIW3Xenon.h"
 
 #include "Game/IW3Xenon/IW3Xenon.h"
+#include "Game/IW3Xenon/XAssets/font_s/font_s_load_db.h"
 #include "Game/IW3Xenon/XAssets/gfximage/gfximage_load_db.h"
+#include "Game/IW3Xenon/XAssets/gfxlightdef/gfxlightdef_load_db.h"
+#include "Game/IW3Xenon/XAssets/loadedsound/loadedsound_load_db.h"
 #include "Game/IW3Xenon/XAssets/localizeentry/localizeentry_load_db.h"
+#include "Game/IW3Xenon/XAssets/mapents/mapents_load_db.h"
 #include "Game/IW3Xenon/XAssets/material/material_load_db.h"
 #include "Game/IW3Xenon/XAssets/materialtechniqueset/materialtechniqueset_load_db.h"
+#include "Game/IW3Xenon/XAssets/menudef_t/menudef_t_load_db.h"
+#include "Game/IW3Xenon/XAssets/menulist/menulist_load_db.h"
+#include "Game/IW3Xenon/XAssets/physpreset/physpreset_load_db.h"
 #include "Game/IW3Xenon/XAssets/rawfile/rawfile_load_db.h"
+#include "Game/IW3Xenon/XAssets/snd_alias_list_t/snd_alias_list_t_load_db.h"
+#include "Game/IW3Xenon/XAssets/sndcurve/sndcurve_load_db.h"
 #include "Game/IW3Xenon/XAssets/stringtable/stringtable_load_db.h"
+#include "Game/IW3Xenon/XAssets/xanimparts/xanimparts_load_db.h"
 #include "Loading/Exception/UnsupportedAssetTypeException.h"
 #include "Utils/Endianness.h"
 
@@ -61,9 +71,19 @@ void ContentLoader::LoadXAsset(const bool atStreamStart) const
 
     switch (varXAsset->type)
     {
+        LOAD_ASSET(ASSET_TYPE_PHYSPRESET, PhysPreset, physPreset)
+        LOAD_ASSET(ASSET_TYPE_XANIMPARTS, XAnimParts, parts)
         LOAD_ASSET(ASSET_TYPE_MATERIAL, Material, material)
         LOAD_ASSET(ASSET_TYPE_TECHNIQUE_SET, MaterialTechniqueSet, techniqueSet)
         LOAD_ASSET(ASSET_TYPE_IMAGE, GfxImage, image)
+        LOAD_ASSET(ASSET_TYPE_SOUND, snd_alias_list_t, sound)
+        LOAD_ASSET(ASSET_TYPE_SOUND_CURVE, SndCurve, sndCurve)
+        LOAD_ASSET(ASSET_TYPE_LOADED_SOUND, LoadedSound, loadSnd)
+        LOAD_ASSET(ASSET_TYPE_MAP_ENTS, MapEnts, mapEnts)
+        LOAD_ASSET(ASSET_TYPE_LIGHT_DEF, GfxLightDef, lightDef)
+        LOAD_ASSET(ASSET_TYPE_FONT, Font_s, font)
+        LOAD_ASSET(ASSET_TYPE_MENULIST, MenuList, menuList)
+        LOAD_ASSET(ASSET_TYPE_MENU, menuDef_t, menu)
         LOAD_ASSET(ASSET_TYPE_LOCALIZE_ENTRY, LocalizeEntry, localize)
         LOAD_ASSET(ASSET_TYPE_RAWFILE, RawFile, rawfile)
         LOAD_ASSET(ASSET_TYPE_STRINGTABLE, StringTable, stringTable)
@@ -93,7 +113,18 @@ void ContentLoader::LoadXAssetArray(const bool atStreamStart, const size_t count
 
     for (size_t index = 0; index < count; index++)
     {
-        LoadXAsset(false);
+        printf("Loading asset %zu: type=%d\n", index, static_cast<int>(varXAsset->type));
+        try
+        {
+            LoadXAsset(false);
+        }
+        catch (const UnsupportedAssetTypeException& e)
+        {
+            printf("ERROR: Asset %zu is not supported (type=%d). Cannot read any more of the fastfile, but will continue dumping what has been loaded.\n",
+                   index,
+                   static_cast<int>(varXAsset->type));
+            break;
+        }
         varXAsset++;
 
 #ifdef DEBUG_OFFSETS

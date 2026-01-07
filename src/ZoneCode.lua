@@ -30,9 +30,19 @@ ZoneCode.Assets = {
     },
 
     IW3Xenon = {
+        "PhysPreset",
+        "XAnimParts",
         "Material",
-        "GfxImage",
         "MaterialTechniqueSet",
+        "GfxImage",
+        "snd_alias_list_t",
+        "SndCurve",
+        "LoadedSound",
+        "MapEnts",
+        "GfxLightDef",
+        "Font_s",
+        "MenuList",
+        "menuDef_t",
         "LocalizeEntry",
         "RawFile",
         "StringTable"
