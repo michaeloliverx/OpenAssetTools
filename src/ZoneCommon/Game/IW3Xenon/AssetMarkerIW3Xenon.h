@@ -669,7 +669,11 @@ static inline void EndianFixup_menuDef_t(IW3Xenon::menuDef_t* v)
 
 // ---- LocalizeEntry
 
-static inline void EndianFixup_LocalizeEntry(IW3Xenon::LocalizeEntry* v) {}
+static inline void EndianFixup_LocalizeEntry(IW3Xenon::LocalizeEntry* v)
+{
+    SwapBigEndianPtr32(v->name);
+    SwapBigEndianPtr32(v->value);
+}
 
 // ---- SndDriverGlobals
 
@@ -679,7 +683,9 @@ static inline void EndianFixup_SndDriverGlobals(IW3Xenon::SndDriverGlobals* v) {
 
 static inline void EndianFixup_RawFile(IW3Xenon::RawFile* v)
 {
+    SwapBigEndianPtr32(v->name);
     SWAP_BE_MEMBER(v, len);
+    SwapBigEndianPtr32(v->buffer);
 }
 
 // ---- StringTable
