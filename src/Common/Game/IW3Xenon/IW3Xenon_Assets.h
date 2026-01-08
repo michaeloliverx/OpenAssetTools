@@ -1315,10 +1315,8 @@ namespace IW3Xenon
 
     struct XaReverbSettings
     {
-        // int presetOverridden;
-        // XAUDIOREVERBSETTINGS reverbSettings;
-        // The engine loader loads a chunk this size idk why
-        uint8_t data[0x548];
+        int presetOverridden;
+        XAUDIOREVERBSETTINGS reverbSettings;
     };
 
     struct SndDriverGlobals
