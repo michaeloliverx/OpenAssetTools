@@ -14,6 +14,7 @@
 #include "Game/IW3Xenon/XAssets/rawfile/rawfile_mark_db.h"
 #include "Game/IW3Xenon/XAssets/snd_alias_list_t/snd_alias_list_t_mark_db.h"
 #include "Game/IW3Xenon/XAssets/sndcurve/sndcurve_mark_db.h"
+#include "Game/IW3Xenon/XAssets/snddriverglobals/snddriverglobals_mark_db.h"
 #include "Game/IW3Xenon/XAssets/stringtable/stringtable_mark_db.h"
 #include "Game/IW3Xenon/XAssets/xanimparts/xanimparts_mark_db.h"
 #include "Utils/Endianness.h"
@@ -669,6 +670,10 @@ static inline void EndianFixup_menuDef_t(IW3Xenon::menuDef_t* v)
 // ---- LocalizeEntry
 
 static inline void EndianFixup_LocalizeEntry(IW3Xenon::LocalizeEntry* v) {}
+
+// ---- SndDriverGlobals
+
+static inline void EndianFixup_SndDriverGlobals(IW3Xenon::SndDriverGlobals* v) {}
 
 // ---- RawFile
 

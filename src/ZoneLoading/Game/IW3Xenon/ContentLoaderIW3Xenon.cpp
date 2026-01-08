@@ -15,6 +15,7 @@
 #include "Game/IW3Xenon/XAssets/rawfile/rawfile_load_db.h"
 #include "Game/IW3Xenon/XAssets/snd_alias_list_t/snd_alias_list_t_load_db.h"
 #include "Game/IW3Xenon/XAssets/sndcurve/sndcurve_load_db.h"
+#include "Game/IW3Xenon/XAssets/snddriverglobals/snddriverglobals_load_db.h"
 #include "Game/IW3Xenon/XAssets/stringtable/stringtable_load_db.h"
 #include "Game/IW3Xenon/XAssets/xanimparts/xanimparts_load_db.h"
 #include "Loading/Exception/UnsupportedAssetTypeException.h"
@@ -85,6 +86,7 @@ void ContentLoader::LoadXAsset(const bool atStreamStart) const
         LOAD_ASSET(ASSET_TYPE_MENULIST, MenuList, menuList)
         LOAD_ASSET(ASSET_TYPE_MENU, menuDef_t, menu)
         LOAD_ASSET(ASSET_TYPE_LOCALIZE_ENTRY, LocalizeEntry, localize)
+        LOAD_ASSET(ASSET_TYPE_SNDDRIVER_GLOBALS, SndDriverGlobals, sndDriverGlobals)
         LOAD_ASSET(ASSET_TYPE_RAWFILE, RawFile, rawfile)
         LOAD_ASSET(ASSET_TYPE_STRINGTABLE, StringTable, stringTable)
 

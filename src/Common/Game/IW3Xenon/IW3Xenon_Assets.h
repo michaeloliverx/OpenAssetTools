@@ -1288,6 +1288,45 @@ namespace IW3Xenon
         const char* name;
     };
 
+    struct XAUDIOREVERBSETTINGS
+    {
+        unsigned int ReflectionsDelay;
+        unsigned __int8 ReverbDelay;
+        unsigned __int8 RearDelay;
+        unsigned __int8 PositionLeft;
+        unsigned __int8 PositionRight;
+        unsigned __int8 PositionMatrixLeft;
+        unsigned __int8 PositionMatrixRight;
+        unsigned __int8 EarlyDiffusion;
+        unsigned __int8 LateDiffusion;
+        unsigned __int8 LowEQGain;
+        unsigned __int8 LowEQCutoff;
+        unsigned __int8 HighEQGain;
+        unsigned __int8 HighEQCutoff;
+        float RoomFilterFreq;
+        float RoomFilterMain;
+        float RoomFilterHF;
+        float ReflectionsGain;
+        float ReverbGain;
+        float DecayTime;
+        float Density;
+        float RoomSize;
+    };
+
+    struct XaReverbSettings
+    {
+        // int presetOverridden;
+        // XAUDIOREVERBSETTINGS reverbSettings;
+        // The engine loader loads a chunk this size idk why
+        uint8_t data[0x548];
+    };
+
+    struct SndDriverGlobals
+    {
+        XaReverbSettings* reverbSettings;
+        const char* name;
+    };
+
     struct RawFile
     {
         const char* name;

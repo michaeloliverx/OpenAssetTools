@@ -44,6 +44,7 @@ ZoneCode.Assets = {
         "MenuList",
         "menuDef_t",
         "LocalizeEntry",
+        "SndDriverGlobals",
         "RawFile",
         "StringTable"
     },
