@@ -31,7 +31,15 @@ set reusable u::literalConst;
 // MaterialPixelShader
 set string MaterialPixelShader::name;
 
+// GfxPixelShaderLoadDef
+use GfxPixelShaderLoadDef;
+reorder:
+    physicalPart
+    cachedPart;
+set allocalign GfxPixelShaderLoadDef::cachedPart 4;
 set count GfxPixelShaderLoadDef::cachedPart cachedPartSize;
+set allocalign GfxPixelShaderLoadDef::physicalPart 32;
+set block GfxPixelShaderLoadDef::physicalPart XFILE_BLOCK_PHYSICAL;
 set count GfxPixelShaderLoadDef::physicalPart physicalPartSize;
 
 // MaterialPixelShaderProgram
@@ -44,7 +52,14 @@ set condition MaterialVertexStreamRouting::decl never;
 set string MaterialVertexShader::name;
 
 // GfxVertexShaderLoadDef
+use GfxVertexShaderLoadDef;
+reorder:
+    physicalPart
+    cachedPart;
+set allocalign GfxVertexShaderLoadDef::cachedPart 4;
 set count GfxVertexShaderLoadDef::cachedPart cachedPartSize;
+set allocalign GfxVertexShaderLoadDef::physicalPart 32;
+set block GfxVertexShaderLoadDef::physicalPart XFILE_BLOCK_PHYSICAL;
 set count GfxVertexShaderLoadDef::physicalPart physicalPartSize;
 
 // MaterialVertexShaderProgram
