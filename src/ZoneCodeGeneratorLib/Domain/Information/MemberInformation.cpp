@@ -9,6 +9,8 @@ MemberInformation::MemberInformation(StructureInformation* parent, StructureInfo
       m_is_reusable(false),
       m_is_leaf(false),
       m_fast_file_block(nullptr),
+      m_conditional_block_true(nullptr),
+      m_conditional_block_false(nullptr),
       m_asset_ref(nullptr)
 {
 }

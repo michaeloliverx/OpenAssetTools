@@ -179,6 +179,11 @@ bool MemberComputations::IsNotInDefaultNormalBlock() const
     return m_info->m_fast_file_block != nullptr && !(m_info->m_fast_file_block->m_type == FastFileBlockType::NORMAL && m_info->m_fast_file_block->m_is_default);
 }
 
+bool MemberComputations::HasConditionalBlock() const
+{
+    return m_info->m_conditional_block_condition != nullptr && m_info->m_conditional_block_true != nullptr && m_info->m_conditional_block_false != nullptr;
+}
+
 bool MemberComputations::IsInTempBlock() const
 {
     return m_info->m_fast_file_block != nullptr && m_info->m_fast_file_block->m_type == FastFileBlockType::TEMP;

@@ -11,6 +11,7 @@
 #include "Parsing/Commands/Sequence/SequenceCondition.h"
 #include "Parsing/Commands/Sequence/SequenceCount.h"
 #include "Parsing/Commands/Sequence/SequenceGame.h"
+#include "Parsing/Commands/Sequence/SequenceSetConditionalBlock.h"
 #include "Parsing/Commands/Sequence/SequenceReorder.h"
 #include "Parsing/Commands/Sequence/SequenceReusable.h"
 #include "Parsing/Commands/Sequence/SequenceScriptString.h"
@@ -42,6 +43,7 @@ const std::vector<CommandsParser::sequence_t*>& CommandsParser::GetTestsForState
         new SequenceReusable(),
         new SequenceScriptString(),
         new SequenceSetBlock(),
+        new SequenceSetConditionalBlock(),
         new SequenceString(),
         new SequenceUse(),
     });

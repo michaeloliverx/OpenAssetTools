@@ -23,6 +23,7 @@ public:
     [[nodiscard]] std::vector<int> GetPointerToArraySizes() const;
     [[nodiscard]] int GetPointerDepth() const;
     [[nodiscard]] bool IsNotInDefaultNormalBlock() const;
+    [[nodiscard]] bool HasConditionalBlock() const;
     [[nodiscard]] bool IsInTempBlock() const;
     [[nodiscard]] bool IsInRuntimeBlock() const;
     [[nodiscard]] bool IsFirstUsedMember() const;

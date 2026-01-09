@@ -25,5 +25,8 @@ public:
     std::unique_ptr<IEvaluation> m_alloc_alignment;
     std::unique_ptr<CustomAction> m_post_load_action;
     const FastFileBlock* m_fast_file_block;
+    std::unique_ptr<IEvaluation> m_conditional_block_condition;
+    const FastFileBlock* m_conditional_block_true;
+    const FastFileBlock* m_conditional_block_false;
     const EnumMember* m_asset_ref;
 };

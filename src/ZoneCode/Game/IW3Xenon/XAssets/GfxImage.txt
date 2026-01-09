@@ -11,13 +11,7 @@ reorder:
 
 set allocalign pixels 4096;
 set count pixels cardMemory::platform[0];
-
-// pixels – default when delayLoadPixels == false
-// set block delayLoadPixels XFILE_BLOCK_LARGE;
-
-// pixels – override when delayLoadPixels == true
-// set condition pixels delayLoadPixels;
-// set block pixels XFILE_BLOCK_LARGE_RUNTIME;
+set conditional block pixels delayLoadPixels XFILE_BLOCK_LARGE_RUNTIME XFILE_BLOCK_LARGE;
 
 // GfxTexture
 use GfxTexture;
