@@ -202,17 +202,10 @@ static inline void EndianFixup_Material(IW3Xenon::Material* v)
 
 static inline void EndianFixup_MaterialTechniqueSet(IW3Xenon::MaterialTechniqueSet* v)
 {
-    // name: zone pointer (XString / offset / following)
     SwapBigEndianPtr32(v->name);
-
-    // remappedTechniqueSet: zone pointer
     SwapBigEndianPtr32(v->remappedTechniqueSet);
-
-    // techniques[26]: array of zone pointers
     for (int i = 0; i < 26; i++)
         SwapBigEndianPtr32(v->techniques[i]);
-
-    // worldVertFormat + unused[] are uint8, no swap needed
 }
 
 static inline void EndianFixup_MaterialVertexShader(IW3Xenon::MaterialVertexShader* v)
@@ -229,13 +222,12 @@ static inline void EndianFixup_MaterialVertexShader(IW3Xenon::MaterialVertexShad
 static inline void EndianFixup_MaterialVertexShaderProgram(IW3Xenon::MaterialVertexShaderProgram* v)
 {
     // Embedded loadDef is handled separately to avoid double-swapping
-    return;
+    assert(false);
 }
 
 static inline void EndianFixup_GfxVertexShaderLoadDef(IW3Xenon::GfxVertexShaderLoadDef* v)
 {
-    SWAP_BE_MEMBER(v, cachedPartSize);
-    SWAP_BE_MEMBER(v, physicalPartSize);
+    assert(false);
 }
 
 static inline void EndianFixup_MaterialPixelShader(IW3Xenon::MaterialPixelShader* v)
@@ -255,14 +247,12 @@ static inline void EndianFixup_MaterialPixelShader(IW3Xenon::MaterialPixelShader
 
 static inline void EndianFixup_MaterialPixelShaderProgram(IW3Xenon::MaterialPixelShaderProgram* v)
 {
-    // Embedded loadDef is handled separately to avoid double-swapping
-    return;
+    assert(false);
 }
 
 static inline void EndianFixup_GfxPixelShaderLoadDef(IW3Xenon::GfxPixelShaderLoadDef* v)
 {
-    SWAP_BE_MEMBER(v, cachedPartSize);
-    SWAP_BE_MEMBER(v, physicalPartSize);
+    assert(false);
 }
 
 static inline void EndianFixup_MaterialShaderArgument(IW3Xenon::MaterialShaderArgument* v)
@@ -270,16 +260,43 @@ static inline void EndianFixup_MaterialShaderArgument(IW3Xenon::MaterialShaderAr
     SWAP_BE_MEMBER(v, type);
     SWAP_BE_MEMBER(v, dest);
 
-    // The union field needs to be swapped based on type, but we do a generic swap
-    // treating it as the largest field (uint32) which covers all union members
-    SWAP_BE_MEMBER(v, u.nameHash);
+    // Swap union field based on type
+    switch (v->type)
+    {
+    case IW3Xenon::MTL_ARG_LITERAL_VERTEX_CONST:
+    case IW3Xenon::MTL_ARG_LITERAL_PIXEL_CONST:
+        // literalConst: pointer
+        SwapBigEndianPtr32(v->u.literalConst);
+        break;
+
+    case IW3Xenon::MTL_ARG_CODE_VERTEX_CONST:
+    case IW3Xenon::MTL_ARG_CODE_PIXEL_CONST:
+        // codeConst: struct with uint16 index + uint8 firstRow + uint8 rowCount
+        SWAP_BE_MEMBER((&v->u.codeConst), index);
+        // firstRow and rowCount are uint8, no swap needed
+        break;
+
+    case IW3Xenon::MTL_ARG_CODE_PIXEL_SAMPLER:
+        // codeSampler: uint32
+        SWAP_BE_MEMBER(v, u.codeSampler);
+        break;
+
+    case IW3Xenon::MTL_ARG_MATERIAL_VERTEX_CONST:
+    case IW3Xenon::MTL_ARG_MATERIAL_PIXEL_SAMPLER:
+    case IW3Xenon::MTL_ARG_MATERIAL_PIXEL_CONST:
+        // nameHash: uint32
+        SWAP_BE_MEMBER(v, u.nameHash);
+        break;
+
+    default:
+        assert(false);
+        break;
+    }
 }
 
 static inline void EndianFixup_MaterialArgumentDef(IW3Xenon::MaterialArgumentDef* v)
 {
-    // This union is always part of MaterialShaderArgument, so endian fixup
-    // is handled there. This function exists for API compatibility but does nothing.
-    return;
+    assert(false);
 }
 
 static inline void EndianFixup_MaterialPass(IW3Xenon::MaterialPass* v)
@@ -482,13 +499,21 @@ static inline void EndianFixup_windowDef_t(IW3Xenon::windowDef_t* v)
     SwapBigEndianPtr32(v->background);
 }
 
-static inline void EndianFixup_ItemKeyHandler(IW3Xenon::ItemKeyHandler* v) {}
+static inline void EndianFixup_ItemKeyHandler(IW3Xenon::ItemKeyHandler* v)
+{
+    SWAP_BE_MEMBER(v, key);
+    SwapBigEndianPtr32(v->action);
+    SwapBigEndianPtr32(v->next);
+}
 
-static inline void EndianFixup_statement_s(IW3Xenon::statement_s* v) {}
+static inline void EndianFixup_statement_s(IW3Xenon::statement_s* v)
+{
+    assert(false);
+}
 
 static inline void EndianFixup_operandInternalDataUnion(IW3Xenon::operandInternalDataUnion* v)
 {
-    // Union - contents swapped based on context in Operand
+    assert(false);
 }
 
 static inline void EndianFixup_Operand(IW3Xenon::Operand* v)
@@ -624,11 +649,55 @@ static inline void EndianFixup_itemDef_s(IW3Xenon::itemDef_s* v)
     SwapBigEndianPtr32(v->forecolorAExp.entries);
 }
 
-static inline void EndianFixup_itemDefData_t(IW3Xenon::itemDefData_t* v) {}
+static inline void EndianFixup_itemDefData_t(IW3Xenon::itemDefData_t* v)
+{
+    assert(false);
+}
 
-static inline void EndianFixup_listBoxDef_s(IW3Xenon::listBoxDef_s* v) {}
+static inline void EndianFixup_listBoxDef_s(IW3Xenon::listBoxDef_s* v)
+{
+    // int startPos[4];
+    for (int i = 0; i < 4; i++)
+        SWAP_BE_MEMBER(v, startPos[i]);
 
-static inline void EndianFixup_multiDef_s(IW3Xenon::multiDef_s* v) {}
+    // int endPos[4];
+    for (int i = 0; i < 4; i++)
+        SWAP_BE_MEMBER(v, endPos[i]);
+
+    SWAP_BE_MEMBER(v, drawPadding);
+    SwapBigEndianFloat(v->elementWidth);
+    SwapBigEndianFloat(v->elementHeight);
+    SWAP_BE_MEMBER(v, elementStyle);
+    SWAP_BE_MEMBER(v, numColumns);
+
+    for (int i = 0; i < 16; i++)
+    {
+        SWAP_BE_MEMBER(v, columnInfo[i].pos);
+        SWAP_BE_MEMBER(v, columnInfo[i].width);
+        SWAP_BE_MEMBER(v, columnInfo[i].maxChars);
+        SWAP_BE_MEMBER(v, columnInfo[i].alignment);
+    }
+
+    SwapBigEndianPtr32(v->doubleClick);
+    SWAP_BE_MEMBER(v, notselectable);
+    SWAP_BE_MEMBER(v, noScrollBars);
+    SWAP_BE_MEMBER(v, usePaging);
+
+    // int selectBorder[4];
+    for (int i = 0; i < 4; i++)
+        SwapBigEndianFloat(v->selectBorder[i]);
+
+    // int disableColor[4];
+    for (int i = 0; i < 4; i++)
+        SwapBigEndianFloat(v->disableColor[i]);
+
+    SwapBigEndianPtr32(v->selectIcon);
+}
+
+static inline void EndianFixup_multiDef_s(IW3Xenon::multiDef_s* v)
+{
+    assert(false);
+}
 
 static inline void EndianFixup_menuDef_t(IW3Xenon::menuDef_t* v)
 {
@@ -692,6 +761,8 @@ static inline void EndianFixup_RawFile(IW3Xenon::RawFile* v)
 
 static inline void EndianFixup_StringTable(IW3Xenon::StringTable* v)
 {
+    SwapBigEndianPtr32(v->name);
     SWAP_BE_MEMBER(v, columnCount);
     SWAP_BE_MEMBER(v, rowCount);
+    SwapBigEndianPtr32(v->values);
 }
