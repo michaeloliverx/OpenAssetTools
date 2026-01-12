@@ -1,5 +1,7 @@
 #include "ContentLoaderBase.h"
 
+#include "utils/Endianness.h"
+
 #include <cassert>
 #include <cstdint>
 #include <limits>
@@ -41,13 +43,29 @@ void ContentLoaderBase::LoadXString(const bool atStreamStart) const
     }
 }
 
+static inline auto SwapBigEndianPtr32 = [](auto& p)
+{
+    std::uint32_t tmp = static_cast<std::uint32_t>(reinterpret_cast<std::uintptr_t>(p));
+    tmp = endianness::FromBigEndian(tmp);
+    p = reinterpret_cast<std::remove_reference_t<decltype(p)>>(static_cast<std::uintptr_t>(tmp));
+};
+
 void ContentLoaderBase::LoadXStringArray(const bool atStreamStart, const size_t count)
 {
     assert(varXString != nullptr);
 
 #ifdef ARCH_x86
     if (atStreamStart)
+    {
         m_stream.Load<const char*>(varXString, count);
+        if (m_zone.m_game_id == GameId::IW3 && m_zone.m_platform == GamePlatform::XBOX)
+        {
+            for (size_t index = 0; index < count; index++)
+            {
+                SwapBigEndianPtr32(varXString[index]);
+            }
+        }
+    }
 #else
     if (atStreamStart)
     {
