@@ -14,6 +14,12 @@ set count pixels cardMemory::platform[0];
 set conditional block pixels delayLoadPixels XFILE_BLOCK_LARGE_RUNTIME XFILE_BLOCK_LARGE;
 
 // GfxTexture
-use GfxTexture;
+use GfxTextureLoad;
 set reusable loadDef;
 set block loadDef XFILE_BLOCK_TEMP;
+
+set block GfxImageLoadDef XFILE_BLOCK_VIRTUAL;
+
+use GfxTexture;
+set condition cubemap GfxImageLoadDef::flags & 4;
+set condition volmap GfxImageLoadDef::flags & 8;

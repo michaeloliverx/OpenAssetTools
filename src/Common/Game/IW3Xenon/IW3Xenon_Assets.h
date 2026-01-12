@@ -646,17 +646,6 @@ namespace IW3Xenon
         MaterialTechnique* techniques[26];
     };
 
-    struct GfxImageLoadDef;
-
-    union GfxTexture
-    {
-        //   D3DBaseTexture *basemap;
-        //   D3DTexture *map;
-        //   D3DVolumeTexture *volmap;
-        //   D3DCubeTexture *cubemap;
-        GfxImageLoadDef* loadDef;
-    };
-
     enum GPUTEXTUREFORMAT : __int32
     {
         GPUTEXTUREFORMAT_1_REVERSE = 0x0,
@@ -725,6 +714,29 @@ namespace IW3Xenon
         GPUTEXTUREFORMAT_2_10_10_10_FLOAT_EDRAM = 0x3F,
     };
 
+    struct type_align(4) DummyD3DTexture
+    {
+        char pad[52];
+    };
+
+    struct type_align(4) DummyD3DVolumeTexture
+    {
+        char pad[52];
+    };
+
+    struct type_align(4) DummyD3DCubeTexture
+    {
+        char pad[52];
+    };
+
+    union GfxTexture
+    {
+        // DummyD3DBaseTexture* basemap;
+        DummyD3DTexture* map;
+        DummyD3DVolumeTexture* volmap;
+        DummyD3DCubeTexture* cubemap;
+    };
+
     struct GfxImageLoadDef
     {
         unsigned __int8 levelCount;
@@ -732,6 +744,11 @@ namespace IW3Xenon
         __int16 dimensions[3];
         int format;
         GfxTexture texture;
+    };
+
+    union GfxTextureLoad
+    {
+        GfxImageLoadDef* loadDef;
     };
 
     enum MapType
@@ -782,7 +799,7 @@ namespace IW3Xenon
     struct GfxImage
     {
         MapType mapType;
-        GfxTexture texture;
+        GfxTextureLoad texture;
         unsigned __int8 semantic;
         CardMemory cardMemory;
         unsigned __int16 width;

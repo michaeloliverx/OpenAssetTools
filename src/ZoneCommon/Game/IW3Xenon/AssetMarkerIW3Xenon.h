@@ -327,7 +327,7 @@ static inline void EndianFixup_MaterialTechnique_Partial(IW3Xenon::MaterialTechn
 static inline void EndianFixup_GfxTexture(IW3Xenon::GfxTexture* v)
 {
     // Union with loadDef pointer
-    SwapBigEndianPtr32(v->loadDef);
+    SwapBigEndianPtr32(v->cubemap);
 }
 
 static inline void EndianFixup_GfxImageLoadDef(IW3Xenon::GfxImageLoadDef* v)
@@ -345,6 +345,11 @@ static inline void EndianFixup_GfxImageLoadDef(IW3Xenon::GfxImageLoadDef* v)
 
     // texture: GfxTexture union - handle via its fixup function
     EndianFixup_GfxTexture(&v->texture);
+}
+
+static inline void EndianFixup_GfxTextureLoad(IW3Xenon::GfxTextureLoad* v)
+{
+    SwapBigEndianPtr32(v->loadDef);
 }
 
 static inline void EndianFixup_GfxImage(IW3Xenon::GfxImage* v)
