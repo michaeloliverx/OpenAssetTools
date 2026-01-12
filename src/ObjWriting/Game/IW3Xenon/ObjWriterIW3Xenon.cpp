@@ -3,6 +3,7 @@
 #include "Game/IW3Xenon/GameAssetPoolIW3Xenon.h"
 #include "ObjWriting.h"
 #include "RawFile/RawFileDumperIW3Xenon.h"
+#include "StringTable/StringTableDumperIW3Xenon.h"
 
 using namespace IW3Xenon;
 
@@ -18,6 +19,7 @@ bool ObjWriter::DumpZone(AssetDumpingContext& context) const
     std::vector<std::unique_ptr<IAssetDumper>> dumpers;
 
     REGISTER_DUMPER(raw_file::DumperIW3Xenon, m_raw_file)
+    REGISTER_DUMPER(string_table::DumperIW3Xenon, m_string_table)
 
     if (context.ShouldTrackProgress())
     {
