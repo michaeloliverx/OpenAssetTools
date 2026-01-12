@@ -29,7 +29,9 @@ set condition u::literalConst type == MTL_ARG_LITERAL_VERTEX_CONST
 set reusable u::literalConst;
 
 // MaterialPixelShader
-set string MaterialPixelShader::name;
+use MaterialPixelShader;
+set block XFILE_BLOCK_VIRTUAL;
+set string name;
 
 // GfxPixelShaderLoadDef
 use GfxPixelShaderLoadDef;
