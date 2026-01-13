@@ -215,8 +215,7 @@ ZoneCode.Assets = {
         "FootstepTableDef",
         "FootstepFXTableDef",
         "ZBarrierDef"
-    },
-
+    }
 }
 
 function ZoneCode:outputForAssets(assetList)
