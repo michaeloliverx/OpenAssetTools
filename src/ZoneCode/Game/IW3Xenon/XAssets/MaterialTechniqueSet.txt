@@ -19,6 +19,7 @@ reorder:
 use MaterialPass;
 set count args perPrimArgCount + perObjArgCount + stableArgCount;
 set reusable vertexDecl;
+set reusable vertexShaderArray;
 set reusable vertexShader;
 set block pixelShader XFILE_BLOCK_TEMP;
 set reusable pixelShader;
