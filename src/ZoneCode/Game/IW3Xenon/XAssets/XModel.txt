@@ -1,0 +1,40 @@
+// =========================================
+// XModel
+// =========================================
+use XModel;
+set block XFILE_BLOCK_TEMP;
+set string name;
+set scriptstring boneNames;
+set reusable boneNames;
+set count boneNames numBones;
+set reusable parentList;
+set count parentList numBones - numRootBones;
+set reusable quats;
+set count quats (numBones - numRootBones) * 8;
+set reusable trans;
+set count trans (numBones - numRootBones) * 16;
+set reusable partClassification;
+set count partClassification numBones;
+set reusable baseMat;
+set count baseMat numBones;
+set count surfs numsurfs;
+set count materialHandles numsurfs;
+set count collSurfs numCollSurfs;
+set count boneInfo numBones;
+set reusable physGeoms;
+set count physGeoms 1;
+
+// XSurface
+use XSurface;
+set reusable verts0;
+set count verts0 vertCount;
+set reusable vertList;
+set count vertList vertListCount;
+set reusable triIndices;
+set count triIndices triCount;
+reorder:
+    vertInfo
+    verts0
+    vb0
+    vertList
+    triIndices;

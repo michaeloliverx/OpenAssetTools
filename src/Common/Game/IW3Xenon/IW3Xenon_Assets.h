@@ -147,7 +147,7 @@ namespace IW3Xenon
 
     struct XAnimNotifyInfo
     {
-        unsigned __int16 name;
+        ScriptString name;
         float time;
     };
 
@@ -157,7 +157,13 @@ namespace IW3Xenon
         unsigned __int16 (*_2)[3];
     };
 
-    union XAnimDynamicIndices
+    union XAnimDynamicIndicesTrans
+    {
+        unsigned __int8 _1[1];
+        unsigned __int16 _2[1];
+    };
+
+    union XAnimDynamicIndicesQuat
     {
         unsigned __int8 _1[1];
         unsigned __int16 _2[1];
@@ -168,7 +174,7 @@ namespace IW3Xenon
         float mins[3];
         float size[3];
         XAnimDynamicFrames frames;
-        XAnimDynamicIndices indices;
+        XAnimDynamicIndicesTrans indices;
     };
 
     union XAnimPartTransData
@@ -187,7 +193,7 @@ namespace IW3Xenon
     struct __declspec(align(4)) XAnimDeltaPartQuatDataFrames
     {
         __int16 (*frames)[2];
-        XAnimDynamicIndices indices;
+        XAnimDynamicIndicesQuat indices;
     };
 
     union XAnimDeltaPartQuatData
@@ -244,6 +250,230 @@ namespace IW3Xenon
         XAnimIndices indices;
         XAnimNotifyInfo* notify;
         XAnimDeltaPart* deltaPart;
+    };
+
+    struct DObjAnimMat
+    {
+        float quat[4];
+        float trans[3];
+        float transWeight;
+    };
+
+    union GfxColor
+    {
+        unsigned int packed;
+        unsigned __int8 array[4];
+    };
+
+    union PackedTexCoords
+    {
+        unsigned int packed;
+    };
+
+    union PackedUnitVec
+    {
+        unsigned int packed;
+    };
+
+    struct GfxPackedVertex
+    {
+        float xyz[3];
+        float binormalSign;
+        GfxColor color;
+        PackedTexCoords texCoord;
+        PackedUnitVec normal;
+        PackedUnitVec tangent;
+    };
+
+    struct XSurfaceCollisionAabb
+    {
+        unsigned __int16 mins[3];
+        unsigned __int16 maxs[3];
+    };
+
+    struct XSurfaceCollisionNode
+    {
+        XSurfaceCollisionAabb aabb;
+        unsigned __int16 childBeginIndex;
+        unsigned __int16 childCount;
+    };
+
+    struct XSurfaceCollisionLeaf
+    {
+        unsigned __int16 triangleBeginIndex;
+    };
+
+    struct XSurfaceCollisionTree
+    {
+        float trans[3];
+        float scale[3];
+        unsigned int nodeCount;
+        XSurfaceCollisionNode* nodes;
+        unsigned int leafCount;
+        XSurfaceCollisionLeaf* leafs;
+    };
+
+    struct XRigidVertList
+    {
+        unsigned __int16 boneOffset;
+        unsigned __int16 vertCount;
+        unsigned __int16 triOffset;
+        unsigned __int16 triCount;
+        XSurfaceCollisionTree* collisionTree;
+    };
+
+    struct XSurfaceVertexInfo
+    {
+        __int16 vertCount[4];
+        unsigned __int16* vertsBlend;
+    };
+
+    struct D3DVertexBuffer
+    {
+        char data[0x20];
+    };
+
+    struct D3DIndexBuffer
+    {
+        char data[0x20];
+    };
+
+    struct XSurface
+    {
+        unsigned __int8 tileMode;
+        bool deformed;
+        unsigned __int16 vertCount;
+        unsigned __int16 triCount;
+        unsigned __int16* triIndices;
+        XSurfaceVertexInfo vertInfo;
+        GfxPackedVertex* verts0;
+        D3DVertexBuffer vb0;
+        unsigned int vertListCount;
+        XRigidVertList* vertList;
+        D3DIndexBuffer indexBuffer;
+        int partBits[4];
+    };
+
+    struct XModelCollSurf_s
+    {
+        float mins[3];
+        float maxs[3];
+        int boneIdx;
+        int contents;
+        int surfFlags;
+    };
+
+    struct XBoneInfo
+    {
+        float bounds[2][3];
+        float offset[3];
+        float radiusSquared;
+    };
+
+    struct XModelHighMipBounds
+    {
+        float mins[3];
+        float maxs[3];
+    };
+
+    struct cplane_s
+    {
+        float normal[3];
+        float dist;
+        unsigned __int8 type;
+        unsigned __int8 signbits;
+        unsigned __int8 pad[2];
+    };
+
+    struct __declspec(align(2)) cbrushside_t
+    {
+        cplane_s* plane;
+        unsigned int materialNum;
+        __int16 firstAdjacentSideOffset;
+        unsigned __int8 edgeCount;
+    };
+
+    struct BrushWrapper
+    {
+        float mins[3];
+        int contents;
+        float maxs[3];
+        unsigned int numsides;
+        cbrushside_t* sides;
+        __int16 axialMaterialNum[2][3];
+        unsigned __int8* baseAdjacentSide;
+        __int16 firstAdjacentSideOffsets[2][3];
+        unsigned __int8 edgeCount[2][3];
+        int totalEdgeCount;
+        cplane_s* planes;
+    };
+
+    struct PhysGeomInfo
+    {
+        BrushWrapper* brush;
+        int type;
+        float orientation[3][3];
+        float offset[3];
+        float halfLengths[3];
+    };
+
+    struct PhysMass
+    {
+        float centerOfMass[3];
+        float momentsOfInertia[3];
+        float productsOfInertia[3];
+    };
+
+    struct PhysGeomList
+    {
+        unsigned int count;
+        PhysGeomInfo* geoms;
+        PhysMass mass;
+    };
+
+    struct XModelLodInfo
+    {
+        float dist;
+        unsigned __int16 numsurfs;
+        unsigned __int16 surfIndex;
+        int partBits[4];
+    };
+
+    struct XModelStreamInfo
+    {
+        XModelHighMipBounds* highMipBounds;
+    };
+
+    struct XModel
+    {
+        const char* name;
+        unsigned __int8 numBones;
+        unsigned __int8 numRootBones;
+        unsigned __int8 numsurfs;
+        unsigned __int8 lodRampType;
+        ScriptString* boneNames;
+        unsigned __int8* parentList;
+        __int16* quats;
+        float* trans;
+        unsigned __int8* partClassification;
+        DObjAnimMat* baseMat;
+        XSurface* surfs;
+        Material** materialHandles;
+        XModelLodInfo lodInfo[4];
+        XModelCollSurf_s* collSurfs;
+        int numCollSurfs;
+        int contents;
+        XBoneInfo* boneInfo;
+        float radius;
+        float mins[3];
+        float maxs[3];
+        __int16 numLods;
+        __int16 collLod;
+        XModelStreamInfo streamInfo;
+        int memUsage;
+        unsigned __int8 flags;
+        PhysPreset* physPreset;
+        PhysGeomList* physGeoms;
     };
 
     struct WaterWritable

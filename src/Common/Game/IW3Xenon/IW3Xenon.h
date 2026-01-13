@@ -31,6 +31,7 @@ namespace IW3Xenon
 
     using AssetPhysPreset = Asset<ASSET_TYPE_PHYSPRESET, PhysPreset>;
     using AssetXAnim = Asset<ASSET_TYPE_XANIMPARTS, XAnimParts>;
+    using AssetXModel = Asset<ASSET_TYPE_XMODEL, XModel>;
     using AssetMaterial = Asset<ASSET_TYPE_MATERIAL, Material>;
     using AssetTechniqueSet = Asset<ASSET_TYPE_TECHNIQUE_SET, MaterialTechniqueSet>;
     using AssetImage = Asset<ASSET_TYPE_IMAGE, GfxImage>;
@@ -50,6 +51,7 @@ namespace IW3Xenon
 
 DEFINE_ASSET_NAME_ACCESSOR(IW3Xenon::AssetPhysPreset, name);
 DEFINE_ASSET_NAME_ACCESSOR(IW3Xenon::AssetXAnim, name);
+DEFINE_ASSET_NAME_ACCESSOR(IW3Xenon::AssetXModel, name);
 DEFINE_ASSET_NAME_ACCESSOR(IW3Xenon::AssetMaterial, info.name);
 DEFINE_ASSET_NAME_ACCESSOR(IW3Xenon::AssetTechniqueSet, name);
 DEFINE_ASSET_NAME_ACCESSOR(IW3Xenon::AssetImage, name);

@@ -4,8 +4,9 @@ architecture x86;
 
 // Game Assets
 asset PhysPreset AssetPhysPreset;
-asset Material AssetMaterial;
 asset XAnimParts AssetXAnim;
+asset XModel AssetXModel;
+asset Material AssetMaterial;
 asset MaterialTechniqueSet AssetTechniqueSet;
 asset GfxImage AssetImage;
 asset snd_alias_list_t AssetSound;
@@ -31,6 +32,7 @@ block normal  XFILE_BLOCK_LARGE;
 block normal  XFILE_BLOCK_PHYSICAL;
 
 #include "XAssets/PhysPreset.txt"
+#include "XAssets/XModel.txt"
 #include "XAssets/XAnimParts.txt"
 #include "XAssets/Material.txt"
 #include "XAssets/MaterialTechniqueSet.txt"

@@ -32,6 +32,7 @@ ZoneCode.Assets = {
     IW3Xenon = {
         "PhysPreset",
         "XAnimParts",
+        "XModel",
         "Material",
         "MaterialTechniqueSet",
         "GfxImage",
