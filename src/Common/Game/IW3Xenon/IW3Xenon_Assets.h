@@ -1670,7 +1670,7 @@ namespace IW3Xenon
         FxElemVec3Range totalDelta;
     };
 
-    const struct FxElemVelStateSample
+    struct FxElemVelStateSample
     {
         FxElemVelStateInFrame local;
         FxElemVelStateInFrame world;
@@ -1685,7 +1685,7 @@ namespace IW3Xenon
         float scale;
     };
 
-    const struct FxElemVisStateSample
+    struct FxElemVisStateSample
     {
         FxElemVisualState base;
         FxElemVisualState amplitude;
@@ -1816,7 +1816,7 @@ namespace IW3Xenon
         unsigned __int8 unused[1];
     };
 
-    const struct FxEffectDef
+    struct FxEffectDef
     {
         const char* name;
         int flags;
@@ -1826,6 +1826,18 @@ namespace IW3Xenon
         int elemDefCountOneShot;
         int elemDefCountEmission;
         FxElemDef* elemDefs;
+    };
+
+    struct FxImpactEntry
+    {
+        FxEffectDef* nonflesh[29];
+        FxEffectDef* flesh[4];
+    };
+
+    struct FxImpactTable
+    {
+        const char* name;
+        FxImpactEntry* table;
     };
 
     struct RawFile

@@ -2,6 +2,7 @@
 
 #include "Game/IW3Xenon/XAssets/font_s/font_s_mark_db.h"
 #include "Game/IW3Xenon/XAssets/fxeffectdef/fxeffectdef_mark_db.h"
+#include "Game/IW3Xenon/XAssets/fximpacttable/fximpacttable_mark_db.h"
 #include "Game/IW3Xenon/XAssets/gfximage/gfximage_mark_db.h"
 #include "Game/IW3Xenon/XAssets/gfxlightdef/gfxlightdef_mark_db.h"
 #include "Game/IW3Xenon/XAssets/loadedsound/loadedsound_mark_db.h"
@@ -1160,6 +1161,22 @@ static inline void EndianFixup_FxEffectDef(IW3Xenon::FxEffectDef* v)
     SWAP_BE_MEMBER(v, elemDefCountOneShot);
     SWAP_BE_MEMBER(v, elemDefCountEmission);
     SwapBigEndianPtr32(v->elemDefs);
+}
+
+// ---- FxImpactTable
+
+static inline void EndianFixup_FxImpactEntry(IW3Xenon::FxImpactEntry* v)
+{
+    for (int i = 0; i < 29; i++)
+        SwapBigEndianPtr32(v->nonflesh[i]);
+    for (int i = 0; i < 4; i++)
+        SwapBigEndianPtr32(v->flesh[i]);
+}
+
+static inline void EndianFixup_FxImpactTable(IW3Xenon::FxImpactTable* v)
+{
+    SwapBigEndianPtr32(v->name);
+    SwapBigEndianPtr32(v->table);
 }
 
 // ---- RawFile
