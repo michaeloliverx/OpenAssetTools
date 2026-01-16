@@ -57,7 +57,17 @@ static inline auto SwapBigEndianFloat = [](float& f)
 
 static inline void EndianFixup_PhysPreset(IW3Xenon::PhysPreset* v)
 {
-    assert(false);
+    SwapBigEndianPtr32(v->name);
+    SWAP_BE_MEMBER(v, type);
+    SwapBigEndianFloat(v->mass);
+    SwapBigEndianFloat(v->bounce);
+    SwapBigEndianFloat(v->friction);
+    SwapBigEndianFloat(v->bulletForceScale);
+    SwapBigEndianFloat(v->explosiveForceScale);
+    SwapBigEndianPtr32(v->sndAliasPrefix);
+    SwapBigEndianFloat(v->piecesSpreadFraction);
+    SwapBigEndianFloat(v->piecesUpwardVelocity);
+    // bool tempDefaultToCylinder
 }
 
 // ---- XAnimParts
@@ -926,7 +936,8 @@ static inline void EndianFixup_LocalizeEntry(IW3Xenon::LocalizeEntry* v)
 
 static inline void EndianFixup_SndDriverGlobals(IW3Xenon::SndDriverGlobals* v)
 {
-    assert(false);
+    SwapBigEndianPtr32(v->reverbSettings);
+    SwapBigEndianPtr32(v->name);
 }
 
 // ---- RawFile
