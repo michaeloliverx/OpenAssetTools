@@ -6,6 +6,7 @@ set block XFILE_BLOCK_TEMP;
 set string info::name;
 set reusable textureTable;
 set count textureTable textureCount;
+set allocalign constantTable 16;
 set reusable constantTable;
 set count constantTable constantCount;
 set reusable stateBitsTable;
