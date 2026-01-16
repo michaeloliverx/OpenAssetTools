@@ -55,7 +55,10 @@ static inline auto SwapBigEndianFloat = [](float& f)
 
 // ---- PhysPreset
 
-static inline void EndianFixup_PhysPreset(IW3Xenon::PhysPreset* v) {}
+static inline void EndianFixup_PhysPreset(IW3Xenon::PhysPreset* v)
+{
+    assert(false);
+}
 
 // ---- XAnimParts
 
@@ -85,15 +88,28 @@ static inline void EndianFixup_XAnimPartTransFrames_Partial(IW3Xenon::XAnimPartT
     SwapBigEndianFloat(v->size[0]);
     SwapBigEndianFloat(v->size[1]);
     SwapBigEndianFloat(v->size[2]);
+    SwapBigEndianPtr32(v->frames._1);
 }
 
-static inline void EndianFixup_XAnimDynamicFrames(IW3Xenon::XAnimDynamicFrames* v) {}
+static inline void EndianFixup_XAnimDynamicFrames(IW3Xenon::XAnimDynamicFrames* v)
+{
+    assert(false);
+}
 
-static inline void EndianFixup_XAnimDeltaPartQuat_Partial(IW3Xenon::XAnimDeltaPartQuat* v, size_t loaded_size) {}
+static inline void EndianFixup_XAnimDeltaPartQuat_Partial(IW3Xenon::XAnimDeltaPartQuat* v, size_t loaded_size)
+{
+    assert(false);
+}
 
-static inline void EndianFixup_XAnimDeltaPartQuatDataFrames_Partial(IW3Xenon::XAnimDeltaPartQuatDataFrames* v, size_t loaded_size) {}
+static inline void EndianFixup_XAnimDeltaPartQuatDataFrames_Partial(IW3Xenon::XAnimDeltaPartQuatDataFrames* v, size_t loaded_size)
+{
+    assert(false);
+}
 
-static inline void EndianFixup_XAnimIndices(IW3Xenon::XAnimIndices* v) {}
+static inline void EndianFixup_XAnimIndices(IW3Xenon::XAnimIndices* v)
+{
+    assert(false);
+}
 
 static inline void EndianFixup_XAnimParts(IW3Xenon::XAnimParts* v)
 {
@@ -111,16 +127,16 @@ static inline void EndianFixup_XAnimParts(IW3Xenon::XAnimParts* v)
     SwapBigEndianFloat(v->framerate);
     SwapBigEndianFloat(v->frequency);
     SwapBigEndianPtr32(v->names);
+    SwapBigEndianPtr32(v->dataByte);
     SwapBigEndianPtr32(v->dataShort);
     SwapBigEndianPtr32(v->dataInt);
     SwapBigEndianPtr32(v->randomDataShort);
     SwapBigEndianPtr32(v->randomDataByte);
     SwapBigEndianPtr32(v->randomDataInt);
-    // indices: union chosen by numframes
-    if (v->numframes < 256)
-        SwapBigEndianPtr32(v->indices._1);
-    else
-        SwapBigEndianPtr32(v->indices._2);
+
+    // Union of pointers
+    SwapBigEndianPtr32(v->indices.data);
+
     SwapBigEndianPtr32(v->notify);
     SwapBigEndianPtr32(v->deltaPart);
 }
@@ -496,25 +512,55 @@ static inline void EndianFixup_GfxImage(IW3Xenon::GfxImage* v)
 
 // ---- snd_alias_list_t
 
-static inline void EndianFixup_snd_alias_t(IW3Xenon::snd_alias_t* v) {}
+static inline void EndianFixup_snd_alias_t(IW3Xenon::snd_alias_t* v)
+{
+    assert(false);
+}
 
-static inline void EndianFixup_XAUDIOCHANNELMAP(IW3Xenon::XAUDIOCHANNELMAP* v) {}
+static inline void EndianFixup_XAUDIOCHANNELMAP(IW3Xenon::XAUDIOCHANNELMAP* v)
+{
+    assert(false);
+}
 
-static inline void EndianFixup_SoundFile(IW3Xenon::SoundFile* v) {}
+static inline void EndianFixup_SoundFile(IW3Xenon::SoundFile* v)
+{
+    assert(false);
+}
 
-static inline void EndianFixup_SoundFileRef(IW3Xenon::SoundFileRef* v) {}
+static inline void EndianFixup_SoundFileRef(IW3Xenon::SoundFileRef* v)
+{
+    assert(false);
+}
 
-static inline void EndianFixup_StreamedSound(IW3Xenon::StreamedSound* v) {}
+static inline void EndianFixup_StreamedSound(IW3Xenon::StreamedSound* v)
+{
+    assert(false);
+}
 
-static inline void EndianFixup_StreamFileName(IW3Xenon::StreamFileName* v) {}
+static inline void EndianFixup_StreamFileName(IW3Xenon::StreamFileName* v)
+{
+    assert(false);
+}
 
-static inline void EndianFixup_StreamFileInfo(IW3Xenon::StreamFileInfo* v) {}
+static inline void EndianFixup_StreamFileInfo(IW3Xenon::StreamFileInfo* v)
+{
+    assert(false);
+}
 
-static inline void EndianFixup_StreamFileNameRaw(IW3Xenon::StreamFileNameRaw* v) {}
+static inline void EndianFixup_StreamFileNameRaw(IW3Xenon::StreamFileNameRaw* v)
+{
+    assert(false);
+}
 
-static inline void EndianFixup_SpeakerMap(IW3Xenon::SpeakerMap* v) {}
+static inline void EndianFixup_SpeakerMap(IW3Xenon::SpeakerMap* v)
+{
+    assert(false);
+}
 
-static inline void EndianFixup_snd_alias_list_t(IW3Xenon::snd_alias_list_t* v) {}
+static inline void EndianFixup_snd_alias_list_t(IW3Xenon::snd_alias_list_t* v)
+{
+    assert(false);
+}
 
 // ---- SndCurve
 
@@ -534,22 +580,43 @@ static inline void EndianFixup_SndCurve(IW3Xenon::SndCurve* v)
 
 // ---- LoadedSound
 
-static inline void EndianFixup_XaSound(IW3Xenon::XaSound* v) {}
+static inline void EndianFixup_XaSound(IW3Xenon::XaSound* v)
+{
+    assert(false);
+}
 
-static inline void EndianFixup_XAUDIOPACKET_ALIGNED(IW3Xenon::XAUDIOPACKET_ALIGNED* v) {}
+static inline void EndianFixup_XAUDIOPACKET_ALIGNED(IW3Xenon::XAUDIOPACKET_ALIGNED* v)
+{
+    assert(false);
+}
 
-static inline void EndianFixup_XaSeekTable(IW3Xenon::XaSeekTable* v) {}
+static inline void EndianFixup_XaSeekTable(IW3Xenon::XaSeekTable* v)
+{
+    assert(false);
+}
 
-static inline void EndianFixup_LoadedSound(IW3Xenon::LoadedSound* v) {}
+static inline void EndianFixup_LoadedSound(IW3Xenon::LoadedSound* v)
+{
+    assert(false);
+}
 
 // ---- MapEnts
 
-static inline void EndianFixup_MapEnts(IW3Xenon::MapEnts* v) {}
+static inline void EndianFixup_MapEnts(IW3Xenon::MapEnts* v)
+{
+    assert(false);
+}
 
 // ---- GfxLightDef
-static inline void EndianFixup_GfxLightImage(IW3Xenon::GfxLightImage* v) {}
+static inline void EndianFixup_GfxLightImage(IW3Xenon::GfxLightImage* v)
+{
+    assert(false);
+}
 
-static inline void EndianFixup_GfxLightDef(IW3Xenon::GfxLightDef* v) {}
+static inline void EndianFixup_GfxLightDef(IW3Xenon::GfxLightDef* v)
+{
+    assert(false);
+}
 
 // ---- Font_s
 
@@ -857,7 +924,10 @@ static inline void EndianFixup_LocalizeEntry(IW3Xenon::LocalizeEntry* v)
 
 // ---- SndDriverGlobals
 
-static inline void EndianFixup_SndDriverGlobals(IW3Xenon::SndDriverGlobals* v) {}
+static inline void EndianFixup_SndDriverGlobals(IW3Xenon::SndDriverGlobals* v)
+{
+    assert(false);
+}
 
 // ---- RawFile
 
