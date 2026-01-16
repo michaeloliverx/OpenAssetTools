@@ -525,7 +525,29 @@ static inline void EndianFixup_GfxImage(IW3Xenon::GfxImage* v)
 
 static inline void EndianFixup_snd_alias_t(IW3Xenon::snd_alias_t* v)
 {
-    assert(false);
+    SwapBigEndianPtr32(v->aliasName);
+    SwapBigEndianPtr32(v->subtitle);
+    SwapBigEndianPtr32(v->secondaryAliasName);
+    SwapBigEndianPtr32(v->chainAliasName);
+    SwapBigEndianPtr32(v->soundFile);
+    SWAP_BE_MEMBER(v, sequence);
+    SwapBigEndianFloat(v->volMin);
+    SwapBigEndianFloat(v->volMax);
+    SwapBigEndianFloat(v->pitchMin);
+    SwapBigEndianFloat(v->pitchMax);
+    SwapBigEndianFloat(v->distMin);
+    SwapBigEndianFloat(v->distMax);
+    SWAP_BE_MEMBER(v, flags);
+    SwapBigEndianFloat(v->slavePercentage);
+    SwapBigEndianFloat(v->probability);
+    SwapBigEndianFloat(v->lfePercentage);
+    SwapBigEndianFloat(v->centerPercentage);
+    SWAP_BE_MEMBER(v, startDelay);
+    SwapBigEndianPtr32(v->volumeFalloffCurve);
+    SwapBigEndianFloat(v->envelopMin);
+    SwapBigEndianFloat(v->envelopMax);
+    SwapBigEndianFloat(v->envelopPercentage);
+    SwapBigEndianPtr32(v->speakerMap);
 }
 
 static inline void EndianFixup_XAUDIOCHANNELMAP(IW3Xenon::XAUDIOCHANNELMAP* v)
@@ -535,7 +557,18 @@ static inline void EndianFixup_XAUDIOCHANNELMAP(IW3Xenon::XAUDIOCHANNELMAP* v)
 
 static inline void EndianFixup_SoundFile(IW3Xenon::SoundFile* v)
 {
-    assert(false);
+    // type and exists are bytes - no swap
+    if (v->type == IW3Xenon::SAT_LOADED)
+    {
+        SwapBigEndianPtr32(v->u.loadSnd);
+    }
+    else if (v->type == IW3Xenon::SAT_STREAMED)
+    {
+        SWAP_BE_MEMBER(v, u.streamSnd.filename.fileIndex);
+        // StreamFileInfo: either raw (2 pointers) or packed (2 uints) - same byte sizes
+        SwapBigEndianPtr32(v->u.streamSnd.filename.info.raw.dir);
+        SwapBigEndianPtr32(v->u.streamSnd.filename.info.raw.name);
+    }
 }
 
 static inline void EndianFixup_SoundFileRef(IW3Xenon::SoundFileRef* v)
@@ -565,12 +598,24 @@ static inline void EndianFixup_StreamFileNameRaw(IW3Xenon::StreamFileNameRaw* v)
 
 static inline void EndianFixup_SpeakerMap(IW3Xenon::SpeakerMap* v)
 {
-    assert(false);
+    // isDefault is bool (1 byte) - no swap
+    SwapBigEndianPtr32(v->name);
+    // XAUDIOCHANNELMAP channelMaps[2][2]
+    for (int i = 0; i < 2; i++)
+    {
+        for (int j = 0; j < 2; j++)
+        {
+            // EntryCount is byte - no swap
+            SwapBigEndianPtr32(v->channelMaps[i][j].paEntries);
+        }
+    }
 }
 
 static inline void EndianFixup_snd_alias_list_t(IW3Xenon::snd_alias_list_t* v)
 {
-    assert(false);
+    SwapBigEndianPtr32(v->aliasName);
+    SwapBigEndianPtr32(v->head);
+    SWAP_BE_MEMBER(v, count);
 }
 
 // ---- SndCurve
@@ -608,7 +653,32 @@ static inline void EndianFixup_XaSeekTable(IW3Xenon::XaSeekTable* v)
 
 static inline void EndianFixup_LoadedSound(IW3Xenon::LoadedSound* v)
 {
-    assert(false);
+    SwapBigEndianPtr32(v->name);
+
+    // XaSound sound
+    // XAUDIOPACKET_ALIGNED packet
+    SwapBigEndianPtr32(v->sound.packet.pBuffer);
+    SWAP_BE_MEMBER(v, sound.packet.BufferSize);
+    SWAP_BE_MEMBER(v, sound.packet.LoopCount);
+    // XMALOOPREGION XMALoop[6]
+    for (int i = 0; i < 6; i++)
+    {
+        SWAP_BE_MEMBER(v, sound.packet.XMALoop[i].LoopStart);
+        SWAP_BE_MEMBER(v, sound.packet.XMALoop[i].LoopEnd);
+        // LoopSubframeEnd and LoopSubframeSkip are bytes - no swap
+    }
+    SwapBigEndianPtr32(v->sound.packet.pContext);
+
+    // XAUDIOSOURCEFORMAT format
+    // SampleType is byte - no swap
+    // TODO: find enum and correctly endian swap
+
+    // XaIwXmaDataInfo xaIwXmaDataInfo
+    SWAP_BE_MEMBER(v, sound.xaIwXmaDataInfo.totalMsec);
+
+    // XaSeekTable seekTable
+    SWAP_BE_MEMBER(v, sound.seekTable.size);
+    SwapBigEndianPtr32(v->sound.seekTable.data);
 }
 
 // ---- MapEnts

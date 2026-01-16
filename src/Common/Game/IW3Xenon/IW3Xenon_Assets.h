@@ -1172,7 +1172,7 @@ namespace IW3Xenon
         char* pContext;
     };
 
-    union XAUDIOSOURCEFORMAT_u1
+    union __declspec(align(4)) XAUDIOSOURCEFORMAT_u1
     {
         unsigned __int8 NumStreams;
         unsigned __int8 ChannelCount;
