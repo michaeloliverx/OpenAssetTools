@@ -626,7 +626,11 @@ static inline void EndianFixup_GfxLightImage(IW3Xenon::GfxLightImage* v)
 
 static inline void EndianFixup_GfxLightDef(IW3Xenon::GfxLightDef* v)
 {
-    assert(false);
+    SwapBigEndianPtr32(v->name);
+    // GfxLightImage attenuation
+    SwapBigEndianPtr32(v->attenuation.image);
+    // samplerState is a byte - no swap
+    SWAP_BE_MEMBER(v, lmapLookupStart);
 }
 
 // ---- Font_s
