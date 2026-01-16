@@ -7,6 +7,7 @@ asset PhysPreset AssetPhysPreset;
 asset XAnimParts AssetXAnim;
 asset XModel AssetXModel;
 asset Material AssetMaterial;
+asset MaterialPixelShader AssetPixelShader;
 asset MaterialTechniqueSet AssetTechniqueSet;
 asset GfxImage AssetImage;
 asset snd_alias_list_t AssetSound;
@@ -35,6 +36,7 @@ block normal  XFILE_BLOCK_PHYSICAL;
 #include "XAssets/XModel.txt"
 #include "XAssets/XAnimParts.txt"
 #include "XAssets/Material.txt"
+#include "XAssets/MaterialPixelShader.txt"
 #include "XAssets/MaterialTechniqueSet.txt"
 #include "XAssets/GfxImage.txt"
 #include "XAssets/snd_alias_list_t.txt"

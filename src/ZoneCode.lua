@@ -34,6 +34,7 @@ ZoneCode.Assets = {
         "XAnimParts",
         "XModel",
         "Material",
+        "MaterialPixelShader",
         "MaterialTechniqueSet",
         "GfxImage",
         "snd_alias_list_t",

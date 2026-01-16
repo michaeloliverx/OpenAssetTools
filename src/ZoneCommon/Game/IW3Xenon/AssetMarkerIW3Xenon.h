@@ -7,6 +7,7 @@
 #include "Game/IW3Xenon/XAssets/localizeentry/localizeentry_mark_db.h"
 #include "Game/IW3Xenon/XAssets/mapents/mapents_mark_db.h"
 #include "Game/IW3Xenon/XAssets/material/material_mark_db.h"
+#include "Game/IW3Xenon/XAssets/materialpixelshader/materialpixelshader_mark_db.h"
 #include "Game/IW3Xenon/XAssets/materialtechniqueset/materialtechniqueset_mark_db.h"
 #include "Game/IW3Xenon/XAssets/menudef_t/menudef_t_mark_db.h"
 #include "Game/IW3Xenon/XAssets/menulist/menulist_mark_db.h"

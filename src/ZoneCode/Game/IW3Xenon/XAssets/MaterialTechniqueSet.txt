@@ -21,7 +21,6 @@ set count args perPrimArgCount + perObjArgCount + stableArgCount;
 set reusable vertexDecl;
 set reusable vertexShaderArray;
 set reusable vertexShader;
-set block pixelShader XFILE_BLOCK_TEMP;
 set reusable pixelShader;
 
 // MaterialShaderArgument
@@ -29,25 +28,6 @@ use MaterialShaderArgument;
 set condition u::literalConst type == MTL_ARG_LITERAL_VERTEX_CONST 
 || type == MTL_ARG_LITERAL_PIXEL_CONST;
 set reusable u::literalConst;
-
-// MaterialPixelShader
-use MaterialPixelShader;
-set block XFILE_BLOCK_VIRTUAL;
-set string name;
-
-// GfxPixelShaderLoadDef
-use GfxPixelShaderLoadDef;
-reorder:
-    physicalPart
-    cachedPart;
-set allocalign GfxPixelShaderLoadDef::cachedPart 4;
-set count GfxPixelShaderLoadDef::cachedPart cachedPartSize;
-set allocalign GfxPixelShaderLoadDef::physicalPart 32;
-set block GfxPixelShaderLoadDef::physicalPart XFILE_BLOCK_PHYSICAL;
-set count GfxPixelShaderLoadDef::physicalPart physicalPartSize;
-
-// MaterialPixelShaderProgram
-set condition MaterialPixelShaderProgram::ps never;
 
 // MaterialVertexStreamRouting
 set condition MaterialVertexStreamRouting::decl never;
