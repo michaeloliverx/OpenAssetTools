@@ -17,6 +17,7 @@
 #include "Game/IW3Xenon/XAssets/snddriverglobals/snddriverglobals_mark_db.h"
 #include "Game/IW3Xenon/XAssets/stringtable/stringtable_mark_db.h"
 #include "Game/IW3Xenon/XAssets/xanimparts/xanimparts_mark_db.h"
+#include "Game/IW3Xenon/XAssets/xmodel/xmodel_mark_db.h"
 #include "Utils/Endianness.h"
 // The following is a total hack for now just testing
 
@@ -121,6 +122,110 @@ static inline void EndianFixup_XAnimParts(IW3Xenon::XAnimParts* v)
         SwapBigEndianPtr32(v->indices._2);
     SwapBigEndianPtr32(v->notify);
     SwapBigEndianPtr32(v->deltaPart);
+}
+
+// ---- XModel
+
+static inline void EndianFixup_XSurface(IW3Xenon::XSurface* v)
+{
+    SWAP_BE_MEMBER(v, vertCount);
+    SWAP_BE_MEMBER(v, triCount);
+    SwapBigEndianPtr32(v->triIndices);
+    for (int i = 0; i < 4; i++)
+        SWAP_BE_MEMBER(v, vertInfo.vertCount[i]);
+    SwapBigEndianPtr32(v->vertInfo.vertsBlend);
+    SwapBigEndianPtr32(v->verts0);
+    SWAP_BE_MEMBER(v, vertListCount);
+    SwapBigEndianPtr32(v->vertList);
+    for (int i = 0; i < 4; i++)
+        SWAP_BE_MEMBER(v, partBits[i]);
+}
+
+static inline void EndianFixup_XSurfaceVertexInfo(IW3Xenon::XSurfaceVertexInfo* v)
+{
+    assert(false);
+}
+
+static inline void EndianFixup_XRigidVertList(IW3Xenon::XRigidVertList* v)
+{
+    SWAP_BE_MEMBER(v, boneOffset);
+    SWAP_BE_MEMBER(v, vertCount);
+    SWAP_BE_MEMBER(v, triOffset);
+    SWAP_BE_MEMBER(v, triCount);
+    SwapBigEndianPtr32(v->collisionTree);
+}
+
+static inline void EndianFixup_XSurfaceCollisionTree(IW3Xenon::XSurfaceCollisionTree* v)
+{
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->trans[i]);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->scale[i]);
+    SWAP_BE_MEMBER(v, nodeCount);
+    SwapBigEndianPtr32(v->nodes);
+    SWAP_BE_MEMBER(v, leafCount);
+    SwapBigEndianPtr32(v->leafs);
+}
+
+static inline void EndianFixup_XModelStreamInfo(IW3Xenon::XModelStreamInfo* v)
+{
+    assert(false);
+}
+
+static inline void EndianFixup_PhysGeomList(IW3Xenon::PhysGeomList* v)
+{
+    assert(false);
+}
+
+static inline void EndianFixup_PhysGeomInfo(IW3Xenon::PhysGeomInfo* v)
+{
+    assert(false);
+}
+
+static inline void EndianFixup_BrushWrapper(IW3Xenon::BrushWrapper* v)
+{
+    assert(false);
+}
+
+static inline void EndianFixup_cbrushside_t(IW3Xenon::cbrushside_t* v)
+{
+    assert(false);
+}
+
+static inline void EndianFixup_XModel(IW3Xenon::XModel* v)
+{
+    SwapBigEndianPtr32(v->name);
+    SwapBigEndianPtr32(v->boneNames);
+    SwapBigEndianPtr32(v->parentList);
+    SwapBigEndianPtr32(v->quats);
+    SwapBigEndianPtr32(v->trans);
+    SwapBigEndianPtr32(v->partClassification);
+    SwapBigEndianPtr32(v->baseMat);
+    SwapBigEndianPtr32(v->surfs);
+    SwapBigEndianPtr32(v->materialHandles);
+    for (int i = 0; i < 4; i++)
+    {
+        SwapBigEndianFloat(v->lodInfo[i].dist);
+        SWAP_BE_MEMBER(v, lodInfo[i].numsurfs);
+        SWAP_BE_MEMBER(v, lodInfo[i].surfIndex);
+        for (int j = 0; j < 4; j++)
+            SWAP_BE_MEMBER(v, lodInfo[i].partBits[j]);
+    }
+    SwapBigEndianPtr32(v->collSurfs);
+    SWAP_BE_MEMBER(v, numCollSurfs);
+    SWAP_BE_MEMBER(v, contents);
+    SwapBigEndianPtr32(v->boneInfo);
+    SwapBigEndianFloat(v->radius);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->mins[i]);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->maxs[i]);
+    SWAP_BE_MEMBER(v, numLods);
+    SWAP_BE_MEMBER(v, collLod);
+    SwapBigEndianPtr32(v->streamInfo.highMipBounds);
+    SWAP_BE_MEMBER(v, memUsage);
+    SwapBigEndianPtr32(v->physPreset);
+    SwapBigEndianPtr32(v->physGeoms);
 }
 
 // ---- Material

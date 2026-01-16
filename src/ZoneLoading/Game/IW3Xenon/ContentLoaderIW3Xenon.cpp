@@ -18,6 +18,7 @@
 #include "Game/IW3Xenon/XAssets/snddriverglobals/snddriverglobals_load_db.h"
 #include "Game/IW3Xenon/XAssets/stringtable/stringtable_load_db.h"
 #include "Game/IW3Xenon/XAssets/xanimparts/xanimparts_load_db.h"
+#include "Game/IW3Xenon/XAssets/xmodel/xmodel_load_db.h"
 #include "Loading/Exception/UnsupportedAssetTypeException.h"
 #include "Utils/Endianness.h"
 
@@ -73,6 +74,7 @@ void ContentLoader::LoadXAsset(const bool atStreamStart) const
     switch (varXAsset->type)
     {
         LOAD_ASSET(ASSET_TYPE_PHYSPRESET, PhysPreset, physPreset)
+        LOAD_ASSET(ASSET_TYPE_XMODEL, XModel, model)
         LOAD_ASSET(ASSET_TYPE_XANIMPARTS, XAnimParts, parts)
         LOAD_ASSET(ASSET_TYPE_MATERIAL, Material, material)
         LOAD_ASSET(ASSET_TYPE_TECHNIQUE_SET, MaterialTechniqueSet, techniqueSet)
