@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Game/IW3Xenon/XAssets/font_s/font_s_mark_db.h"
+#include "Game/IW3Xenon/XAssets/fxeffectdef/fxeffectdef_mark_db.h"
 #include "Game/IW3Xenon/XAssets/gfximage/gfximage_mark_db.h"
 #include "Game/IW3Xenon/XAssets/gfxlightdef/gfxlightdef_mark_db.h"
 #include "Game/IW3Xenon/XAssets/loadedsound/loadedsound_mark_db.h"
@@ -938,6 +939,153 @@ static inline void EndianFixup_SndDriverGlobals(IW3Xenon::SndDriverGlobals* v)
 {
     SwapBigEndianPtr32(v->reverbSettings);
     SwapBigEndianPtr32(v->name);
+}
+
+// ---- FXEffectDef
+
+static inline void EndianFixup_FxElemDef(IW3Xenon::FxElemDef* v)
+{
+    SWAP_BE_MEMBER(v, flags);
+
+    // FxSpawnDef spawn (union - both members have same layout: 2 ints)
+    SWAP_BE_MEMBER(v, spawn.looping.intervalMsec);
+    SWAP_BE_MEMBER(v, spawn.looping.count);
+
+    // FxFloatRange spawnRange
+    SwapBigEndianFloat(v->spawnRange.base);
+    SwapBigEndianFloat(v->spawnRange.amplitude);
+
+    // FxFloatRange fadeInRange
+    SwapBigEndianFloat(v->fadeInRange.base);
+    SwapBigEndianFloat(v->fadeInRange.amplitude);
+
+    // FxFloatRange fadeOutRange
+    SwapBigEndianFloat(v->fadeOutRange.base);
+    SwapBigEndianFloat(v->fadeOutRange.amplitude);
+
+    SwapBigEndianFloat(v->spawnFrustumCullRadius);
+
+    // FxIntRange spawnDelayMsec
+    SWAP_BE_MEMBER(v, spawnDelayMsec.base);
+    SWAP_BE_MEMBER(v, spawnDelayMsec.amplitude);
+
+    // FxIntRange lifeSpanMsec
+    SWAP_BE_MEMBER(v, lifeSpanMsec.base);
+    SWAP_BE_MEMBER(v, lifeSpanMsec.amplitude);
+
+    // FxFloatRange spawnOrigin[3]
+    for (int i = 0; i < 3; i++)
+    {
+        SwapBigEndianFloat(v->spawnOrigin[i].base);
+        SwapBigEndianFloat(v->spawnOrigin[i].amplitude);
+    }
+
+    // FxFloatRange spawnOffsetRadius
+    SwapBigEndianFloat(v->spawnOffsetRadius.base);
+    SwapBigEndianFloat(v->spawnOffsetRadius.amplitude);
+
+    // FxFloatRange spawnOffsetHeight
+    SwapBigEndianFloat(v->spawnOffsetHeight.base);
+    SwapBigEndianFloat(v->spawnOffsetHeight.amplitude);
+
+    // FxFloatRange spawnAngles[3]
+    for (int i = 0; i < 3; i++)
+    {
+        SwapBigEndianFloat(v->spawnAngles[i].base);
+        SwapBigEndianFloat(v->spawnAngles[i].amplitude);
+    }
+
+    // FxFloatRange angularVelocity[3]
+    for (int i = 0; i < 3; i++)
+    {
+        SwapBigEndianFloat(v->angularVelocity[i].base);
+        SwapBigEndianFloat(v->angularVelocity[i].amplitude);
+    }
+
+    // FxFloatRange initialRotation
+    SwapBigEndianFloat(v->initialRotation.base);
+    SwapBigEndianFloat(v->initialRotation.amplitude);
+
+    // FxFloatRange gravity
+    SwapBigEndianFloat(v->gravity.base);
+    SwapBigEndianFloat(v->gravity.amplitude);
+
+    // FxFloatRange reflectionFactor
+    SwapBigEndianFloat(v->reflectionFactor.base);
+    SwapBigEndianFloat(v->reflectionFactor.amplitude);
+
+    // FxElemAtlas atlas - only entryCount needs swap (rest are bytes)
+    SWAP_BE_MEMBER(v, atlas.entryCount);
+
+    // bytes: elemType, visualCount, velIntervalCount, visStateIntervalCount - no swap
+
+    SwapBigEndianPtr32(v->velSamples);
+    SwapBigEndianPtr32(v->visSamples);
+
+    // FxElemDefVisuals visuals - union of pointers, swap as pointer
+    SwapBigEndianPtr32(v->visuals.markArray);
+
+    // float collMins[3]
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->collMins[i]);
+
+    // float collMaxs[3]
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->collMaxs[i]);
+
+    // FxEffectDefRef - union of pointers
+    SwapBigEndianPtr32(v->effectOnImpact.handle);
+    SwapBigEndianPtr32(v->effectOnDeath.handle);
+    SwapBigEndianPtr32(v->effectEmitted.handle);
+
+    // FxFloatRange emitDist
+    SwapBigEndianFloat(v->emitDist.base);
+    SwapBigEndianFloat(v->emitDist.amplitude);
+
+    // FxFloatRange emitDistVariance
+    SwapBigEndianFloat(v->emitDistVariance.base);
+    SwapBigEndianFloat(v->emitDistVariance.amplitude);
+
+    SwapBigEndianPtr32(v->trailDef);
+
+    // bytes: sortOrder, lightingFrac, useItemClip, unused - no swap
+}
+
+static inline void EndianFixup_FxElemMarkVisuals(IW3Xenon::FxElemMarkVisuals* v)
+{
+    assert(false);
+}
+
+static inline void EndianFixup_FxElemVisuals(IW3Xenon::FxElemVisuals* v)
+{
+    assert(false);
+}
+
+static inline void EndianFixup_FxElemDefVisuals(IW3Xenon::FxElemDefVisuals* v)
+{
+    assert(false);
+}
+
+static inline void EndianFixup_FxEffectDefRef(IW3Xenon::FxEffectDefRef* v)
+{
+    assert(false);
+}
+
+static inline void EndianFixup_FxTrailDef(IW3Xenon::FxTrailDef* v)
+{
+    assert(false);
+}
+
+static inline void EndianFixup_FxEffectDef(IW3Xenon::FxEffectDef* v)
+{
+    SwapBigEndianPtr32(v->name);
+    SWAP_BE_MEMBER(v, flags);
+    SWAP_BE_MEMBER(v, totalSize);
+    SWAP_BE_MEMBER(v, msecLoopingLife);
+    SWAP_BE_MEMBER(v, elemDefCountLooping);
+    SWAP_BE_MEMBER(v, elemDefCountOneShot);
+    SWAP_BE_MEMBER(v, elemDefCountEmission);
+    SwapBigEndianPtr32(v->elemDefs);
 }
 
 // ---- RawFile

@@ -20,6 +20,7 @@ asset MenuList AssetMenuList;
 asset menuDef_t AssetMenu;
 asset LocalizeEntry AssetLocalize;
 asset SndDriverGlobals AssetSndDriverGlobals;
+asset FxEffectDef AssetFx;
 asset RawFile AssetRawFile;
 asset StringTable AssetStringTable;
 
@@ -49,5 +50,6 @@ block normal  XFILE_BLOCK_PHYSICAL;
 #include "XAssets/menuDef_t.txt"
 #include "XAssets/LocalizeEntry.txt"
 #include "XAssets/SndDriverGlobals.txt"
+#include "XAssets/FxEffectDef.txt"
 #include "XAssets/RawFile.txt"
 #include "XAssets/StringTable.txt"

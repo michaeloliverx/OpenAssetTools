@@ -46,6 +46,7 @@ namespace IW3Xenon
     using AssetMenu = Asset<ASSET_TYPE_MENU, menuDef_t>;
     using AssetLocalize = Asset<ASSET_TYPE_LOCALIZE_ENTRY, LocalizeEntry>;
     using AssetSndDriverGlobals = Asset<ASSET_TYPE_SNDDRIVER_GLOBALS, SndDriverGlobals>;
+    using AssetFx = Asset<ASSET_TYPE_FX, FxEffectDef>;
     using AssetRawFile = Asset<ASSET_TYPE_RAWFILE, RawFile>;
     using AssetStringTable = Asset<ASSET_TYPE_STRINGTABLE, StringTable>;
 } // namespace IW3Xenon
@@ -67,5 +68,6 @@ DEFINE_ASSET_NAME_ACCESSOR(IW3Xenon::AssetMenuList, name);
 DEFINE_ASSET_NAME_ACCESSOR(IW3Xenon::AssetMenu, window.name);
 DEFINE_ASSET_NAME_ACCESSOR(IW3Xenon::AssetLocalize, name);
 DEFINE_ASSET_NAME_ACCESSOR(IW3Xenon::AssetSndDriverGlobals, name);
+DEFINE_ASSET_NAME_ACCESSOR(IW3Xenon::AssetFx, name);
 DEFINE_ASSET_NAME_ACCESSOR(IW3Xenon::AssetRawFile, name);
 DEFINE_ASSET_NAME_ACCESSOR(IW3Xenon::AssetStringTable, name);

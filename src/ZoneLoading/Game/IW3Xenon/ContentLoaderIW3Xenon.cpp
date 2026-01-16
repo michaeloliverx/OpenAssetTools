@@ -2,6 +2,7 @@
 
 #include "Game/IW3Xenon/IW3Xenon.h"
 #include "Game/IW3Xenon/XAssets/font_s/font_s_load_db.h"
+#include "Game/IW3Xenon/XAssets/fxeffectdef/fxeffectdef_load_db.h"
 #include "Game/IW3Xenon/XAssets/gfximage/gfximage_load_db.h"
 #include "Game/IW3Xenon/XAssets/gfxlightdef/gfxlightdef_load_db.h"
 #include "Game/IW3Xenon/XAssets/loadedsound/loadedsound_load_db.h"
@@ -89,6 +90,7 @@ void ContentLoader::LoadXAsset(const bool atStreamStart) const
         LOAD_ASSET(ASSET_TYPE_MENU, menuDef_t, menu)
         LOAD_ASSET(ASSET_TYPE_LOCALIZE_ENTRY, LocalizeEntry, localize)
         LOAD_ASSET(ASSET_TYPE_SNDDRIVER_GLOBALS, SndDriverGlobals, sndDriverGlobals)
+        LOAD_ASSET(ASSET_TYPE_FX, FxEffectDef, fx)
         LOAD_ASSET(ASSET_TYPE_RAWFILE, RawFile, rawfile)
         LOAD_ASSET(ASSET_TYPE_STRINGTABLE, StringTable, stringTable)
 

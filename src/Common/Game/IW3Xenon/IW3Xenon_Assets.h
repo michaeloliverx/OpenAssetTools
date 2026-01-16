@@ -123,7 +123,7 @@ namespace IW3Xenon
         LocalizeEntry* localize;
         WeaponDef* weapon;
         SndDriverGlobals* sndDriverGlobals;
-        const FxEffectDef* fx;
+        FxEffectDef* fx;
         FxImpactTable* impactFx;
         RawFile* rawfile;
         StringTable* stringTable;
@@ -1638,6 +1638,194 @@ namespace IW3Xenon
     {
         XaReverbSettings* reverbSettings;
         const char* name;
+    };
+
+    enum FxElemType
+    {
+        FX_ELEM_TYPE_SPRITE_BILLBOARD = 0x0,
+        FX_ELEM_TYPE_SPRITE_ORIENTED = 0x1,
+        FX_ELEM_TYPE_TAIL = 0x2,
+        FX_ELEM_TYPE_TRAIL = 0x3,
+        FX_ELEM_TYPE_CLOUD = 0x4,
+        FX_ELEM_TYPE_MODEL = 0x5,
+        FX_ELEM_TYPE_OMNI_LIGHT = 0x6,
+        FX_ELEM_TYPE_SPOT_LIGHT = 0x7,
+        FX_ELEM_TYPE_SOUND = 0x8,
+        FX_ELEM_TYPE_DECAL = 0x9,
+        FX_ELEM_TYPE_RUNNER = 0xA,
+        FX_ELEM_TYPE_COUNT = 0xB,
+        FX_ELEM_TYPE_LAST_SPRITE = 0x3,
+        FX_ELEM_TYPE_LAST_DRAWN = 0x7,
+    };
+
+    struct FxElemVec3Range
+    {
+        float base[3];
+        float amplitude[3];
+    };
+
+    struct FxElemVelStateInFrame
+    {
+        FxElemVec3Range velocity;
+        FxElemVec3Range totalDelta;
+    };
+
+    const struct FxElemVelStateSample
+    {
+        FxElemVelStateInFrame local;
+        FxElemVelStateInFrame world;
+    };
+
+    struct FxElemVisualState
+    {
+        unsigned __int8 color[4];
+        float rotationDelta;
+        float rotationTotal;
+        float size[2];
+        float scale;
+    };
+
+    const struct FxElemVisStateSample
+    {
+        FxElemVisualState base;
+        FxElemVisualState amplitude;
+    };
+
+    struct FxElemMarkVisuals
+    {
+        Material* materials[2];
+    };
+
+    union FxEffectDefRef
+    {
+        const FxEffectDef* handle;
+        const char* name;
+    };
+
+    union FxElemVisuals
+    {
+        const void* anonymous;
+        Material* material;
+        XModel* model;
+        FxEffectDefRef effectDef;
+        const char* soundName;
+    };
+
+    union FxElemDefVisuals
+    {
+        FxElemMarkVisuals* markArray;
+        FxElemVisuals* array;
+        FxElemVisuals instance;
+    };
+
+    struct FxTrailVertex
+    {
+        float pos[2];
+        float normal[2];
+        float texCoord;
+    };
+
+    struct FxTrailDef
+    {
+        int scrollTimeMsec;
+        int repeatDist;
+        int splitDist;
+        int vertCount;
+        FxTrailVertex* verts;
+        int indCount;
+        unsigned __int16* inds;
+    };
+
+    struct FxSpawnDefLooping
+    {
+        int intervalMsec;
+        int count;
+    };
+
+    struct FxIntRange
+    {
+        int base;
+        int amplitude;
+    };
+
+    struct FxSpawnDefOneShot
+    {
+        FxIntRange count;
+    };
+
+    union FxSpawnDef
+    {
+        FxSpawnDefLooping looping;
+        FxSpawnDefOneShot oneShot;
+    };
+
+    struct FxFloatRange
+    {
+        float base;
+        float amplitude;
+    };
+
+    struct FxElemAtlas
+    {
+        unsigned __int8 behavior;
+        unsigned __int8 index;
+        unsigned __int8 fps;
+        unsigned __int8 loopCount;
+        unsigned __int8 colIndexBits;
+        unsigned __int8 rowIndexBits;
+        __int16 entryCount;
+    };
+
+    struct FxElemDef
+    {
+        int flags;
+        FxSpawnDef spawn;
+        FxFloatRange spawnRange;
+        FxFloatRange fadeInRange;
+        FxFloatRange fadeOutRange;
+        float spawnFrustumCullRadius;
+        FxIntRange spawnDelayMsec;
+        FxIntRange lifeSpanMsec;
+        FxFloatRange spawnOrigin[3];
+        FxFloatRange spawnOffsetRadius;
+        FxFloatRange spawnOffsetHeight;
+        FxFloatRange spawnAngles[3];
+        FxFloatRange angularVelocity[3];
+        FxFloatRange initialRotation;
+        FxFloatRange gravity;
+        FxFloatRange reflectionFactor;
+        FxElemAtlas atlas;
+        unsigned __int8 elemType;
+        unsigned __int8 visualCount;
+        unsigned __int8 velIntervalCount;
+        unsigned __int8 visStateIntervalCount;
+        FxElemVelStateSample* velSamples;
+        FxElemVisStateSample* visSamples;
+        FxElemDefVisuals visuals;
+        float collMins[3];
+        float collMaxs[3];
+        FxEffectDefRef effectOnImpact;
+        FxEffectDefRef effectOnDeath;
+        FxEffectDefRef effectEmitted;
+        FxFloatRange emitDist;
+        FxFloatRange emitDistVariance;
+        FxTrailDef* trailDef;
+        unsigned __int8 sortOrder;
+        unsigned __int8 lightingFrac;
+        unsigned __int8 useItemClip;
+        unsigned __int8 unused[1];
+    };
+
+    const struct FxEffectDef
+    {
+        const char* name;
+        int flags;
+        int totalSize;
+        int msecLoopingLife;
+        int elemDefCountLooping;
+        int elemDefCountOneShot;
+        int elemDefCountEmission;
+        FxElemDef* elemDefs;
     };
 
     struct RawFile
