@@ -203,12 +203,28 @@ static inline void EndianFixup_XModelStreamInfo(IW3Xenon::XModelStreamInfo* v)
 
 static inline void EndianFixup_PhysGeomList(IW3Xenon::PhysGeomList* v)
 {
-    assert(false);
+    SWAP_BE_MEMBER(v, count);
+    SwapBigEndianPtr32(v->geoms);
+    // PhysMass mass
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->mass.centerOfMass[i]);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->mass.momentsOfInertia[i]);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->mass.productsOfInertia[i]);
 }
 
 static inline void EndianFixup_PhysGeomInfo(IW3Xenon::PhysGeomInfo* v)
 {
-    assert(false);
+    SwapBigEndianPtr32(v->brush);
+    SWAP_BE_MEMBER(v, type);
+    for (int i = 0; i < 3; i++)
+        for (int j = 0; j < 3; j++)
+            SwapBigEndianFloat(v->orientation[i][j]);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->offset[i]);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->halfLengths[i]);
 }
 
 static inline void EndianFixup_BrushWrapper(IW3Xenon::BrushWrapper* v)
