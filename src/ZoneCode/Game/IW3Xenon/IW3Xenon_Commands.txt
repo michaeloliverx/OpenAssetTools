@@ -19,6 +19,7 @@ asset Font_s AssetFont;
 asset MenuList AssetMenuList;
 asset menuDef_t AssetMenu;
 asset LocalizeEntry AssetLocalize;
+asset WeaponDef AssetWeapon;
 asset SndDriverGlobals AssetSndDriverGlobals;
 asset FxEffectDef AssetFx;
 asset FxImpactTable AssetImpactFx;
@@ -50,6 +51,7 @@ block normal  XFILE_BLOCK_PHYSICAL;
 #include "XAssets/MenuList.txt"
 #include "XAssets/menuDef_t.txt"
 #include "XAssets/LocalizeEntry.txt"
+#include "XAssets/WeaponDef.txt"
 #include "XAssets/SndDriverGlobals.txt"
 #include "XAssets/FxEffectDef.txt"
 #include "XAssets/FxImpactTable.txt"

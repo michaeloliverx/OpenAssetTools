@@ -19,6 +19,7 @@
 #include "Game/IW3Xenon/XAssets/sndcurve/sndcurve_mark_db.h"
 #include "Game/IW3Xenon/XAssets/snddriverglobals/snddriverglobals_mark_db.h"
 #include "Game/IW3Xenon/XAssets/stringtable/stringtable_mark_db.h"
+#include "Game/IW3Xenon/XAssets/weapondef/weapondef_mark_db.h"
 #include "Game/IW3Xenon/XAssets/xanimparts/xanimparts_mark_db.h"
 #include "Game/IW3Xenon/XAssets/xmodel/xmodel_mark_db.h"
 #include "Utils/Endianness.h"
@@ -54,6 +55,13 @@ static inline auto SwapBigEndianFloat = [](float& f)
  * Expands to: ptr->memberName = endianness::FromBigEndian(ptr->memberName)
  */
 #define SWAP_BE_MEMBER(ptr, member) (ptr)->member = endianness::FromBigEndian((ptr)->member)
+
+/**
+ * Macro to swap an enum member field from big-endian to host byte order in-place.
+ * Usage: SWAP_BE_ENUM(ptr, memberName, EnumType)
+ * Casts the result back to the enum type.
+ */
+#define SWAP_BE_ENUM(ptr, member, enumType) (ptr)->member = static_cast<enumType>(endianness::FromBigEndian(static_cast<int>((ptr)->member)))
 
 // ---- PhysPreset
 
@@ -1022,6 +1030,411 @@ static inline void EndianFixup_LocalizeEntry(IW3Xenon::LocalizeEntry* v)
 {
     SwapBigEndianPtr32(v->name);
     SwapBigEndianPtr32(v->value);
+}
+
+// ---- WeaponDef
+
+static inline void EndianFixup_snd_alias_list_name(IW3Xenon::snd_alias_list_name* v)
+{
+    SwapBigEndianPtr32(v->soundName);
+}
+
+static inline void EndianFixup_SndAliasCustom(IW3Xenon::SndAliasCustom* v)
+{
+    assert(false);
+}
+
+static inline void EndianFixup_WeaponDef(IW3Xenon::WeaponDef* v)
+{
+    SwapBigEndianPtr32(v->szInternalName);
+    SwapBigEndianPtr32(v->szDisplayName);
+    SwapBigEndianPtr32(v->szOverlayName);
+    for (int i = 0; i < 16; i++)
+        SwapBigEndianPtr32(v->gunXModel[i]);
+    SwapBigEndianPtr32(v->handXModel);
+    for (int i = 0; i < 33; i++)
+        SwapBigEndianPtr32(v->szXAnims[i]);
+    SwapBigEndianPtr32(v->szModeName);
+    for (int i = 0; i < 8; i++)
+        SWAP_BE_MEMBER(v, hideTags[i]);
+    for (int i = 0; i < 16; i++)
+        SWAP_BE_MEMBER(v, notetrackSoundMapKeys[i]);
+    for (int i = 0; i < 16; i++)
+        SWAP_BE_MEMBER(v, notetrackSoundMapValues[i]);
+    SWAP_BE_MEMBER(v, playerAnimType);
+    SWAP_BE_ENUM(v, weapType, IW3Xenon::weapType_t);
+    SWAP_BE_ENUM(v, weapClass, IW3Xenon::weapClass_t);
+    SWAP_BE_ENUM(v, penetrateType, IW3Xenon::PenetrateType);
+    SWAP_BE_ENUM(v, impactType, IW3Xenon::ImpactType);
+    SWAP_BE_ENUM(v, inventoryType, IW3Xenon::weapInventoryType_t);
+    SWAP_BE_ENUM(v, fireType, IW3Xenon::weapFireType_t);
+    SWAP_BE_ENUM(v, offhandClass, IW3Xenon::OffhandClass);
+    SWAP_BE_ENUM(v, stance, IW3Xenon::weapStance_t);
+    SwapBigEndianPtr32(v->viewFlashEffect);
+    SwapBigEndianPtr32(v->worldFlashEffect);
+    SwapBigEndianPtr32(v->pickupSound.name);
+    SwapBigEndianPtr32(v->pickupSoundPlayer.name);
+    SwapBigEndianPtr32(v->ammoPickupSound.name);
+    SwapBigEndianPtr32(v->ammoPickupSoundPlayer.name);
+    SwapBigEndianPtr32(v->projectileSound.name);
+    SwapBigEndianPtr32(v->pullbackSound.name);
+    SwapBigEndianPtr32(v->pullbackSoundPlayer.name);
+    SwapBigEndianPtr32(v->fireSound.name);
+    SwapBigEndianPtr32(v->fireSoundPlayer.name);
+    SwapBigEndianPtr32(v->fireLoopSound.name);
+    SwapBigEndianPtr32(v->fireLoopSoundPlayer.name);
+    SwapBigEndianPtr32(v->fireStopSound.name);
+    SwapBigEndianPtr32(v->fireStopSoundPlayer.name);
+    SwapBigEndianPtr32(v->fireLastSound.name);
+    SwapBigEndianPtr32(v->fireLastSoundPlayer.name);
+    SwapBigEndianPtr32(v->emptyFireSound.name);
+    SwapBigEndianPtr32(v->emptyFireSoundPlayer.name);
+    SwapBigEndianPtr32(v->meleeSwipeSound.name);
+    SwapBigEndianPtr32(v->meleeSwipeSoundPlayer.name);
+    SwapBigEndianPtr32(v->meleeHitSound.name);
+    SwapBigEndianPtr32(v->meleeMissSound.name);
+    SwapBigEndianPtr32(v->rechamberSound.name);
+    SwapBigEndianPtr32(v->rechamberSoundPlayer.name);
+    SwapBigEndianPtr32(v->reloadSound.name);
+    SwapBigEndianPtr32(v->reloadSoundPlayer.name);
+    SwapBigEndianPtr32(v->reloadEmptySound.name);
+    SwapBigEndianPtr32(v->reloadEmptySoundPlayer.name);
+    SwapBigEndianPtr32(v->reloadStartSound.name);
+    SwapBigEndianPtr32(v->reloadStartSoundPlayer.name);
+    SwapBigEndianPtr32(v->reloadEndSound.name);
+    SwapBigEndianPtr32(v->reloadEndSoundPlayer.name);
+    SwapBigEndianPtr32(v->detonateSound.name);
+    SwapBigEndianPtr32(v->detonateSoundPlayer.name);
+    SwapBigEndianPtr32(v->nightVisionWearSound.name);
+    SwapBigEndianPtr32(v->nightVisionWearSoundPlayer.name);
+    SwapBigEndianPtr32(v->nightVisionRemoveSound.name);
+    SwapBigEndianPtr32(v->nightVisionRemoveSoundPlayer.name);
+    SwapBigEndianPtr32(v->altSwitchSound.name);
+    SwapBigEndianPtr32(v->altSwitchSoundPlayer.name);
+    SwapBigEndianPtr32(v->raiseSound.name);
+    SwapBigEndianPtr32(v->raiseSoundPlayer.name);
+    SwapBigEndianPtr32(v->firstRaiseSound.name);
+    SwapBigEndianPtr32(v->firstRaiseSoundPlayer.name);
+    SwapBigEndianPtr32(v->putawaySound.name);
+    SwapBigEndianPtr32(v->putawaySoundPlayer.name);
+    SwapBigEndianPtr32(v->bounceSound);
+    SwapBigEndianPtr32(v->viewShellEjectEffect);
+    SwapBigEndianPtr32(v->worldShellEjectEffect);
+    SwapBigEndianPtr32(v->viewLastShotEjectEffect);
+    SwapBigEndianPtr32(v->worldLastShotEjectEffect);
+    SwapBigEndianPtr32(v->reticleCenter);
+    SwapBigEndianPtr32(v->reticleSide);
+    SWAP_BE_MEMBER(v, iReticleCenterSize);
+    SWAP_BE_MEMBER(v, iReticleSideSize);
+    SWAP_BE_MEMBER(v, iReticleMinOfs);
+    SWAP_BE_ENUM(v, activeReticleType, IW3Xenon::activeReticleType_t);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->vStandMove[i]);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->vStandRot[i]);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->vDuckedOfs[i]);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->vDuckedMove[i]);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->vDuckedRot[i]);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->vProneOfs[i]);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->vProneMove[i]);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->vProneRot[i]);
+    SwapBigEndianFloat(v->fPosMoveRate);
+    SwapBigEndianFloat(v->fPosProneMoveRate);
+    SwapBigEndianFloat(v->fStandMoveMinSpeed);
+    SwapBigEndianFloat(v->fDuckedMoveMinSpeed);
+    SwapBigEndianFloat(v->fProneMoveMinSpeed);
+    SwapBigEndianFloat(v->fPosRotRate);
+    SwapBigEndianFloat(v->fPosProneRotRate);
+    SwapBigEndianFloat(v->fStandRotMinSpeed);
+    SwapBigEndianFloat(v->fDuckedRotMinSpeed);
+    SwapBigEndianFloat(v->fProneRotMinSpeed);
+    for (int i = 0; i < 16; i++)
+        SwapBigEndianPtr32(v->worldModel[i]);
+    SwapBigEndianPtr32(v->worldClipModel);
+    SwapBigEndianPtr32(v->rocketModel);
+    SwapBigEndianPtr32(v->knifeModel);
+    SwapBigEndianPtr32(v->worldKnifeModel);
+    SwapBigEndianPtr32(v->hudIcon);
+    SWAP_BE_ENUM(v, hudIconRatio, IW3Xenon::weaponIconRatioType_t);
+    SwapBigEndianPtr32(v->ammoCounterIcon);
+    SWAP_BE_ENUM(v, ammoCounterIconRatio, IW3Xenon::weaponIconRatioType_t);
+    SWAP_BE_ENUM(v, ammoCounterClip, IW3Xenon::ammoCounterClipType_t);
+    SWAP_BE_MEMBER(v, iStartAmmo);
+    SwapBigEndianPtr32(v->szAmmoName);
+    SWAP_BE_MEMBER(v, iAmmoIndex);
+    SwapBigEndianPtr32(v->szClipName);
+    SWAP_BE_MEMBER(v, iClipIndex);
+    SWAP_BE_MEMBER(v, iMaxAmmo);
+    SWAP_BE_MEMBER(v, iClipSize);
+    SWAP_BE_MEMBER(v, shotCount);
+    SwapBigEndianPtr32(v->szSharedAmmoCapName);
+    SWAP_BE_MEMBER(v, iSharedAmmoCapIndex);
+    SWAP_BE_MEMBER(v, iSharedAmmoCap);
+    SWAP_BE_MEMBER(v, damage);
+    SWAP_BE_MEMBER(v, playerDamage);
+    SWAP_BE_MEMBER(v, iMeleeDamage);
+    SWAP_BE_MEMBER(v, iDamageType);
+    SWAP_BE_MEMBER(v, iFireDelay);
+    SWAP_BE_MEMBER(v, iMeleeDelay);
+    SWAP_BE_MEMBER(v, meleeChargeDelay);
+    SWAP_BE_MEMBER(v, iDetonateDelay);
+    SWAP_BE_MEMBER(v, iFireTime);
+    SWAP_BE_MEMBER(v, iRechamberTime);
+    SWAP_BE_MEMBER(v, iRechamberBoltTime);
+    SWAP_BE_MEMBER(v, iHoldFireTime);
+    SWAP_BE_MEMBER(v, iDetonateTime);
+    SWAP_BE_MEMBER(v, iMeleeTime);
+    SWAP_BE_MEMBER(v, meleeChargeTime);
+    SWAP_BE_MEMBER(v, iReloadTime);
+    SWAP_BE_MEMBER(v, reloadShowRocketTime);
+    SWAP_BE_MEMBER(v, iReloadEmptyTime);
+    SWAP_BE_MEMBER(v, iReloadAddTime);
+    SWAP_BE_MEMBER(v, iReloadStartTime);
+    SWAP_BE_MEMBER(v, iReloadStartAddTime);
+    SWAP_BE_MEMBER(v, iReloadEndTime);
+    SWAP_BE_MEMBER(v, iDropTime);
+    SWAP_BE_MEMBER(v, iRaiseTime);
+    SWAP_BE_MEMBER(v, iAltDropTime);
+    SWAP_BE_MEMBER(v, iAltRaiseTime);
+    SWAP_BE_MEMBER(v, quickDropTime);
+    SWAP_BE_MEMBER(v, quickRaiseTime);
+    SWAP_BE_MEMBER(v, iFirstRaiseTime);
+    SWAP_BE_MEMBER(v, iEmptyRaiseTime);
+    SWAP_BE_MEMBER(v, iEmptyDropTime);
+    SWAP_BE_MEMBER(v, sprintInTime);
+    SWAP_BE_MEMBER(v, sprintLoopTime);
+    SWAP_BE_MEMBER(v, sprintOutTime);
+    SWAP_BE_MEMBER(v, nightVisionWearTime);
+    SWAP_BE_MEMBER(v, nightVisionWearTimeFadeOutEnd);
+    SWAP_BE_MEMBER(v, nightVisionWearTimePowerUp);
+    SWAP_BE_MEMBER(v, nightVisionRemoveTime);
+    SWAP_BE_MEMBER(v, nightVisionRemoveTimePowerDown);
+    SWAP_BE_MEMBER(v, nightVisionRemoveTimeFadeInStart);
+    SWAP_BE_MEMBER(v, fuseTime);
+    SWAP_BE_MEMBER(v, aiFuseTime);
+    SWAP_BE_MEMBER(v, requireLockonToFire);
+    SWAP_BE_MEMBER(v, noAdsWhenMagEmpty);
+    SWAP_BE_MEMBER(v, avoidDropCleanup);
+    SwapBigEndianFloat(v->autoAimRange);
+    SwapBigEndianFloat(v->aimAssistRange);
+    SwapBigEndianFloat(v->aimAssistRangeAds);
+    SwapBigEndianFloat(v->aimPadding);
+    SwapBigEndianFloat(v->enemyCrosshairRange);
+    SWAP_BE_MEMBER(v, crosshairColorChange);
+    SwapBigEndianFloat(v->moveSpeedScale);
+    SwapBigEndianFloat(v->adsMoveSpeedScale);
+    SwapBigEndianFloat(v->sprintDurationScale);
+    SwapBigEndianFloat(v->fAdsZoomFov);
+    SwapBigEndianFloat(v->fAdsZoomInFrac);
+    SwapBigEndianFloat(v->fAdsZoomOutFrac);
+    SwapBigEndianPtr32(v->overlayMaterial);
+    SwapBigEndianPtr32(v->overlayMaterialLowRes);
+    SWAP_BE_ENUM(v, overlayReticle, IW3Xenon::weapOverlayReticle_t);
+    SWAP_BE_ENUM(v, overlayInterface, IW3Xenon::WeapOverlayInteface_t);
+    SwapBigEndianFloat(v->overlayWidth);
+    SwapBigEndianFloat(v->overlayHeight);
+    SwapBigEndianFloat(v->fAdsBobFactor);
+    SwapBigEndianFloat(v->fAdsViewBobMult);
+    SwapBigEndianFloat(v->fHipSpreadStandMin);
+    SwapBigEndianFloat(v->fHipSpreadDuckedMin);
+    SwapBigEndianFloat(v->fHipSpreadProneMin);
+    SwapBigEndianFloat(v->hipSpreadStandMax);
+    SwapBigEndianFloat(v->hipSpreadDuckedMax);
+    SwapBigEndianFloat(v->hipSpreadProneMax);
+    SwapBigEndianFloat(v->fHipSpreadDecayRate);
+    SwapBigEndianFloat(v->fHipSpreadFireAdd);
+    SwapBigEndianFloat(v->fHipSpreadTurnAdd);
+    SwapBigEndianFloat(v->fHipSpreadMoveAdd);
+    SwapBigEndianFloat(v->fHipSpreadDuckedDecay);
+    SwapBigEndianFloat(v->fHipSpreadProneDecay);
+    SwapBigEndianFloat(v->fHipReticleSidePos);
+    SWAP_BE_MEMBER(v, iAdsTransInTime);
+    SWAP_BE_MEMBER(v, iAdsTransOutTime);
+    SwapBigEndianFloat(v->fAdsIdleAmount);
+    SwapBigEndianFloat(v->fHipIdleAmount);
+    SwapBigEndianFloat(v->adsIdleSpeed);
+    SwapBigEndianFloat(v->hipIdleSpeed);
+    SwapBigEndianFloat(v->fIdleCrouchFactor);
+    SwapBigEndianFloat(v->fIdleProneFactor);
+    SwapBigEndianFloat(v->fGunMaxPitch);
+    SwapBigEndianFloat(v->fGunMaxYaw);
+    SwapBigEndianFloat(v->swayMaxAngle);
+    SwapBigEndianFloat(v->swayLerpSpeed);
+    SwapBigEndianFloat(v->swayPitchScale);
+    SwapBigEndianFloat(v->swayYawScale);
+    SwapBigEndianFloat(v->swayHorizScale);
+    SwapBigEndianFloat(v->swayVertScale);
+    SwapBigEndianFloat(v->swayShellShockScale);
+    SwapBigEndianFloat(v->adsSwayMaxAngle);
+    SwapBigEndianFloat(v->adsSwayLerpSpeed);
+    SwapBigEndianFloat(v->adsSwayPitchScale);
+    SwapBigEndianFloat(v->adsSwayYawScale);
+    SwapBigEndianFloat(v->adsSwayHorizScale);
+    SwapBigEndianFloat(v->adsSwayVertScale);
+    SWAP_BE_MEMBER(v, bRifleBullet);
+    SWAP_BE_MEMBER(v, armorPiercing);
+    SWAP_BE_MEMBER(v, bBoltAction);
+    SWAP_BE_MEMBER(v, aimDownSight);
+    SWAP_BE_MEMBER(v, bRechamberWhileAds);
+    SwapBigEndianFloat(v->adsViewErrorMin);
+    SwapBigEndianFloat(v->adsViewErrorMax);
+    SWAP_BE_MEMBER(v, bCookOffHold);
+    SWAP_BE_MEMBER(v, bClipOnly);
+    SWAP_BE_MEMBER(v, adsFireOnly);
+    SWAP_BE_MEMBER(v, cancelAutoHolsterWhenEmpty);
+    SWAP_BE_MEMBER(v, suppressAmmoReserveDisplay);
+    SWAP_BE_MEMBER(v, enhanced);
+    SWAP_BE_MEMBER(v, laserSightDuringNightvision);
+    SwapBigEndianPtr32(v->killIcon);
+    SWAP_BE_ENUM(v, killIconRatio, IW3Xenon::weaponIconRatioType_t);
+    SWAP_BE_MEMBER(v, flipKillIcon);
+    SwapBigEndianPtr32(v->dpadIcon);
+    SWAP_BE_ENUM(v, dpadIconRatio, IW3Xenon::weaponIconRatioType_t);
+    SWAP_BE_MEMBER(v, bNoPartialReload);
+    SWAP_BE_MEMBER(v, bSegmentedReload);
+    SWAP_BE_MEMBER(v, iReloadAmmoAdd);
+    SWAP_BE_MEMBER(v, iReloadStartAdd);
+    SwapBigEndianPtr32(v->szAltWeaponName);
+    SWAP_BE_MEMBER(v, altWeaponIndex);
+    SWAP_BE_MEMBER(v, iDropAmmoMin);
+    SWAP_BE_MEMBER(v, iDropAmmoMax);
+    SWAP_BE_MEMBER(v, blocksProne);
+    SWAP_BE_MEMBER(v, silenced);
+    SWAP_BE_MEMBER(v, iExplosionRadius);
+    SWAP_BE_MEMBER(v, iExplosionRadiusMin);
+    SWAP_BE_MEMBER(v, iExplosionInnerDamage);
+    SWAP_BE_MEMBER(v, iExplosionOuterDamage);
+    SwapBigEndianFloat(v->damageConeAngle);
+    SWAP_BE_MEMBER(v, iProjectileSpeed);
+    SWAP_BE_MEMBER(v, iProjectileSpeedUp);
+    SWAP_BE_MEMBER(v, iProjectileSpeedForward);
+    SWAP_BE_MEMBER(v, iProjectileActivateDist);
+    SwapBigEndianFloat(v->projLifetime);
+    SwapBigEndianFloat(v->timeToAccelerate);
+    SwapBigEndianFloat(v->projectileCurvature);
+    SwapBigEndianPtr32(v->projectileModel);
+    SWAP_BE_ENUM(v, projExplosion, IW3Xenon::weapProjExposion_t);
+    SwapBigEndianPtr32(v->projExplosionEffect);
+    SWAP_BE_MEMBER(v, projExplosionEffectForceNormalUp);
+    SwapBigEndianPtr32(v->projDudEffect);
+    SwapBigEndianPtr32(v->projExplosionSound.name);
+    SwapBigEndianPtr32(v->projDudSound.name);
+    SWAP_BE_MEMBER(v, bProjImpactExplode);
+    SWAP_BE_ENUM(v, stickiness, IW3Xenon::WeapStickinessType);
+    SWAP_BE_MEMBER(v, hasDetonator);
+    SWAP_BE_MEMBER(v, timedDetonation);
+    SWAP_BE_MEMBER(v, rotate);
+    SWAP_BE_MEMBER(v, holdButtonToThrow);
+    SWAP_BE_MEMBER(v, freezeMovementWhenFiring);
+    SwapBigEndianFloat(v->lowAmmoWarningThreshold);
+    for (int i = 0; i < 29; i++)
+        SwapBigEndianFloat(v->parallelBounce[i]);
+    for (int i = 0; i < 29; i++)
+        SwapBigEndianFloat(v->perpendicularBounce[i]);
+    SwapBigEndianPtr32(v->projTrailEffect);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->vProjectileColor[i]);
+    SWAP_BE_ENUM(v, guidedMissileType, IW3Xenon::guidedMissileType_t);
+    SwapBigEndianFloat(v->maxSteeringAccel);
+    SWAP_BE_MEMBER(v, projIgnitionDelay);
+    SwapBigEndianPtr32(v->projIgnitionEffect);
+    SwapBigEndianPtr32(v->projIgnitionSound.name);
+    SwapBigEndianFloat(v->fAdsAimPitch);
+    SwapBigEndianFloat(v->fAdsCrosshairInFrac);
+    SwapBigEndianFloat(v->fAdsCrosshairOutFrac);
+    SWAP_BE_MEMBER(v, adsGunKickReducedKickBullets);
+    SwapBigEndianFloat(v->adsGunKickReducedKickPercent);
+    SwapBigEndianFloat(v->fAdsGunKickPitchMin);
+    SwapBigEndianFloat(v->fAdsGunKickPitchMax);
+    SwapBigEndianFloat(v->fAdsGunKickYawMin);
+    SwapBigEndianFloat(v->fAdsGunKickYawMax);
+    SwapBigEndianFloat(v->fAdsGunKickAccel);
+    SwapBigEndianFloat(v->fAdsGunKickSpeedMax);
+    SwapBigEndianFloat(v->fAdsGunKickSpeedDecay);
+    SwapBigEndianFloat(v->fAdsGunKickStaticDecay);
+    SwapBigEndianFloat(v->fAdsViewKickPitchMin);
+    SwapBigEndianFloat(v->fAdsViewKickPitchMax);
+    SwapBigEndianFloat(v->fAdsViewKickYawMin);
+    SwapBigEndianFloat(v->fAdsViewKickYawMax);
+    SwapBigEndianFloat(v->fAdsViewKickCenterSpeed);
+    SwapBigEndianFloat(v->fAdsViewScatterMin);
+    SwapBigEndianFloat(v->fAdsViewScatterMax);
+    SwapBigEndianFloat(v->fAdsSpread);
+    SWAP_BE_MEMBER(v, hipGunKickReducedKickBullets);
+    SwapBigEndianFloat(v->hipGunKickReducedKickPercent);
+    SwapBigEndianFloat(v->fHipGunKickPitchMin);
+    SwapBigEndianFloat(v->fHipGunKickPitchMax);
+    SwapBigEndianFloat(v->fHipGunKickYawMin);
+    SwapBigEndianFloat(v->fHipGunKickYawMax);
+    SwapBigEndianFloat(v->fHipGunKickAccel);
+    SwapBigEndianFloat(v->fHipGunKickSpeedMax);
+    SwapBigEndianFloat(v->fHipGunKickSpeedDecay);
+    SwapBigEndianFloat(v->fHipGunKickStaticDecay);
+    SwapBigEndianFloat(v->fHipViewKickPitchMin);
+    SwapBigEndianFloat(v->fHipViewKickPitchMax);
+    SwapBigEndianFloat(v->fHipViewKickYawMin);
+    SwapBigEndianFloat(v->fHipViewKickYawMax);
+    SwapBigEndianFloat(v->fHipViewKickCenterSpeed);
+    SwapBigEndianFloat(v->fHipViewScatterMin);
+    SwapBigEndianFloat(v->fHipViewScatterMax);
+    SwapBigEndianFloat(v->fightDist);
+    SwapBigEndianFloat(v->maxDist);
+    SwapBigEndianPtr32(v->aiVsAiAccuracyGraphName);
+    SwapBigEndianPtr32(v->aiVsPlayerAccuracyGraphName);
+    SwapBigEndianPtr32(v->aiVsAiAccuracyGraphKnots);
+    SwapBigEndianPtr32(v->aiVsPlayerAccuracyGraphKnots);
+    SwapBigEndianPtr32(v->originalAiVsAiAccuracyGraphKnots);
+    SwapBigEndianPtr32(v->originalAiVsPlayerAccuracyGraphKnots);
+    SWAP_BE_MEMBER(v, aiVsAiAccuracyGraphKnotCount);
+    SWAP_BE_MEMBER(v, aiVsPlayerAccuracyGraphKnotCount);
+    SWAP_BE_MEMBER(v, originalAiVsAiAccuracyGraphKnotCount);
+    SWAP_BE_MEMBER(v, originalAiVsPlayerAccuracyGraphKnotCount);
+    SWAP_BE_MEMBER(v, iPositionReloadTransTime);
+    SwapBigEndianFloat(v->leftArc);
+    SwapBigEndianFloat(v->rightArc);
+    SwapBigEndianFloat(v->topArc);
+    SwapBigEndianFloat(v->bottomArc);
+    SwapBigEndianFloat(v->accuracy);
+    SwapBigEndianFloat(v->aiSpread);
+    SwapBigEndianFloat(v->playerSpread);
+    for (int i = 0; i < 2; i++)
+        SwapBigEndianFloat(v->minTurnSpeed[i]);
+    for (int i = 0; i < 2; i++)
+        SwapBigEndianFloat(v->maxTurnSpeed[i]);
+    SwapBigEndianFloat(v->pitchConvergenceTime);
+    SwapBigEndianFloat(v->yawConvergenceTime);
+    SwapBigEndianFloat(v->suppressTime);
+    SwapBigEndianFloat(v->maxRange);
+    SwapBigEndianFloat(v->fAnimHorRotateInc);
+    SwapBigEndianFloat(v->fPlayerPositionDist);
+    SwapBigEndianPtr32(v->szUseHintString);
+    SwapBigEndianPtr32(v->dropHintString);
+    SWAP_BE_MEMBER(v, iUseHintStringIndex);
+    SWAP_BE_MEMBER(v, dropHintStringIndex);
+    SwapBigEndianFloat(v->horizViewJitter);
+    SwapBigEndianFloat(v->vertViewJitter);
+    SwapBigEndianPtr32(v->szScript);
+    for (int i = 0; i < 2; i++)
+        SwapBigEndianFloat(v->fOOPosAnimLength[i]);
+    SWAP_BE_MEMBER(v, minDamage);
+    SWAP_BE_MEMBER(v, minPlayerDamage);
+    SwapBigEndianFloat(v->fMaxDamageRange);
+    SwapBigEndianFloat(v->fMinDamageRange);
+    SwapBigEndianFloat(v->destabilizationRateTime);
+    SwapBigEndianFloat(v->destabilizationCurvatureMax);
+    SWAP_BE_MEMBER(v, destabilizeDistance);
+    for (int i = 0; i < 19; i++)
+        SwapBigEndianFloat(v->locationDamageMultipliers[i]);
+    SwapBigEndianPtr32(v->fireRumble);
+    SwapBigEndianPtr32(v->meleeImpactRumble);
+    SwapBigEndianFloat(v->adsDofStart);
+    SwapBigEndianFloat(v->adsDofEnd);
 }
 
 // ---- SndDriverGlobals

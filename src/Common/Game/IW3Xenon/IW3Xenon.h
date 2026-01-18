@@ -45,6 +45,7 @@ namespace IW3Xenon
     using AssetMenuList = Asset<ASSET_TYPE_MENULIST, MenuList>;
     using AssetMenu = Asset<ASSET_TYPE_MENU, menuDef_t>;
     using AssetLocalize = Asset<ASSET_TYPE_LOCALIZE_ENTRY, LocalizeEntry>;
+    using AssetWeapon = Asset<ASSET_TYPE_WEAPON, WeaponDef>;
     using AssetSndDriverGlobals = Asset<ASSET_TYPE_SNDDRIVER_GLOBALS, SndDriverGlobals>;
     using AssetFx = Asset<ASSET_TYPE_FX, FxEffectDef>;
     using AssetImpactFx = Asset<ASSET_TYPE_IMPACT_FX, FxImpactTable>;
@@ -68,6 +69,7 @@ DEFINE_ASSET_NAME_ACCESSOR(IW3Xenon::AssetFont, fontName);
 DEFINE_ASSET_NAME_ACCESSOR(IW3Xenon::AssetMenuList, name);
 DEFINE_ASSET_NAME_ACCESSOR(IW3Xenon::AssetMenu, window.name);
 DEFINE_ASSET_NAME_ACCESSOR(IW3Xenon::AssetLocalize, name);
+DEFINE_ASSET_NAME_ACCESSOR(IW3Xenon::AssetWeapon, szInternalName);
 DEFINE_ASSET_NAME_ACCESSOR(IW3Xenon::AssetSndDriverGlobals, name);
 DEFINE_ASSET_NAME_ACCESSOR(IW3Xenon::AssetFx, name);
 DEFINE_ASSET_NAME_ACCESSOR(IW3Xenon::AssetImpactFx, name);
