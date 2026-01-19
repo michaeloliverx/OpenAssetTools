@@ -1,10 +1,12 @@
 #include "ContentLoaderIW3Xenon.h"
 
 #include "Game/IW3Xenon/IW3Xenon.h"
+#include "Game/IW3Xenon/XAssets/clipmap_t/clipmap_t_load_db.h"
 #include "Game/IW3Xenon/XAssets/comworld/comworld_load_db.h"
 #include "Game/IW3Xenon/XAssets/font_s/font_s_load_db.h"
 #include "Game/IW3Xenon/XAssets/fxeffectdef/fxeffectdef_load_db.h"
 #include "Game/IW3Xenon/XAssets/fximpacttable/fximpacttable_load_db.h"
+#include "Game/IW3Xenon/XAssets/gameworldmp/gameworldmp_load_db.h"
 #include "Game/IW3Xenon/XAssets/gfximage/gfximage_load_db.h"
 #include "Game/IW3Xenon/XAssets/gfxlightdef/gfxlightdef_load_db.h"
 #include "Game/IW3Xenon/XAssets/gfxworld/gfxworld_load_db.h"
@@ -87,7 +89,10 @@ void ContentLoader::LoadXAsset(const bool atStreamStart) const
         LOAD_ASSET(ASSET_TYPE_SOUND, snd_alias_list_t, sound)
         LOAD_ASSET(ASSET_TYPE_SOUND_CURVE, SndCurve, sndCurve)
         LOAD_ASSET(ASSET_TYPE_LOADED_SOUND, LoadedSound, loadSnd)
+        LOAD_ASSET(ASSET_TYPE_CLIPMAP, clipMap_t, clipMap)
+        LOAD_ASSET(ASSET_TYPE_CLIPMAP_PVS, clipMap_t, clipMap)
         LOAD_ASSET(ASSET_TYPE_COMWORLD, ComWorld, comWorld)
+        LOAD_ASSET(ASSET_TYPE_GAMEWORLD_MP, GameWorldMp, gameWorldMp)
         LOAD_ASSET(ASSET_TYPE_MAP_ENTS, MapEnts, mapEnts)
         LOAD_ASSET(ASSET_TYPE_GFXWORLD, GfxWorld, gfxWorld)
         LOAD_ASSET(ASSET_TYPE_LIGHT_DEF, GfxLightDef, lightDef)

@@ -130,6 +130,19 @@ namespace IW3Xenon
         void* data;
     };
 
+    struct XModelPiece
+    {
+        XModel* model;
+        float offset[3];
+    };
+
+    struct XModelPieces
+    {
+        const char* name;
+        int numpieces;
+        XModelPiece* pieces;
+    };
+
     struct __declspec(align(4)) PhysPreset
     {
         const char* name;
@@ -1223,6 +1236,230 @@ namespace IW3Xenon
         XaSound sound;
     };
 
+    struct cStaticModelWritable
+    {
+        unsigned __int16 nextModelInWorldSector;
+    };
+
+    struct cStaticModel_s
+    {
+        cStaticModelWritable writable;
+        XModel* xmodel;
+        float origin[3];
+        float invScaledAxis[3][3];
+        float absmin[3];
+        float absmax[3];
+    };
+
+    struct dmaterial_t
+    {
+        char material[64];
+        int surfaceFlags;
+        int contentFlags;
+    };
+
+    struct cNode_t
+    {
+        cplane_s* plane;
+        __int16 children[2];
+    };
+
+    struct __declspec(align(4)) cLeaf_t
+    {
+        unsigned __int16 firstCollAabbIndex;
+        unsigned __int16 collAabbCount;
+        int brushContents;
+        int terrainContents;
+        float mins[3];
+        float maxs[3];
+        int leafBrushNode;
+        __int16 cluster;
+    };
+
+    struct cLeafBrushNodeLeaf_t
+    {
+        unsigned __int16* brushes;
+    };
+
+    struct cLeafBrushNodeChildren_t
+    {
+        float dist;
+        float range;
+        unsigned __int16 childOffset[2];
+    };
+
+    union cLeafBrushNodeData_t
+    {
+        cLeafBrushNodeLeaf_t leaf;
+        cLeafBrushNodeChildren_t children;
+    };
+
+    struct cLeafBrushNode_s
+    {
+        unsigned __int8 axis;
+        __int16 leafBrushCount;
+        int contents;
+        cLeafBrushNodeData_t data;
+    };
+
+    struct CollisionBorder
+    {
+        float distEq[3];
+        float zBase;
+        float zSlope;
+        float start;
+        float length;
+    };
+
+    struct CollisionPartition
+    {
+        unsigned __int8 triCount;
+        unsigned __int8 borderCount;
+        int firstTri;
+        CollisionBorder* borders;
+    };
+
+    union CollisionAabbTreeIndex
+    {
+        int firstChildIndex;
+        int partitionIndex;
+    };
+
+    struct CollisionAabbTree
+    {
+        float origin[3];
+        float halfSize[3];
+        unsigned __int16 materialIndex;
+        unsigned __int16 childCount;
+        CollisionAabbTreeIndex u;
+    };
+
+    struct __declspec(align(16)) cbrush_t
+    {
+        float mins[3];
+        int contents;
+        float maxs[3];
+        unsigned int numsides;
+        cbrushside_t* sides;
+        __int16 axialMaterialNum[2][3];
+        unsigned __int8* baseAdjacentSide;
+        __int16 firstAdjacentSideOffsets[2][3];
+        unsigned __int8 edgeCount[2][3];
+    };
+
+    enum DynEntityType
+    {
+        DYNENT_TYPE_INVALID = 0x0,
+        DYNENT_TYPE_CLUTTER = 0x1,
+        DYNENT_TYPE_DESTRUCT = 0x2,
+        DYNENT_TYPE_COUNT = 0x3,
+    };
+
+    struct GfxPlacement
+    {
+        float quat[4];
+        float origin[3];
+    };
+
+    struct DynEntityDef
+    {
+        DynEntityType type;
+        GfxPlacement pose;
+        XModel* xModel;
+        unsigned __int16 brushModel;
+        unsigned __int16 physicsBrushModel;
+        FxEffectDef* destroyFx;
+        XModelPieces* destroyPieces;
+        PhysPreset* physPreset;
+        int health;
+        PhysMass mass;
+        int contents;
+    };
+
+    struct DynEntityPose
+    {
+        GfxPlacement pose;
+        float radius;
+    };
+
+    struct DynEntityClient
+    {
+        int physObjId;
+        unsigned __int16 flags;
+        unsigned __int16 lightingHandle;
+        int health;
+    };
+
+    struct DynEntityColl
+    {
+        unsigned __int16 sector;
+        unsigned __int16 nextEntInSector;
+        float linkMins[2];
+        float linkMaxs[2];
+    };
+
+    struct cmodel_t
+    {
+        float mins[3];
+        float maxs[3];
+        float radius;
+        cLeaf_t leaf;
+    };
+
+    struct clipMap_t
+    {
+        const char* name;
+        int isInUse;
+        int planeCount;
+        cplane_s* planes;
+        unsigned int numStaticModels;
+        cStaticModel_s* staticModelList;
+        unsigned int numMaterials;
+        dmaterial_t* materials;
+        unsigned int numBrushSides;
+        cbrushside_t* brushsides;
+        unsigned int numBrushEdges;
+        unsigned __int8* brushEdges;
+        unsigned int numNodes;
+        cNode_t* nodes;
+        unsigned int numLeafs;
+        cLeaf_t* leafs;
+        unsigned int leafbrushNodesCount;
+        cLeafBrushNode_s* leafbrushNodes;
+        unsigned int numLeafBrushes;
+        unsigned __int16* leafbrushes;
+        unsigned int numLeafSurfaces;
+        unsigned int* leafsurfaces;
+        unsigned int vertCount;
+        float (*verts)[3];
+        int triCount;
+        unsigned __int16* triIndices;
+        unsigned __int8* triEdgeIsWalkable;
+        int borderCount;
+        CollisionBorder* borders;
+        int partitionCount;
+        CollisionPartition* partitions;
+        int aabbTreeCount;
+        CollisionAabbTree* aabbTrees;
+        unsigned int numSubModels;
+        cmodel_t* cmodels;
+        unsigned __int16 numBrushes;
+        cbrush_t* brushes;
+        int numClusters;
+        int clusterBytes;
+        unsigned __int8* visibility;
+        int vised;
+        MapEnts* mapEnts;
+        cbrush_t* box_brush;
+        cmodel_t box_model;
+        unsigned __int16 dynEntCount[2];
+        DynEntityDef* dynEntDefList[2];
+        DynEntityPose* dynEntPoseList[2];
+        DynEntityClient* dynEntClientList[2];
+        DynEntityColl* dynEntCollList[2];
+        unsigned int checksum;
+    };
+
     struct ComPrimaryLight
     {
         unsigned __int8 type;
@@ -1247,6 +1484,11 @@ namespace IW3Xenon
         int isInUse;
         unsigned int primaryLightCount;
         ComPrimaryLight* primaryLights;
+    };
+
+    struct GameWorldMp
+    {
+        const char* name;
     };
 
     struct MapEnts

@@ -1,9 +1,11 @@
 #pragma once
 
+#include "Game/IW3Xenon/XAssets/clipmap_t/clipmap_t_mark_db.h"
 #include "Game/IW3Xenon/XAssets/comworld/comworld_mark_db.h"
 #include "Game/IW3Xenon/XAssets/font_s/font_s_mark_db.h"
 #include "Game/IW3Xenon/XAssets/fxeffectdef/fxeffectdef_mark_db.h"
 #include "Game/IW3Xenon/XAssets/fximpacttable/fximpacttable_mark_db.h"
+#include "Game/IW3Xenon/XAssets/gameworldmp/gameworldmp_mark_db.h"
 #include "Game/IW3Xenon/XAssets/gfximage/gfximage_mark_db.h"
 #include "Game/IW3Xenon/XAssets/gfxlightdef/gfxlightdef_mark_db.h"
 #include "Game/IW3Xenon/XAssets/gfxworld/gfxworld_mark_db.h"
@@ -239,12 +241,31 @@ static inline void EndianFixup_PhysGeomInfo(IW3Xenon::PhysGeomInfo* v)
 
 static inline void EndianFixup_BrushWrapper(IW3Xenon::BrushWrapper* v)
 {
-    assert(false);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->mins[i]);
+    SWAP_BE_MEMBER(v, contents);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->maxs[i]);
+    SWAP_BE_MEMBER(v, numsides);
+    SwapBigEndianPtr32(v->sides);
+    for (int i = 0; i < 2; i++)
+        for (int j = 0; j < 3; j++)
+            SWAP_BE_MEMBER(v, axialMaterialNum[i][j]);
+    SwapBigEndianPtr32(v->baseAdjacentSide);
+    for (int i = 0; i < 2; i++)
+        for (int j = 0; j < 3; j++)
+            SWAP_BE_MEMBER(v, firstAdjacentSideOffsets[i][j]);
+    // edgeCount[2][3] - unsigned __int8, no swap
+    SWAP_BE_MEMBER(v, totalEdgeCount);
+    SwapBigEndianPtr32(v->planes);
 }
 
 static inline void EndianFixup_cbrushside_t(IW3Xenon::cbrushside_t* v)
 {
-    assert(false);
+    SwapBigEndianPtr32(v->plane);
+    SWAP_BE_MEMBER(v, materialNum);
+    SWAP_BE_MEMBER(v, firstAdjacentSideOffset);
+    // edgeCount - unsigned __int8, no swap
 }
 
 static inline void EndianFixup_XModel(IW3Xenon::XModel* v)
@@ -708,6 +729,207 @@ static inline void EndianFixup_LoadedSound(IW3Xenon::LoadedSound* v)
     SwapBigEndianPtr32(v->sound.seekTable.data);
 }
 
+// ---- clipMap_t
+
+static inline void EndianFixup_XModelPieces(IW3Xenon::XModelPieces* v)
+{
+    assert(false);
+}
+
+static inline void EndianFixup_cLeafBrushNodeLeaf_t(IW3Xenon::cLeafBrushNodeLeaf_t* v)
+{
+    assert(false);
+}
+
+static inline void EndianFixup_cLeafBrushNodeData_t(IW3Xenon::cLeafBrushNodeData_t* v)
+{
+    assert(false);
+}
+
+static inline void EndianFixup_XModelPiece(IW3Xenon::XModelPiece* v)
+{
+    assert(false);
+}
+
+static inline void EndianFixup_DynEntityDef(IW3Xenon::DynEntityDef* v)
+{
+    SWAP_BE_ENUM(v, type, IW3Xenon::DynEntityType);
+
+    // GfxPlacement pose (embedded)
+    for (int i = 0; i < 4; i++)
+        SwapBigEndianFloat(v->pose.quat[i]);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->pose.origin[i]);
+
+    SwapBigEndianPtr32(v->xModel);
+    SWAP_BE_MEMBER(v, brushModel);
+    SWAP_BE_MEMBER(v, physicsBrushModel);
+    SwapBigEndianPtr32(v->destroyFx);
+    SwapBigEndianPtr32(v->destroyPieces);
+    SwapBigEndianPtr32(v->physPreset);
+    SWAP_BE_MEMBER(v, health);
+
+    // PhysMass mass (embedded)
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->mass.centerOfMass[i]);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->mass.momentsOfInertia[i]);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->mass.productsOfInertia[i]);
+
+    SWAP_BE_MEMBER(v, contents);
+}
+
+static inline void EndianFixup_cbrush_t(IW3Xenon::cbrush_t* v)
+{
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->mins[i]);
+    SWAP_BE_MEMBER(v, contents);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->maxs[i]);
+    SWAP_BE_MEMBER(v, numsides);
+    SwapBigEndianPtr32(v->sides);
+    for (int i = 0; i < 2; i++)
+        for (int j = 0; j < 3; j++)
+            SWAP_BE_MEMBER(v, axialMaterialNum[i][j]);
+    SwapBigEndianPtr32(v->baseAdjacentSide);
+    for (int i = 0; i < 2; i++)
+        for (int j = 0; j < 3; j++)
+            SWAP_BE_MEMBER(v, firstAdjacentSideOffsets[i][j]);
+    // edgeCount[2][3] - unsigned __int8, no swap
+}
+
+static inline void EndianFixup_CollisionPartition(IW3Xenon::CollisionPartition* v)
+{
+    // triCount - unsigned __int8, no swap
+    // borderCount - unsigned __int8, no swap
+    SWAP_BE_MEMBER(v, firstTri);
+    SwapBigEndianPtr32(v->borders);
+}
+
+static inline void EndianFixup_cLeafBrushNode_s(IW3Xenon::cLeafBrushNode_s* v)
+{
+    // axis - unsigned __int8, no swap
+    SWAP_BE_MEMBER(v, leafBrushCount);
+    SWAP_BE_MEMBER(v, contents);
+
+    // cLeafBrushNodeData_t data (union) - axis determines which member
+    if (v->axis >= 3)
+    {
+        // leaf
+        SwapBigEndianPtr32(v->data.leaf.brushes);
+    }
+    else
+    {
+        // children
+        SwapBigEndianFloat(v->data.children.dist);
+        SwapBigEndianFloat(v->data.children.range);
+        for (int i = 0; i < 2; i++)
+            SWAP_BE_MEMBER(v, data.children.childOffset[i]);
+    }
+}
+
+static inline void EndianFixup_cNode_t(IW3Xenon::cNode_t* v)
+{
+    SwapBigEndianPtr32(v->plane);
+    for (int i = 0; i < 2; i++)
+        SWAP_BE_MEMBER(v, children[i]);
+}
+
+static inline void EndianFixup_cStaticModel_s(IW3Xenon::cStaticModel_s* v)
+{
+    // cStaticModelWritable writable (embedded)
+    SWAP_BE_MEMBER(v, writable.nextModelInWorldSector);
+
+    SwapBigEndianPtr32(v->xmodel);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->origin[i]);
+    for (int i = 0; i < 3; i++)
+        for (int j = 0; j < 3; j++)
+            SwapBigEndianFloat(v->invScaledAxis[i][j]);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->absmin[i]);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->absmax[i]);
+}
+
+static inline void EndianFixup_clipMap_t(IW3Xenon::clipMap_t* v)
+{
+    SwapBigEndianPtr32(v->name);
+    SWAP_BE_MEMBER(v, isInUse);
+    SWAP_BE_MEMBER(v, planeCount);
+    SwapBigEndianPtr32(v->planes);
+    SWAP_BE_MEMBER(v, numStaticModels);
+    SwapBigEndianPtr32(v->staticModelList);
+    SWAP_BE_MEMBER(v, numMaterials);
+    SwapBigEndianPtr32(v->materials);
+    SWAP_BE_MEMBER(v, numBrushSides);
+    SwapBigEndianPtr32(v->brushsides);
+    SWAP_BE_MEMBER(v, numBrushEdges);
+    SwapBigEndianPtr32(v->brushEdges);
+    SWAP_BE_MEMBER(v, numNodes);
+    SwapBigEndianPtr32(v->nodes);
+    SWAP_BE_MEMBER(v, numLeafs);
+    SwapBigEndianPtr32(v->leafs);
+    SWAP_BE_MEMBER(v, leafbrushNodesCount);
+    SwapBigEndianPtr32(v->leafbrushNodes);
+    SWAP_BE_MEMBER(v, numLeafBrushes);
+    SwapBigEndianPtr32(v->leafbrushes);
+    SWAP_BE_MEMBER(v, numLeafSurfaces);
+    SwapBigEndianPtr32(v->leafsurfaces);
+    SWAP_BE_MEMBER(v, vertCount);
+    SwapBigEndianPtr32(v->verts);
+    SWAP_BE_MEMBER(v, triCount);
+    SwapBigEndianPtr32(v->triIndices);
+    SwapBigEndianPtr32(v->triEdgeIsWalkable);
+    SWAP_BE_MEMBER(v, borderCount);
+    SwapBigEndianPtr32(v->borders);
+    SWAP_BE_MEMBER(v, partitionCount);
+    SwapBigEndianPtr32(v->partitions);
+    SWAP_BE_MEMBER(v, aabbTreeCount);
+    SwapBigEndianPtr32(v->aabbTrees);
+    SWAP_BE_MEMBER(v, numSubModels);
+    SwapBigEndianPtr32(v->cmodels);
+    SWAP_BE_MEMBER(v, numBrushes);
+    SwapBigEndianPtr32(v->brushes);
+    SWAP_BE_MEMBER(v, numClusters);
+    SWAP_BE_MEMBER(v, clusterBytes);
+    SwapBigEndianPtr32(v->visibility);
+    SWAP_BE_MEMBER(v, vised);
+    SwapBigEndianPtr32(v->mapEnts);
+    SwapBigEndianPtr32(v->box_brush);
+
+    // cmodel_t box_model (embedded)
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->box_model.mins[i]);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->box_model.maxs[i]);
+    SwapBigEndianFloat(v->box_model.radius);
+    // cLeaf_t leaf (embedded in box_model)
+    SWAP_BE_MEMBER(v, box_model.leaf.firstCollAabbIndex);
+    SWAP_BE_MEMBER(v, box_model.leaf.collAabbCount);
+    SWAP_BE_MEMBER(v, box_model.leaf.brushContents);
+    SWAP_BE_MEMBER(v, box_model.leaf.terrainContents);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->box_model.leaf.mins[i]);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->box_model.leaf.maxs[i]);
+    SWAP_BE_MEMBER(v, box_model.leaf.leafBrushNode);
+    SWAP_BE_MEMBER(v, box_model.leaf.cluster);
+
+    for (int i = 0; i < 2; i++)
+        SWAP_BE_MEMBER(v, dynEntCount[i]);
+    for (int i = 0; i < 2; i++)
+        SwapBigEndianPtr32(v->dynEntDefList[i]);
+    for (int i = 0; i < 2; i++)
+        SwapBigEndianPtr32(v->dynEntPoseList[i]);
+    for (int i = 0; i < 2; i++)
+        SwapBigEndianPtr32(v->dynEntClientList[i]);
+    for (int i = 0; i < 2; i++)
+        SwapBigEndianPtr32(v->dynEntCollList[i]);
+    SWAP_BE_MEMBER(v, checksum);
+}
+
 // ---- ComWorld
 
 static inline void EndianFixup_ComPrimaryLight(IW3Xenon::ComPrimaryLight* v)
@@ -735,11 +957,20 @@ static inline void EndianFixup_ComWorld(IW3Xenon::ComWorld* v)
     SwapBigEndianPtr32(v->primaryLights);
 }
 
+// ---- GameWorldMp
+
+static inline void EndianFixup_GameWorldMp(IW3Xenon::GameWorldMp* v)
+{
+    SwapBigEndianPtr32(v->name);
+}
+
 // ---- MapEnts
 
 static inline void EndianFixup_MapEnts(IW3Xenon::MapEnts* v)
 {
-    assert(false);
+    SwapBigEndianPtr32(v->name);
+    SwapBigEndianPtr32(v->entityString);
+    SWAP_BE_MEMBER(v, numEntityChars);
 }
 
 // ---- GfxWorld
@@ -1940,7 +2171,8 @@ static inline void EndianFixup_FxElemMarkVisuals(IW3Xenon::FxElemMarkVisuals* v)
 
 static inline void EndianFixup_FxElemVisuals(IW3Xenon::FxElemVisuals* v)
 {
-    assert(false);
+    // Union of pointers - all members overlap, swap any one
+    SwapBigEndianPtr32(v->anonymous);
 }
 
 static inline void EndianFixup_FxElemDefVisuals(IW3Xenon::FxElemDefVisuals* v)
