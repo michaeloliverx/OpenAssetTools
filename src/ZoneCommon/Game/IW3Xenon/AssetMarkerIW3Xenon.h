@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Game/IW3Xenon/XAssets/comworld/comworld_mark_db.h"
 #include "Game/IW3Xenon/XAssets/font_s/font_s_mark_db.h"
 #include "Game/IW3Xenon/XAssets/fxeffectdef/fxeffectdef_mark_db.h"
 #include "Game/IW3Xenon/XAssets/fximpacttable/fximpacttable_mark_db.h"
@@ -704,6 +705,33 @@ static inline void EndianFixup_LoadedSound(IW3Xenon::LoadedSound* v)
     // XaSeekTable seekTable
     SWAP_BE_MEMBER(v, sound.seekTable.size);
     SwapBigEndianPtr32(v->sound.seekTable.data);
+}
+
+// ---- ComWorld
+
+static inline void EndianFixup_ComPrimaryLight(IW3Xenon::ComPrimaryLight* v)
+{
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->color[i]);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->dir[i]);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->origin[i]);
+    SwapBigEndianFloat(v->radius);
+    SwapBigEndianFloat(v->cosHalfFovOuter);
+    SwapBigEndianFloat(v->cosHalfFovInner);
+    SwapBigEndianFloat(v->cosHalfFovExpanded);
+    SwapBigEndianFloat(v->rotationLimit);
+    SwapBigEndianFloat(v->translationLimit);
+    SwapBigEndianPtr32(v->defName);
+}
+
+static inline void EndianFixup_ComWorld(IW3Xenon::ComWorld* v)
+{
+    SwapBigEndianPtr32(v->name);
+    SWAP_BE_MEMBER(v, isInUse);
+    SWAP_BE_MEMBER(v, primaryLightCount);
+    SwapBigEndianPtr32(v->primaryLights);
 }
 
 // ---- MapEnts

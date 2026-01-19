@@ -1,6 +1,7 @@
 #include "ContentLoaderIW3Xenon.h"
 
 #include "Game/IW3Xenon/IW3Xenon.h"
+#include "Game/IW3Xenon/XAssets/comworld/comworld_load_db.h"
 #include "Game/IW3Xenon/XAssets/font_s/font_s_load_db.h"
 #include "Game/IW3Xenon/XAssets/fxeffectdef/fxeffectdef_load_db.h"
 #include "Game/IW3Xenon/XAssets/fximpacttable/fximpacttable_load_db.h"
@@ -19,6 +20,7 @@
 #include "Game/IW3Xenon/XAssets/sndcurve/sndcurve_load_db.h"
 #include "Game/IW3Xenon/XAssets/snddriverglobals/snddriverglobals_load_db.h"
 #include "Game/IW3Xenon/XAssets/stringtable/stringtable_load_db.h"
+#include "Game/IW3Xenon/XAssets/weapondef/weapondef_load_db.h"
 #include "Game/IW3Xenon/XAssets/xanimparts/xanimparts_load_db.h"
 #include "Game/IW3Xenon/XAssets/xmodel/xmodel_load_db.h"
 #include "Loading/Exception/UnsupportedAssetTypeException.h"
@@ -84,12 +86,14 @@ void ContentLoader::LoadXAsset(const bool atStreamStart) const
         LOAD_ASSET(ASSET_TYPE_SOUND, snd_alias_list_t, sound)
         LOAD_ASSET(ASSET_TYPE_SOUND_CURVE, SndCurve, sndCurve)
         LOAD_ASSET(ASSET_TYPE_LOADED_SOUND, LoadedSound, loadSnd)
+        LOAD_ASSET(ASSET_TYPE_COMWORLD, ComWorld, comWorld)
         LOAD_ASSET(ASSET_TYPE_MAP_ENTS, MapEnts, mapEnts)
         LOAD_ASSET(ASSET_TYPE_LIGHT_DEF, GfxLightDef, lightDef)
         LOAD_ASSET(ASSET_TYPE_FONT, Font_s, font)
         LOAD_ASSET(ASSET_TYPE_MENULIST, MenuList, menuList)
         LOAD_ASSET(ASSET_TYPE_MENU, menuDef_t, menu)
         LOAD_ASSET(ASSET_TYPE_LOCALIZE_ENTRY, LocalizeEntry, localize)
+        LOAD_ASSET(ASSET_TYPE_WEAPON, WeaponDef, weapon)
         LOAD_ASSET(ASSET_TYPE_SNDDRIVER_GLOBALS, SndDriverGlobals, sndDriverGlobals)
         LOAD_ASSET(ASSET_TYPE_FX, FxEffectDef, fx)
         LOAD_ASSET(ASSET_TYPE_IMPACT_FX, FxImpactTable, impactFx)

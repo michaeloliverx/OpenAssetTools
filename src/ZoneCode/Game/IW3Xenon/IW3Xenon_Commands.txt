@@ -13,6 +13,7 @@ asset GfxImage AssetImage;
 asset snd_alias_list_t AssetSound;
 asset SndCurve AssetSoundCurve;
 asset LoadedSound AssetLoadedSound;
+asset ComWorld AssetComWorld;
 asset MapEnts AssetMapEnts;
 asset GfxLightDef AssetLightDef;
 asset Font_s AssetFont;
@@ -44,6 +45,7 @@ block normal  XFILE_BLOCK_PHYSICAL;
 #include "XAssets/GfxImage.txt"
 #include "XAssets/snd_alias_list_t.txt"
 #include "XAssets/SndCurve.txt"
+#include "XAssets/ComWorld.txt"
 #include "XAssets/MapEnts.txt"
 #include "XAssets/LoadedSound.txt"
 #include "XAssets/GfxLightDef.txt"

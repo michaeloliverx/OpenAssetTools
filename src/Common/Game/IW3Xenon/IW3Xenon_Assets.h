@@ -1223,6 +1223,32 @@ namespace IW3Xenon
         XaSound sound;
     };
 
+    struct ComPrimaryLight
+    {
+        unsigned __int8 type;
+        unsigned __int8 canUseShadowMap;
+        unsigned __int8 exponent;
+        unsigned __int8 unused;
+        float color[3];
+        float dir[3];
+        float origin[3];
+        float radius;
+        float cosHalfFovOuter;
+        float cosHalfFovInner;
+        float cosHalfFovExpanded;
+        float rotationLimit;
+        float translationLimit;
+        const char* defName;
+    };
+
+    struct ComWorld
+    {
+        const char* name;
+        int isInUse;
+        unsigned int primaryLightCount;
+        ComPrimaryLight* primaryLights;
+    };
+
     struct MapEnts
     {
         const char* name;

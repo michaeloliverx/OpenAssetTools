@@ -40,6 +40,7 @@ ZoneCode.Assets = {
         "snd_alias_list_t",
         "SndCurve",
         "LoadedSound",
+        "ComWorld",
         "MapEnts",
         "GfxLightDef",
         "Font_s",
