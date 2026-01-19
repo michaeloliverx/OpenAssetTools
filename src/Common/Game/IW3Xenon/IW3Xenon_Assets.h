@@ -1256,6 +1256,426 @@ namespace IW3Xenon
         int numEntityChars;
     };
 
+    struct GfxLight
+    {
+        unsigned __int8 type;
+        unsigned __int8 canUseShadowMap;
+        unsigned __int8 unused[2];
+        float color[3];
+        float dir[3];
+        float origin[3];
+        float radius;
+        float cosHalfFovOuter;
+        float cosHalfFovInner;
+        int exponent;
+        unsigned int spotShadowIndex;
+        GfxLightDef* def;
+    };
+
+    struct GfxStreamingAabbTree
+    {
+        unsigned __int16 firstItem;
+        unsigned __int16 itemCount;
+        unsigned __int16 firstChild;
+        unsigned __int16 childCount;
+        float mins[3];
+        float maxs[3];
+    };
+
+    struct GfxWorldVertex
+    {
+        float xyz[3];
+        float binormalSign;
+        GfxColor color;
+        float texCoord[2];
+        float lmapCoord[2];
+        PackedUnitVec normal;
+        PackedUnitVec tangent;
+    };
+
+    struct GfxReflectionProbe
+    {
+        float origin[3];
+        GfxImage* reflectionImage;
+    };
+
+    struct GfxAabbTree
+    {
+        float mins[3];
+        float maxs[3];
+        unsigned __int16 childCount;
+        unsigned __int16 surfaceCount;
+        unsigned __int16 startSurfIndex;
+        unsigned __int16 smodelIndexCount;
+        unsigned __int16* smodelIndexes;
+        int childrenOffset;
+    };
+
+    struct GfxPortal;
+
+    struct GfxPortalWritable
+    {
+        bool isQueued;
+        bool isAncestor;
+        unsigned __int8 recursionDepth;
+        unsigned __int8 hullPointCount;
+        float (*hullPoints)[2];
+        GfxPortal* queuedParent;
+    };
+
+    struct DpvsPlane
+    {
+        float coeffs[4];
+        unsigned __int8 side[3];
+        unsigned __int8 pad;
+    };
+
+    struct GfxCell;
+
+    struct GfxPortal
+    {
+        GfxPortalWritable writable;
+        DpvsPlane plane;
+        GfxCell* cell;
+        float (*vertices)[3];
+        unsigned __int8 vertexCount;
+        float hullAxis[2][3];
+    };
+
+    struct GfxCell
+    {
+        float mins[3];
+        float maxs[3];
+        int aabbTreeCount;
+        GfxAabbTree* aabbTree;
+        int portalCount;
+        GfxPortal* portals;
+        int cullGroupCount;
+        int* cullGroups;
+        unsigned __int8 reflectionProbeCount;
+        unsigned __int8* reflectionProbes;
+    };
+
+    struct GfxLightmapArray
+    {
+        GfxImage* primary;
+        GfxImage* secondary;
+    };
+
+    struct GfxLightGridEntry
+    {
+        unsigned __int16 colorsIndex;
+        unsigned __int8 primaryLightIndex;
+        unsigned __int8 needsTrace;
+    };
+
+    struct GfxLightGridColors
+    {
+        unsigned __int8 rgb[56][3];
+    };
+
+    struct GfxBrushModelWritable
+    {
+        float mins[3];
+        float maxs[3];
+    };
+
+    struct GfxBrushModel
+    {
+        GfxBrushModelWritable writable;
+        float bounds[2][3];
+        unsigned int surfaceCount;
+        unsigned int startSurfIndex;
+    };
+
+    struct MaterialMemory
+    {
+        Material* material;
+        int memory;
+    };
+
+    struct XModelDrawInfo
+    {
+        unsigned __int16 lod;
+        unsigned __int16 surfId;
+    };
+
+    struct GfxSceneDynModel
+    {
+        XModelDrawInfo info;
+        unsigned __int16 dynEntId;
+    };
+
+    struct BModelDrawInfo
+    {
+        unsigned __int16 surfId;
+    };
+
+    struct GfxSceneDynBrush
+    {
+        BModelDrawInfo info;
+        unsigned __int16 dynEntId;
+    };
+
+    struct GfxShadowGeometry
+    {
+        unsigned __int16 surfaceCount;
+        unsigned __int16 smodelCount;
+        unsigned __int16* sortedSurfIndex;
+        unsigned __int16* smodelIndex;
+    };
+
+    struct GfxLightRegionAxis
+    {
+        float dir[3];
+        float midPoint;
+        float halfSize;
+    };
+
+    struct GfxLightRegionHull
+    {
+        float kdopMidPoint[9];
+        float kdopHalfSize[9];
+        unsigned int axisCount;
+        GfxLightRegionAxis* axis;
+    };
+
+    struct GfxLightRegion
+    {
+        unsigned int hullCount;
+        GfxLightRegionHull* hulls;
+    };
+
+    struct GfxStaticModelInst
+    {
+        float mins[3];
+        float maxs[3];
+        GfxColor groundLighting;
+    };
+
+    struct srfTriangles_t
+    {
+        int vertexLayerData;
+        int firstVertex;
+        unsigned __int16 vertexCount;
+        unsigned __int16 triCount;
+        int baseIndex;
+        float topMipMins[3];
+        float topMipMaxs[3];
+    };
+
+    struct GfxSurface
+    {
+        srfTriangles_t tris;
+        Material* material;
+        unsigned __int8 lightmapIndex;
+        unsigned __int8 reflectionProbeIndex;
+        unsigned __int8 primaryLightIndex;
+        bool castsSunShadow;
+        float bounds[2][3];
+    };
+
+    struct GfxCullGroup
+    {
+        float mins[3];
+        float maxs[3];
+        int surfaceCount;
+        int startSurfIndex;
+    };
+
+    struct GfxPackedPlacement
+    {
+        float origin[3];
+        PackedUnitVec axis[3];
+        float scale;
+    };
+
+    struct __declspec(align(4)) GfxStaticModelDrawInst
+    {
+        float cullDist;
+        GfxPackedPlacement placement;
+        XModel* model;
+        unsigned __int8 reflectionProbeIndex;
+        unsigned __int8 primaryLightIndex;
+        unsigned __int16 lightingHandle;
+        unsigned __int8 flags;
+    };
+
+    struct GfxWorldStreamInfo
+    {
+        int aabbTreeCount;
+        GfxStreamingAabbTree* aabbTrees;
+        int leafRefCount;
+        int* leafRefs;
+    };
+
+    struct GfxWorldVertexData
+    {
+        GfxWorldVertex* vertices;
+        D3DVertexBuffer worldVb;
+    };
+
+    struct GfxWorldVertexLayerData
+    {
+        unsigned __int8* data;
+        D3DVertexBuffer layerVb;
+    };
+
+    struct SunLightParseParams
+    {
+        char name[64];
+        float ambientScale;
+        float ambientColor[3];
+        float diffuseFraction;
+        float sunLight;
+        float sunColor[3];
+        float diffuseColor[3];
+        bool diffuseColorHasBeenSet;
+        float angles[3];
+    };
+
+    struct GfxWorldDpvsPlanes
+    {
+        int cellCount;
+        cplane_s* planes;
+        unsigned __int16* nodes;
+        unsigned int* sceneEntCellBits;
+    };
+
+    struct GfxLightGrid
+    {
+        bool hasLightRegions;
+        unsigned int sunPrimaryLightIndex;
+        unsigned __int16 mins[3];
+        unsigned __int16 maxs[3];
+        unsigned int rowAxis;
+        unsigned int colAxis;
+        unsigned __int16* rowDataStart;
+        unsigned int rawRowDataSize;
+        unsigned __int8* rawRowData;
+        unsigned int entryCount;
+        GfxLightGridEntry* entries;
+        unsigned int colorCount;
+        GfxLightGridColors* colors;
+    };
+
+    struct sunflare_t
+    {
+        bool hasValidData;
+        Material* spriteMaterial;
+        Material* flareMaterial;
+        float spriteSize;
+        float flareMinSize;
+        float flareMinDot;
+        float flareMaxSize;
+        float flareMaxDot;
+        float flareMaxAlpha;
+        int flareFadeInTime;
+        int flareFadeOutTime;
+        float blindMinDot;
+        float blindMaxDot;
+        float blindMaxDarken;
+        int blindFadeInTime;
+        int blindFadeOutTime;
+        float glareMinDot;
+        float glareMaxDot;
+        float glareMaxLighten;
+        int glareFadeInTime;
+        int glareFadeOutTime;
+        float sunFxPosition[3];
+    };
+
+    struct GfxWorldDpvsStatic
+    {
+        unsigned int smodelCount;
+        unsigned int staticSurfaceCount;
+        unsigned int litSurfsBegin;
+        unsigned int litSurfsEnd;
+        unsigned int decalSurfsBegin;
+        unsigned int decalSurfsEnd;
+        unsigned int emissiveSurfsBegin;
+        unsigned int emissiveSurfsEnd;
+        unsigned int smodelVisDataCount;
+        unsigned int surfaceVisDataCount;
+        unsigned __int8* smodelVisData[3];
+        unsigned __int8* surfaceVisData[3];
+        unsigned int* lodData;
+        unsigned __int16* sortedSurfIndex;
+        GfxStaticModelInst* smodelInsts;
+        GfxSurface* surfaces;
+        GfxCullGroup* cullGroups;
+        GfxStaticModelDrawInst* smodelDrawInsts;
+        GfxDrawSurf* surfaceMaterials;
+        unsigned int* surfaceCastsSunShadow;
+        volatile int usageCount;
+    };
+
+    struct GfxWorldDpvsDynamic
+    {
+        unsigned int dynEntClientWordCount[2];
+        unsigned int dynEntClientCount[2];
+        unsigned int* dynEntCellBits[2];
+        unsigned __int8* dynEntVisData[2][3];
+    };
+
+    struct GfxWorld
+    {
+        const char* name;
+        const char* baseName;
+        int planeCount;
+        int nodeCount;
+        int indexCount;
+        unsigned __int16* indices;
+        D3DIndexBuffer indexBuffer;
+        int surfaceCount;
+        GfxWorldStreamInfo streamInfo;
+        int skySurfCount;
+        int* skyStartSurfs;
+        GfxImage* skyImage;
+        unsigned __int8 skySamplerState;
+        unsigned int vertexCount;
+        GfxWorldVertexData vd;
+        unsigned int vertexLayerDataSize;
+        GfxWorldVertexLayerData vld;
+        SunLightParseParams sunParse;
+        GfxLight* sunLight;
+        float sunColorFromBsp[3];
+        unsigned int sunPrimaryLightIndex;
+        unsigned int primaryLightCount;
+        int cullGroupCount;
+        unsigned int reflectionProbeCount;
+        GfxReflectionProbe* reflectionProbes;
+        GfxTexture* reflectionProbeTextures;
+        GfxWorldDpvsPlanes dpvsPlanes;
+        int cellBitsCount;
+        GfxCell* cells;
+        int lightmapCount;
+        GfxLightmapArray* lightmaps;
+        GfxLightGrid lightGrid;
+        GfxTexture* lightmapPrimaryTextures;
+        GfxTexture* lightmapSecondaryTextures;
+        int modelCount;
+        GfxBrushModel* models;
+        float mins[3];
+        float maxs[3];
+        unsigned int checksum;
+        int materialMemoryCount;
+        MaterialMemory* materialMemory;
+        sunflare_t sun;
+        float outdoorLookupMatrix[4][4];
+        GfxImage* outdoorImage;
+        unsigned int* cellCasterBits;
+        GfxSceneDynModel* sceneDynModel;
+        GfxSceneDynBrush* sceneDynBrush;
+        unsigned int* primaryLightEntityShadowVis;
+        unsigned int* primaryLightDynEntShadowVis[2];
+        unsigned __int8* nonSunPrimaryLightForModelDynEnt;
+        GfxShadowGeometry* shadowGeom;
+        GfxLightRegion* lightRegion;
+        GfxWorldDpvsStatic dpvs;
+        GfxWorldDpvsDynamic dpvsDyn;
+    };
+
     struct __declspec(align(4)) GfxLightImage
     {
         GfxImage* image;

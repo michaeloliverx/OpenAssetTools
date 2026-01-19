@@ -6,6 +6,7 @@
 #include "Game/IW3Xenon/XAssets/fximpacttable/fximpacttable_mark_db.h"
 #include "Game/IW3Xenon/XAssets/gfximage/gfximage_mark_db.h"
 #include "Game/IW3Xenon/XAssets/gfxlightdef/gfxlightdef_mark_db.h"
+#include "Game/IW3Xenon/XAssets/gfxworld/gfxworld_mark_db.h"
 #include "Game/IW3Xenon/XAssets/loadedsound/loadedsound_mark_db.h"
 #include "Game/IW3Xenon/XAssets/localizeentry/localizeentry_mark_db.h"
 #include "Game/IW3Xenon/XAssets/mapents/mapents_mark_db.h"
@@ -739,6 +740,355 @@ static inline void EndianFixup_ComWorld(IW3Xenon::ComWorld* v)
 static inline void EndianFixup_MapEnts(IW3Xenon::MapEnts* v)
 {
     assert(false);
+}
+
+// ---- GfxWorld
+
+static inline void EndianFixup_GfxReflectionProbe(IW3Xenon::GfxReflectionProbe* v)
+{
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->origin[i]);
+    SwapBigEndianPtr32(v->reflectionImage);
+}
+
+static inline void EndianFixup_GfxCell(IW3Xenon::GfxCell* v)
+{
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->mins[i]);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->maxs[i]);
+    SWAP_BE_MEMBER(v, aabbTreeCount);
+    SwapBigEndianPtr32(v->aabbTree);
+    SWAP_BE_MEMBER(v, portalCount);
+    SwapBigEndianPtr32(v->portals);
+    SWAP_BE_MEMBER(v, cullGroupCount);
+    SwapBigEndianPtr32(v->cullGroups);
+    // reflectionProbeCount is byte - no swap
+    SwapBigEndianPtr32(v->reflectionProbes);
+}
+
+static inline void EndianFixup_GfxAabbTree(IW3Xenon::GfxAabbTree* v)
+{
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->mins[i]);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->maxs[i]);
+    SWAP_BE_MEMBER(v, childCount);
+    SWAP_BE_MEMBER(v, surfaceCount);
+    SWAP_BE_MEMBER(v, startSurfIndex);
+    SWAP_BE_MEMBER(v, smodelIndexCount);
+    SwapBigEndianPtr32(v->smodelIndexes);
+    SWAP_BE_MEMBER(v, childrenOffset);
+}
+
+static inline void EndianFixup_GfxPortal(IW3Xenon::GfxPortal* v)
+{
+    // GfxPortalWritable writable - embedded struct
+    // isQueued, isAncestor, recursionDepth, hullPointCount are bytes - no swap
+    SwapBigEndianPtr32(v->writable.hullPoints);
+    SwapBigEndianPtr32(v->writable.queuedParent);
+    // DpvsPlane plane - embedded struct
+    for (int i = 0; i < 4; i++)
+        SwapBigEndianFloat(v->plane.coeffs[i]);
+    // side[3] and pad are bytes - no swap
+    SwapBigEndianPtr32(v->cell);
+    SwapBigEndianPtr32(v->vertices);
+    // vertexCount is byte - no swap
+    for (int i = 0; i < 2; i++)
+        for (int j = 0; j < 3; j++)
+            SwapBigEndianFloat(v->hullAxis[i][j]);
+}
+
+static inline void EndianFixup_GfxLightmapArray(IW3Xenon::GfxLightmapArray* v)
+{
+    SwapBigEndianPtr32(v->primary);
+    SwapBigEndianPtr32(v->secondary);
+}
+
+static inline void EndianFixup_MaterialMemory(IW3Xenon::MaterialMemory* v)
+{
+    SwapBigEndianPtr32(v->material);
+    SWAP_BE_MEMBER(v, memory);
+}
+
+static inline void EndianFixup_GfxShadowGeometry(IW3Xenon::GfxShadowGeometry* v)
+{
+    SWAP_BE_MEMBER(v, surfaceCount);
+    SWAP_BE_MEMBER(v, smodelCount);
+    SwapBigEndianPtr32(v->sortedSurfIndex);
+    SwapBigEndianPtr32(v->smodelIndex);
+}
+
+static inline void EndianFixup_GfxLightRegion(IW3Xenon::GfxLightRegion* v)
+{
+    SWAP_BE_MEMBER(v, hullCount);
+    SwapBigEndianPtr32(v->hulls);
+}
+
+static inline void EndianFixup_GfxLightRegionHull(IW3Xenon::GfxLightRegionHull* v)
+{
+    for (int i = 0; i < 9; i++)
+        SwapBigEndianFloat(v->kdopMidPoint[i]);
+    for (int i = 0; i < 9; i++)
+        SwapBigEndianFloat(v->kdopHalfSize[i]);
+    SWAP_BE_MEMBER(v, axisCount);
+    SwapBigEndianPtr32(v->axis);
+}
+
+static inline void EndianFixup_GfxSurface(IW3Xenon::GfxSurface* v)
+{
+    // srfTriangles_t tris (embedded)
+    SWAP_BE_MEMBER(v, tris.vertexLayerData);
+    SWAP_BE_MEMBER(v, tris.firstVertex);
+    SWAP_BE_MEMBER(v, tris.vertexCount);
+    SWAP_BE_MEMBER(v, tris.triCount);
+    SWAP_BE_MEMBER(v, tris.baseIndex);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->tris.topMipMins[i]);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->tris.topMipMaxs[i]);
+
+    SwapBigEndianPtr32(v->material);
+    // lightmapIndex - unsigned __int8, no swap
+    // reflectionProbeIndex - unsigned __int8, no swap
+    // primaryLightIndex - unsigned __int8, no swap
+    // castsSunShadow - bool, no swap
+    for (int i = 0; i < 2; i++)
+        for (int j = 0; j < 3; j++)
+            SwapBigEndianFloat(v->bounds[i][j]);
+}
+
+static inline void EndianFixup_GfxStaticModelDrawInst(IW3Xenon::GfxStaticModelDrawInst* v)
+{
+    SwapBigEndianFloat(v->cullDist);
+    // GfxPackedPlacement placement
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->placement.origin[i]);
+    for (int i = 0; i < 3; i++)
+        SWAP_BE_MEMBER(v, placement.axis[i].packed);
+    SwapBigEndianFloat(v->placement.scale);
+    SwapBigEndianPtr32(v->model);
+    // unsigned __int8 reflectionProbeIndex;
+    // unsigned __int8 primaryLightIndex;
+    SWAP_BE_MEMBER(v, lightingHandle);
+    // unsigned __int8 flags;
+}
+
+static inline void EndianFixup_GfxWorldStreamInfo(IW3Xenon::GfxWorldStreamInfo* v)
+{
+    assert(false);
+}
+
+static inline void EndianFixup_GfxLight(IW3Xenon::GfxLight* v)
+{
+    // type, canUseShadowMap, unused[2] are bytes - no swap
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->color[i]);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->dir[i]);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->origin[i]);
+    SwapBigEndianFloat(v->radius);
+    SwapBigEndianFloat(v->cosHalfFovOuter);
+    SwapBigEndianFloat(v->cosHalfFovInner);
+    SWAP_BE_MEMBER(v, exponent);
+    SWAP_BE_MEMBER(v, spotShadowIndex);
+    SwapBigEndianPtr32(v->def);
+}
+
+static inline void EndianFixup_GfxWorldDpvsPlanes(IW3Xenon::GfxWorldDpvsPlanes* v)
+{
+    assert(false);
+}
+
+static inline void EndianFixup_GfxLightGrid(IW3Xenon::GfxLightGrid* v)
+{
+    assert(false);
+}
+
+static inline void EndianFixup_GfxWorldVertexData(IW3Xenon::GfxWorldVertexData* v)
+{
+    assert(false);
+}
+
+static inline void EndianFixup_GfxWorldVertexLayerData(IW3Xenon::GfxWorldVertexLayerData* v)
+{
+    assert(false);
+}
+
+static inline void EndianFixup_sunflare_t(IW3Xenon::sunflare_t* v)
+{
+    assert(false);
+}
+
+static inline void EndianFixup_GfxWorldDpvsStatic(IW3Xenon::GfxWorldDpvsStatic* v)
+{
+    assert(false);
+}
+
+static inline void EndianFixup_GfxWorldDpvsDynamic(IW3Xenon::GfxWorldDpvsDynamic* v)
+{
+    assert(false);
+}
+
+static inline void EndianFixup_GfxWorld(IW3Xenon::GfxWorld* v)
+{
+    SwapBigEndianPtr32(v->name);
+    SwapBigEndianPtr32(v->baseName);
+    SWAP_BE_MEMBER(v, planeCount);
+    SWAP_BE_MEMBER(v, nodeCount);
+    SWAP_BE_MEMBER(v, indexCount);
+    SwapBigEndianPtr32(v->indices);
+    // D3DIndexBuffer indexBuffer - opaque 0x20 bytes, no swap needed
+    SWAP_BE_MEMBER(v, surfaceCount);
+    // GfxWorldStreamInfo streamInfo - embedded struct, swap inline
+    SWAP_BE_MEMBER(v, streamInfo.aabbTreeCount);
+    SwapBigEndianPtr32(v->streamInfo.aabbTrees);
+    SWAP_BE_MEMBER(v, streamInfo.leafRefCount);
+    SwapBigEndianPtr32(v->streamInfo.leafRefs);
+    SWAP_BE_MEMBER(v, skySurfCount);
+    SwapBigEndianPtr32(v->skyStartSurfs);
+    SwapBigEndianPtr32(v->skyImage);
+    // skySamplerState is byte - no swap
+    SWAP_BE_MEMBER(v, vertexCount);
+    // GfxWorldVertexData vd - embedded struct
+    SwapBigEndianPtr32(v->vd.vertices);
+    // D3DVertexBuffer worldVb - opaque 0x20 bytes, no swap needed
+    SWAP_BE_MEMBER(v, vertexLayerDataSize);
+    // GfxWorldVertexLayerData vld - embedded struct
+    SwapBigEndianPtr32(v->vld.data);
+    // D3DVertexBuffer layerVb - opaque 0x20 bytes, no swap needed
+    // SunLightParseParams sunParse - embedded struct
+    // name[64] is char array - no swap
+    SwapBigEndianFloat(v->sunParse.ambientScale);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->sunParse.ambientColor[i]);
+    SwapBigEndianFloat(v->sunParse.diffuseFraction);
+    SwapBigEndianFloat(v->sunParse.sunLight);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->sunParse.sunColor[i]);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->sunParse.diffuseColor[i]);
+    // diffuseColorHasBeenSet is bool - no swap
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->sunParse.angles[i]);
+    SwapBigEndianPtr32(v->sunLight);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->sunColorFromBsp[i]);
+    SWAP_BE_MEMBER(v, sunPrimaryLightIndex);
+    SWAP_BE_MEMBER(v, primaryLightCount);
+    SWAP_BE_MEMBER(v, cullGroupCount);
+    SWAP_BE_MEMBER(v, reflectionProbeCount);
+    SwapBigEndianPtr32(v->reflectionProbes);
+    SwapBigEndianPtr32(v->reflectionProbeTextures);
+    // GfxWorldDpvsPlanes dpvsPlanes - embedded struct
+    SWAP_BE_MEMBER(v, dpvsPlanes.cellCount);
+    SwapBigEndianPtr32(v->dpvsPlanes.planes);
+    SwapBigEndianPtr32(v->dpvsPlanes.nodes);
+    SwapBigEndianPtr32(v->dpvsPlanes.sceneEntCellBits);
+    SWAP_BE_MEMBER(v, cellBitsCount);
+    SwapBigEndianPtr32(v->cells);
+    SWAP_BE_MEMBER(v, lightmapCount);
+    SwapBigEndianPtr32(v->lightmaps);
+    // GfxLightGrid lightGrid - embedded struct
+    // hasLightRegions is bool - no swap
+    SWAP_BE_MEMBER(v, lightGrid.sunPrimaryLightIndex);
+    for (int i = 0; i < 3; i++)
+        SWAP_BE_MEMBER(v, lightGrid.mins[i]);
+    for (int i = 0; i < 3; i++)
+        SWAP_BE_MEMBER(v, lightGrid.maxs[i]);
+    SWAP_BE_MEMBER(v, lightGrid.rowAxis);
+    SWAP_BE_MEMBER(v, lightGrid.colAxis);
+    SwapBigEndianPtr32(v->lightGrid.rowDataStart);
+    SWAP_BE_MEMBER(v, lightGrid.rawRowDataSize);
+    SwapBigEndianPtr32(v->lightGrid.rawRowData);
+    SWAP_BE_MEMBER(v, lightGrid.entryCount);
+    SwapBigEndianPtr32(v->lightGrid.entries);
+    SWAP_BE_MEMBER(v, lightGrid.colorCount);
+    SwapBigEndianPtr32(v->lightGrid.colors);
+    SwapBigEndianPtr32(v->lightmapPrimaryTextures);
+    SwapBigEndianPtr32(v->lightmapSecondaryTextures);
+    SWAP_BE_MEMBER(v, modelCount);
+    SwapBigEndianPtr32(v->models);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->mins[i]);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->maxs[i]);
+    SWAP_BE_MEMBER(v, checksum);
+    SWAP_BE_MEMBER(v, materialMemoryCount);
+    SwapBigEndianPtr32(v->materialMemory);
+    // sunflare_t sun - embedded struct
+    // hasValidData is bool - no swap
+    SwapBigEndianPtr32(v->sun.spriteMaterial);
+    SwapBigEndianPtr32(v->sun.flareMaterial);
+    SwapBigEndianFloat(v->sun.spriteSize);
+    SwapBigEndianFloat(v->sun.flareMinSize);
+    SwapBigEndianFloat(v->sun.flareMinDot);
+    SwapBigEndianFloat(v->sun.flareMaxSize);
+    SwapBigEndianFloat(v->sun.flareMaxDot);
+    SwapBigEndianFloat(v->sun.flareMaxAlpha);
+    SWAP_BE_MEMBER(v, sun.flareFadeInTime);
+    SWAP_BE_MEMBER(v, sun.flareFadeOutTime);
+    SwapBigEndianFloat(v->sun.blindMinDot);
+    SwapBigEndianFloat(v->sun.blindMaxDot);
+    SwapBigEndianFloat(v->sun.blindMaxDarken);
+    SWAP_BE_MEMBER(v, sun.blindFadeInTime);
+    SWAP_BE_MEMBER(v, sun.blindFadeOutTime);
+    SwapBigEndianFloat(v->sun.glareMinDot);
+    SwapBigEndianFloat(v->sun.glareMaxDot);
+    SwapBigEndianFloat(v->sun.glareMaxLighten);
+    SWAP_BE_MEMBER(v, sun.glareFadeInTime);
+    SWAP_BE_MEMBER(v, sun.glareFadeOutTime);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->sun.sunFxPosition[i]);
+    // outdoorLookupMatrix[4][4]
+    for (int i = 0; i < 4; i++)
+        for (int j = 0; j < 4; j++)
+            SwapBigEndianFloat(v->outdoorLookupMatrix[i][j]);
+    SwapBigEndianPtr32(v->outdoorImage);
+    SwapBigEndianPtr32(v->cellCasterBits);
+    SwapBigEndianPtr32(v->sceneDynModel);
+    SwapBigEndianPtr32(v->sceneDynBrush);
+    SwapBigEndianPtr32(v->primaryLightEntityShadowVis);
+    SwapBigEndianPtr32(v->primaryLightDynEntShadowVis[0]);
+    SwapBigEndianPtr32(v->primaryLightDynEntShadowVis[1]);
+    SwapBigEndianPtr32(v->nonSunPrimaryLightForModelDynEnt);
+    SwapBigEndianPtr32(v->shadowGeom);
+    SwapBigEndianPtr32(v->lightRegion);
+    // GfxWorldDpvsStatic dpvs - embedded struct
+    SWAP_BE_MEMBER(v, dpvs.smodelCount);
+    SWAP_BE_MEMBER(v, dpvs.staticSurfaceCount);
+    SWAP_BE_MEMBER(v, dpvs.litSurfsBegin);
+    SWAP_BE_MEMBER(v, dpvs.litSurfsEnd);
+    SWAP_BE_MEMBER(v, dpvs.decalSurfsBegin);
+    SWAP_BE_MEMBER(v, dpvs.decalSurfsEnd);
+    SWAP_BE_MEMBER(v, dpvs.emissiveSurfsBegin);
+    SWAP_BE_MEMBER(v, dpvs.emissiveSurfsEnd);
+    SWAP_BE_MEMBER(v, dpvs.smodelVisDataCount);
+    SWAP_BE_MEMBER(v, dpvs.surfaceVisDataCount);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianPtr32(v->dpvs.smodelVisData[i]);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianPtr32(v->dpvs.surfaceVisData[i]);
+    SwapBigEndianPtr32(v->dpvs.lodData);
+    SwapBigEndianPtr32(v->dpvs.sortedSurfIndex);
+    SwapBigEndianPtr32(v->dpvs.smodelInsts);
+    SwapBigEndianPtr32(v->dpvs.surfaces);
+    SwapBigEndianPtr32(v->dpvs.cullGroups);
+    SwapBigEndianPtr32(v->dpvs.smodelDrawInsts);
+    SwapBigEndianPtr32(v->dpvs.surfaceMaterials);
+    SwapBigEndianPtr32(v->dpvs.surfaceCastsSunShadow);
+    SWAP_BE_MEMBER(v, dpvs.usageCount);
+    // GfxWorldDpvsDynamic dpvsDyn - embedded struct
+    SWAP_BE_MEMBER(v, dpvsDyn.dynEntClientWordCount[0]);
+    SWAP_BE_MEMBER(v, dpvsDyn.dynEntClientWordCount[1]);
+    SWAP_BE_MEMBER(v, dpvsDyn.dynEntClientCount[0]);
+    SWAP_BE_MEMBER(v, dpvsDyn.dynEntClientCount[1]);
+    SwapBigEndianPtr32(v->dpvsDyn.dynEntCellBits[0]);
+    SwapBigEndianPtr32(v->dpvsDyn.dynEntCellBits[1]);
+    for (int i = 0; i < 2; i++)
+        for (int j = 0; j < 3; j++)
+            SwapBigEndianPtr32(v->dpvsDyn.dynEntVisData[i][j]);
 }
 
 // ---- GfxLightDef

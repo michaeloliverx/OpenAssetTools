@@ -15,6 +15,7 @@ asset SndCurve AssetSoundCurve;
 asset LoadedSound AssetLoadedSound;
 asset ComWorld AssetComWorld;
 asset MapEnts AssetMapEnts;
+asset GfxWorld AssetGfxWorld;
 asset GfxLightDef AssetLightDef;
 asset Font_s AssetFont;
 asset MenuList AssetMenuList;
@@ -47,6 +48,7 @@ block normal  XFILE_BLOCK_PHYSICAL;
 #include "XAssets/SndCurve.txt"
 #include "XAssets/ComWorld.txt"
 #include "XAssets/MapEnts.txt"
+#include "XAssets/GfxWorld.txt"
 #include "XAssets/LoadedSound.txt"
 #include "XAssets/GfxLightDef.txt"
 #include "XAssets/Font_s.txt"

@@ -7,6 +7,7 @@
 #include "Game/IW3Xenon/XAssets/fximpacttable/fximpacttable_load_db.h"
 #include "Game/IW3Xenon/XAssets/gfximage/gfximage_load_db.h"
 #include "Game/IW3Xenon/XAssets/gfxlightdef/gfxlightdef_load_db.h"
+#include "Game/IW3Xenon/XAssets/gfxworld/gfxworld_load_db.h"
 #include "Game/IW3Xenon/XAssets/loadedsound/loadedsound_load_db.h"
 #include "Game/IW3Xenon/XAssets/localizeentry/localizeentry_load_db.h"
 #include "Game/IW3Xenon/XAssets/mapents/mapents_load_db.h"
@@ -88,6 +89,7 @@ void ContentLoader::LoadXAsset(const bool atStreamStart) const
         LOAD_ASSET(ASSET_TYPE_LOADED_SOUND, LoadedSound, loadSnd)
         LOAD_ASSET(ASSET_TYPE_COMWORLD, ComWorld, comWorld)
         LOAD_ASSET(ASSET_TYPE_MAP_ENTS, MapEnts, mapEnts)
+        LOAD_ASSET(ASSET_TYPE_GFXWORLD, GfxWorld, gfxWorld)
         LOAD_ASSET(ASSET_TYPE_LIGHT_DEF, GfxLightDef, lightDef)
         LOAD_ASSET(ASSET_TYPE_FONT, Font_s, font)
         LOAD_ASSET(ASSET_TYPE_MENULIST, MenuList, menuList)

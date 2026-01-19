@@ -42,6 +42,7 @@ ZoneCode.Assets = {
         "LoadedSound",
         "ComWorld",
         "MapEnts",
+        "GfxWorld",
         "GfxLightDef",
         "Font_s",
         "MenuList",

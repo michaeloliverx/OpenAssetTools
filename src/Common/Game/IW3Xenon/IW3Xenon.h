@@ -41,6 +41,7 @@ namespace IW3Xenon
     using AssetLoadedSound = Asset<ASSET_TYPE_LOADED_SOUND, LoadedSound>;
     using AssetComWorld = Asset<ASSET_TYPE_COMWORLD, ComWorld>;
     using AssetMapEnts = Asset<ASSET_TYPE_MAP_ENTS, MapEnts>;
+    using AssetGfxWorld = Asset<ASSET_TYPE_GFXWORLD, GfxWorld>;
     using AssetLightDef = Asset<ASSET_TYPE_LIGHT_DEF, GfxLightDef>;
     using AssetFont = Asset<ASSET_TYPE_FONT, Font_s>;
     using AssetMenuList = Asset<ASSET_TYPE_MENULIST, MenuList>;
@@ -66,6 +67,7 @@ DEFINE_ASSET_NAME_ACCESSOR(IW3Xenon::AssetSoundCurve, filename);
 DEFINE_ASSET_NAME_ACCESSOR(IW3Xenon::AssetLoadedSound, name);
 DEFINE_ASSET_NAME_ACCESSOR(IW3Xenon::AssetComWorld, name);
 DEFINE_ASSET_NAME_ACCESSOR(IW3Xenon::AssetMapEnts, name);
+DEFINE_ASSET_NAME_ACCESSOR(IW3Xenon::AssetGfxWorld, name);
 DEFINE_ASSET_NAME_ACCESSOR(IW3Xenon::AssetLightDef, name);
 DEFINE_ASSET_NAME_ACCESSOR(IW3Xenon::AssetFont, fontName);
 DEFINE_ASSET_NAME_ACCESSOR(IW3Xenon::AssetMenuList, name);
