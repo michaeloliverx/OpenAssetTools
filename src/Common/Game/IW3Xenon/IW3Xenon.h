@@ -42,6 +42,7 @@ namespace IW3Xenon
     using AssetClipMap = Asset<ASSET_TYPE_CLIPMAP, clipMap_t>;
     using AssetClipMapPvs = Asset<ASSET_TYPE_CLIPMAP_PVS, clipMap_t>;
     using AssetComWorld = Asset<ASSET_TYPE_COMWORLD, ComWorld>;
+    using AssetGameWorldSp = Asset<ASSET_TYPE_GAMEWORLD_SP, GameWorldSp>;
     using AssetGameWorldMp = Asset<ASSET_TYPE_GAMEWORLD_MP, GameWorldMp>;
     using AssetMapEnts = Asset<ASSET_TYPE_MAP_ENTS, MapEnts>;
     using AssetGfxWorld = Asset<ASSET_TYPE_GFXWORLD, GfxWorld>;
@@ -71,6 +72,7 @@ DEFINE_ASSET_NAME_ACCESSOR(IW3Xenon::AssetLoadedSound, name);
 DEFINE_ASSET_NAME_ACCESSOR(IW3Xenon::AssetClipMap, name);
 DEFINE_ASSET_NAME_ACCESSOR(IW3Xenon::AssetClipMapPvs, name);
 DEFINE_ASSET_NAME_ACCESSOR(IW3Xenon::AssetComWorld, name);
+DEFINE_ASSET_NAME_ACCESSOR(IW3Xenon::AssetGameWorldSp, name);
 DEFINE_ASSET_NAME_ACCESSOR(IW3Xenon::AssetGameWorldMp, name);
 DEFINE_ASSET_NAME_ACCESSOR(IW3Xenon::AssetMapEnts, name);
 DEFINE_ASSET_NAME_ACCESSOR(IW3Xenon::AssetGfxWorld, name);

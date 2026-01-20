@@ -15,6 +15,7 @@ asset SndCurve AssetSoundCurve;
 asset LoadedSound AssetLoadedSound;
 asset clipMap_t AssetClipMapPvs;
 asset ComWorld AssetComWorld;
+asset GameWorldSp AssetGameWorldSp;
 asset GameWorldMp AssetGameWorldMp;
 asset MapEnts AssetMapEnts;
 asset GfxWorld AssetGfxWorld;
@@ -49,6 +50,7 @@ block normal  XFILE_BLOCK_PHYSICAL;
 #include "XAssets/snd_alias_list_t.txt"
 #include "XAssets/SndCurve.txt"
 #include "XAssets/ComWorld.txt"
+#include "XAssets/GameWorldSp.txt"
 #include "XAssets/GameWorldMp.txt"
 #include "XAssets/MapEnts.txt"
 #include "XAssets/GfxWorld.txt"

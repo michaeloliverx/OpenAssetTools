@@ -42,6 +42,7 @@ ZoneCode.Assets = {
         "LoadedSound",
         "clipMap_t",
         "ComWorld",
+        "GameWorldSp",
         "GameWorldMp",
         "MapEnts",
         "GfxWorld",

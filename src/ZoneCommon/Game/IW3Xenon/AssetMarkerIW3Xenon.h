@@ -6,6 +6,7 @@
 #include "Game/IW3Xenon/XAssets/fxeffectdef/fxeffectdef_mark_db.h"
 #include "Game/IW3Xenon/XAssets/fximpacttable/fximpacttable_mark_db.h"
 #include "Game/IW3Xenon/XAssets/gameworldmp/gameworldmp_mark_db.h"
+#include "Game/IW3Xenon/XAssets/gameworldsp/gameworldsp_mark_db.h"
 #include "Game/IW3Xenon/XAssets/gfximage/gfximage_mark_db.h"
 #include "Game/IW3Xenon/XAssets/gfxlightdef/gfxlightdef_mark_db.h"
 #include "Game/IW3Xenon/XAssets/gfxworld/gfxworld_mark_db.h"
@@ -122,12 +123,12 @@ static inline void EndianFixup_XAnimDynamicFrames(IW3Xenon::XAnimDynamicFrames* 
 
 static inline void EndianFixup_XAnimDeltaPartQuat_Partial(IW3Xenon::XAnimDeltaPartQuat* v, size_t loaded_size)
 {
-    assert(false);
+    SWAP_BE_MEMBER(v, size);
 }
 
 static inline void EndianFixup_XAnimDeltaPartQuatDataFrames_Partial(IW3Xenon::XAnimDeltaPartQuatDataFrames* v, size_t loaded_size)
 {
-    assert(false);
+    SwapBigEndianPtr32(v->frames);
 }
 
 static inline void EndianFixup_XAnimIndices(IW3Xenon::XAnimIndices* v)
@@ -957,6 +958,109 @@ static inline void EndianFixup_ComWorld(IW3Xenon::ComWorld* v)
     SwapBigEndianPtr32(v->primaryLights);
 }
 
+// ---- GameWorldSp
+
+static inline void EndianFixup_pathnode_t(IW3Xenon::pathnode_t* v)
+{
+    // pathnode_constant_t constant (embedded)
+    SWAP_BE_ENUM(v, constant.type, IW3Xenon::nodeType);
+    SWAP_BE_MEMBER(v, constant.spawnflags);
+    SWAP_BE_MEMBER(v, constant.targetname);
+    SWAP_BE_MEMBER(v, constant.script_linkName);
+    SWAP_BE_MEMBER(v, constant.script_noteworthy);
+    SWAP_BE_MEMBER(v, constant.target);
+    SWAP_BE_MEMBER(v, constant.animscript);
+    SWAP_BE_MEMBER(v, constant.animscriptfunc);
+    for (int i = 0; i < 3; i++)
+        SwapBigEndianFloat(v->constant.vOrigin[i]);
+    SwapBigEndianFloat(v->constant.fAngle);
+    for (int i = 0; i < 2; i++)
+        SwapBigEndianFloat(v->constant.forward[i]);
+    SwapBigEndianFloat(v->constant.fRadius);
+    SwapBigEndianFloat(v->constant.minUseDistSq);
+    for (int i = 0; i < 2; i++)
+        SWAP_BE_MEMBER(v, constant.wOverlapNode[i]);
+    SWAP_BE_MEMBER(v, constant.wChainId);
+    SWAP_BE_MEMBER(v, constant.wChainDepth);
+    SWAP_BE_MEMBER(v, constant.wChainParent);
+    SWAP_BE_MEMBER(v, constant.totalLinkCount);
+    SwapBigEndianPtr32(v->constant.Links);
+
+    // pathnode_dynamic_t dynamic (embedded)
+    SwapBigEndianPtr32(v->dynamic.pOwner);
+    SWAP_BE_MEMBER(v, dynamic.iFreeTime);
+    for (int i = 0; i < 3; i++)
+        SWAP_BE_MEMBER(v, dynamic.iValidTime[i]);
+    SWAP_BE_MEMBER(v, dynamic.inPlayerLOSTime);
+    SWAP_BE_MEMBER(v, dynamic.wLinkCount);
+    SWAP_BE_MEMBER(v, dynamic.wOverlapCount);
+    SWAP_BE_MEMBER(v, dynamic.turretEntNumber);
+    SWAP_BE_MEMBER(v, dynamic.userCount);
+
+    // pathnode_transient_t transient (embedded)
+    SWAP_BE_MEMBER(v, transient.iSearchFrame);
+    SwapBigEndianPtr32(v->transient.pNextOpen);
+    SwapBigEndianPtr32(v->transient.pPrevOpen);
+    SwapBigEndianPtr32(v->transient.pParent);
+    SwapBigEndianFloat(v->transient.fCost);
+    SwapBigEndianFloat(v->transient.fHeuristic);
+    SwapBigEndianFloat(v->transient.costFactor);
+}
+
+static inline void EndianFixup_pathnode_tree_t(IW3Xenon::pathnode_tree_t* v)
+{
+    SWAP_BE_MEMBER(v, axis);
+    SwapBigEndianFloat(v->dist);
+    if (v->axis >= 0)
+    {
+        SwapBigEndianPtr32(v->u.child[0]);
+        SwapBigEndianPtr32(v->u.child[1]);
+    }
+    else
+    {
+        SWAP_BE_MEMBER(v, u.s.nodeCount);
+        SwapBigEndianPtr32(v->u.s.nodes);
+    }
+}
+
+static inline void EndianFixup_PathData(IW3Xenon::PathData* v)
+{
+    assert(false);
+}
+
+static inline void EndianFixup_pathnode_constant_t(IW3Xenon::pathnode_constant_t* v)
+{
+    assert(false);
+}
+
+static inline void EndianFixup_pathnode_tree_info_t(IW3Xenon::pathnode_tree_info_t* v)
+{
+    assert(false);
+}
+
+static inline void EndianFixup_pathnode_tree_nodes_t(IW3Xenon::pathnode_tree_nodes_t* v)
+{
+    SWAP_BE_MEMBER(v, nodeCount);
+    SwapBigEndianPtr32(v->nodes);
+}
+
+static inline void EndianFixup_GameWorldSp(IW3Xenon::GameWorldSp* v)
+{
+    SwapBigEndianPtr32(v->name);
+
+    // PathData path (embedded)
+    SWAP_BE_MEMBER(v, path.nodeCount);
+    SwapBigEndianPtr32(v->path.nodes);
+    SwapBigEndianPtr32(v->path.basenodes);
+    SWAP_BE_MEMBER(v, path.chainNodeCount);
+    SwapBigEndianPtr32(v->path.chainNodeForNode);
+    SwapBigEndianPtr32(v->path.nodeForChainNode);
+    SWAP_BE_MEMBER(v, path.visBytes);
+    SwapBigEndianPtr32(v->path.pathVis);
+    SWAP_BE_MEMBER(v, path.nodeTreeCount);
+    SwapBigEndianPtr32(v->path.nodeTree);
+}
+
 // ---- GameWorldMp
 
 static inline void EndianFixup_GameWorldMp(IW3Xenon::GameWorldMp* v)
@@ -1593,7 +1697,14 @@ static inline void EndianFixup_listBoxDef_s(IW3Xenon::listBoxDef_s* v)
 
 static inline void EndianFixup_multiDef_s(IW3Xenon::multiDef_s* v)
 {
-    assert(false);
+    for (int i = 0; i < 32; i++)
+        SwapBigEndianPtr32(v->dvarList[i]);
+    for (int i = 0; i < 32; i++)
+        SwapBigEndianPtr32(v->dvarStr[i]);
+    for (int i = 0; i < 32; i++)
+        SwapBigEndianFloat(v->dvarValue[i]);
+    SWAP_BE_MEMBER(v, count);
+    SWAP_BE_MEMBER(v, strDef);
 }
 
 static inline void EndianFixup_menuDef_t(IW3Xenon::menuDef_t* v)
@@ -2166,7 +2277,8 @@ static inline void EndianFixup_FxElemDef(IW3Xenon::FxElemDef* v)
 
 static inline void EndianFixup_FxElemMarkVisuals(IW3Xenon::FxElemMarkVisuals* v)
 {
-    assert(false);
+    for (int i = 0; i < 2; i++)
+        SwapBigEndianPtr32(v->materials[i]);
 }
 
 static inline void EndianFixup_FxElemVisuals(IW3Xenon::FxElemVisuals* v)

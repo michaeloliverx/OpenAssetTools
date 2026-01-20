@@ -7,6 +7,7 @@
 #include "Game/IW3Xenon/XAssets/fxeffectdef/fxeffectdef_load_db.h"
 #include "Game/IW3Xenon/XAssets/fximpacttable/fximpacttable_load_db.h"
 #include "Game/IW3Xenon/XAssets/gameworldmp/gameworldmp_load_db.h"
+#include "Game/IW3Xenon/XAssets/gameworldsp/gameworldsp_load_db.h"
 #include "Game/IW3Xenon/XAssets/gfximage/gfximage_load_db.h"
 #include "Game/IW3Xenon/XAssets/gfxlightdef/gfxlightdef_load_db.h"
 #include "Game/IW3Xenon/XAssets/gfxworld/gfxworld_load_db.h"
@@ -92,6 +93,7 @@ void ContentLoader::LoadXAsset(const bool atStreamStart) const
         LOAD_ASSET(ASSET_TYPE_CLIPMAP, clipMap_t, clipMap)
         LOAD_ASSET(ASSET_TYPE_CLIPMAP_PVS, clipMap_t, clipMap)
         LOAD_ASSET(ASSET_TYPE_COMWORLD, ComWorld, comWorld)
+        LOAD_ASSET(ASSET_TYPE_GAMEWORLD_SP, GameWorldSp, gameWorldSp)
         LOAD_ASSET(ASSET_TYPE_GAMEWORLD_MP, GameWorldMp, gameWorldMp)
         LOAD_ASSET(ASSET_TYPE_MAP_ENTS, MapEnts, mapEnts)
         LOAD_ASSET(ASSET_TYPE_GFXWORLD, GfxWorld, gfxWorld)
