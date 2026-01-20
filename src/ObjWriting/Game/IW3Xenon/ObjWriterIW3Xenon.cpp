@@ -1,6 +1,7 @@
 #include "ObjWriterIW3Xenon.h"
 
 #include "Game/IW3Xenon/GameAssetPoolIW3Xenon.h"
+#include "Localize/LocalizeDumperIW3Xenon.h"
 #include "ObjWriting.h"
 #include "RawFile/RawFileDumperIW3Xenon.h"
 #include "StringTable/StringTableDumperIW3Xenon.h"
@@ -18,6 +19,7 @@ bool ObjWriter::DumpZone(AssetDumpingContext& context) const
     const auto* assetPools = dynamic_cast<GameAssetPoolIW3Xenon*>(context.m_zone.m_pools.get());
     std::vector<std::unique_ptr<IAssetDumper>> dumpers;
 
+    REGISTER_DUMPER(localize::DumperIW3Xenon, m_localize)
     REGISTER_DUMPER(raw_file::DumperIW3Xenon, m_raw_file)
     REGISTER_DUMPER(string_table::DumperIW3Xenon, m_string_table)
 
