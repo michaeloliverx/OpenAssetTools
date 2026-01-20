@@ -24,6 +24,10 @@ set count boneInfo numBones;
 set reusable physGeoms;
 set count physGeoms 1;
 
+// XModelStreamInfo
+use XModelStreamInfo;
+set count highMipBounds XModel::lodInfo[0]::numsurfs;
+
 // PhysGeomList
 use PhysGeomList;
 set count geoms count;

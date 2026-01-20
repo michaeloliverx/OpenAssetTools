@@ -23,9 +23,9 @@ public:
 
     static std::unique_ptr<matcher_t> Typename(const supplier_t* labelSupplier);
     static std::unique_ptr<matcher_t> ArrayDef(const supplier_t* labelSupplier);
+    static std::unique_ptr<matcher_t> ParseOperandArray(const supplier_t* labelSupplier);
 
 private:
-    static std::unique_ptr<matcher_t> ParseOperandArray(const supplier_t* labelSupplier);
     static std::unique_ptr<matcher_t> ParseOperand(const supplier_t* labelSupplier);
     static std::unique_ptr<matcher_t> ParseOperationType(const supplier_t* labelSupplier);
 
