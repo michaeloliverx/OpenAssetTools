@@ -1761,7 +1761,8 @@ static inline void EndianFixup_snd_alias_list_name(IW3Xenon::snd_alias_list_name
 
 static inline void EndianFixup_SndAliasCustom(IW3Xenon::SndAliasCustom* v)
 {
-    assert(false);
+    // union of pointers so swap any
+    SwapBigEndianPtr32(v->name);
 }
 
 static inline void EndianFixup_WeaponDef(IW3Xenon::WeaponDef* v)
@@ -2299,7 +2300,13 @@ static inline void EndianFixup_FxEffectDefRef(IW3Xenon::FxEffectDefRef* v)
 
 static inline void EndianFixup_FxTrailDef(IW3Xenon::FxTrailDef* v)
 {
-    assert(false);
+    SWAP_BE_MEMBER(v, scrollTimeMsec);
+    SWAP_BE_MEMBER(v, repeatDist);
+    SWAP_BE_MEMBER(v, splitDist);
+    SWAP_BE_MEMBER(v, vertCount);
+    SwapBigEndianPtr32(v->verts);
+    SWAP_BE_MEMBER(v, indCount);
+    SwapBigEndianPtr32(v->inds);
 }
 
 static inline void EndianFixup_FxEffectDef(IW3Xenon::FxEffectDef* v)
