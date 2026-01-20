@@ -47,6 +47,7 @@ set arraysize u::frames::indices::_1 size + 1;
 set arraysize u::frames::indices::_2 size + 1;
 set condition u::frames::frames::_1 smallTrans;
 set count u::frames::frames::_1 size + 1;
+set allocalign u::frames::frames::_2 4;
 set count u::frames::frames::_2 size + 1;
 
 // XAnimPartTransFrames
@@ -60,6 +61,7 @@ set condition u::frames size > 0;
 set condition u::frames::indices::_1 XAnimParts::numframes < 256;
 set arraysize u::frames::indices::_1 size + 1;
 set arraysize u::frames::indices::_2 size + 1;
+set allocalign u::frames::frames 4;
 set count u::frames::frames size + 1;
 
 // XAnimDeltaPartQuatDataFrames
