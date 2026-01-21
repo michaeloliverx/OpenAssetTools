@@ -116,7 +116,7 @@ CommandsParserValue CommandsLexer::GetNextToken()
                 break;
 
             const auto pos = GetPreviousCharacterPos();
-            if (isdigit(c))
+            if (isdigit(c) || ((c == '+' || c == '-') && isdigit(PeekChar())))
             {
                 bool isFloatingPointValue;
                 bool hasSignPrefix;
