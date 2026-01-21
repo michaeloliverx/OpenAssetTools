@@ -33,6 +33,8 @@ set count paEntries EntryCount;
 
 // StreamedSound
 use StreamedSound;
-set condition StreamedSound::filename::info::raw StreamedSound::filename::fileIndex == 0;
+// The latest version of the executable has an additional check for -1
+set condition StreamedSound::filename::info::raw StreamedSound::filename::fileIndex == 0
+    || StreamedSound::filename::fileIndex == -1;
 set string StreamedSound::filename::info::raw::dir;
 set string StreamedSound::filename::info::raw::name;
