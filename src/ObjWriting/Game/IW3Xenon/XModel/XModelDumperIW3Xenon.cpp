@@ -17,9 +17,12 @@
 #include "XModel/Obj/ObjWriter.h"
 #include "XModel/XModelWriter.h"
 
+#include <algorithm>
 #include <cassert>
+#include <cmath>
 #include <cstring>
 #include <format>
+#include <iostream>
 
 using namespace IW3Xenon;
 
@@ -55,6 +58,29 @@ namespace
         u = SwapU32(u);
         std::memcpy(&v, &u, sizeof(v));
         return v;
+    }
+
+    static inline float Len3(const float v[3])
+    {
+        return std::sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+    }
+
+    static inline void Normalize3(float (&n)[3])
+    {
+        const float len = Len3(n);
+        if (len > 1e-20f)
+        {
+            const float inv = 1.0f / len;
+            n[0] *= inv;
+            n[1] *= inv;
+            n[2] *= inv;
+        }
+        else
+        {
+            n[0] = 0.0f;
+            n[1] = 0.0f;
+            n[2] = 1.0f;
+        }
     }
 
     std::string GetFileNameForLod(const std::string& modelName, const unsigned lod, const std::string& extension)
@@ -344,7 +370,7 @@ namespace
 
                 pack32::Vec3UnpackUnitVecScaleBased(SwapU32(v.normal.packed), vertex.normal);
 
-                // normalize(vertex.normal);
+                Normalize3(vertex.normal);
 
                 pack32::Vec4UnpackGfxColor(SwapU32(v.color.packed), vertex.color);
                 pack32::Vec2UnpackTexCoordsVU(SwapU32(v.texCoord.packed), vertex.uv);
@@ -531,8 +557,9 @@ namespace
 
                 XModelFace face{};
                 face.vertexIndex[0] = base + i0;
-                face.vertexIndex[1] = base + i1;
-                face.vertexIndex[2] = base + i2;
+                // Xenon needs to flip i1/i2
+                face.vertexIndex[1] = base + i2;
+                face.vertexIndex[2] = base + i1;
 
                 object.m_faces.emplace_back(face);
             }
