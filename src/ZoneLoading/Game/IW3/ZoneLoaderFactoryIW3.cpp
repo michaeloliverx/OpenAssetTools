@@ -59,7 +59,7 @@ namespace
         {
             zoneLoader.AddXBlock(XBLOCK_DEF(IW3Xenon::XFILE_BLOCK_TEMP, XBlockType::BLOCK_TYPE_TEMP));
             zoneLoader.AddXBlock(XBLOCK_DEF(IW3Xenon::XFILE_BLOCK_RUNTIME, XBlockType::BLOCK_TYPE_RUNTIME));
-            zoneLoader.AddXBlock(XBLOCK_DEF(IW3Xenon::XFILE_BLOCK_LARGE_RUNTIME, XBlockType::BLOCK_TYPE_RUNTIME));
+            zoneLoader.AddXBlock(XBLOCK_DEF(IW3Xenon::XFILE_BLOCK_LARGE_RUNTIME, XBlockType::BLOCK_TYPE_DELAY));
             zoneLoader.AddXBlock(XBLOCK_DEF(IW3Xenon::XFILE_BLOCK_PHYSICAL_RUNTIME, XBlockType::BLOCK_TYPE_RUNTIME));
             zoneLoader.AddXBlock(XBLOCK_DEF(IW3Xenon::XFILE_BLOCK_VIRTUAL, XBlockType::BLOCK_TYPE_NORMAL));
             zoneLoader.AddXBlock(XBLOCK_DEF(IW3Xenon::XFILE_BLOCK_LARGE, XBlockType::BLOCK_TYPE_NORMAL));

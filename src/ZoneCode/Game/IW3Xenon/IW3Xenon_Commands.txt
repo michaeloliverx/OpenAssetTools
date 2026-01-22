@@ -34,7 +34,7 @@ asset StringTable AssetStringTable;
 // Setup blocks
 block temp    XFILE_BLOCK_TEMP              default;
 block runtime XFILE_BLOCK_RUNTIME           default;
-block runtime XFILE_BLOCK_LARGE_RUNTIME;
+block delay XFILE_BLOCK_LARGE_RUNTIME;
 block runtime XFILE_BLOCK_PHYSICAL_RUNTIME;
 block normal  XFILE_BLOCK_VIRTUAL           default;
 block normal  XFILE_BLOCK_LARGE;

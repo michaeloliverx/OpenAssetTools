@@ -12,6 +12,7 @@
 #include <cstring>
 #include <memory>
 #include <optional>
+#include <span>
 #include <type_traits>
 #include <vector>
 
@@ -54,6 +55,12 @@ private:
     size_t m_buffer_size;
     unsigned m_pointer_byte_count;
     size_t m_offset;
+};
+
+struct StreamDelayInfo
+{
+    void* dst;
+    size_t size;
 };
 
 template<typename T> class MaybePointerFromLookup
@@ -239,6 +246,8 @@ public:
 #ifdef DEBUG_OFFSETS
     virtual void DebugOffsets(size_t assetIndex) const = 0;
 #endif
+
+    virtual std::span<const StreamDelayInfo> GetDelayedLoads() const = 0;
 
     static std::unique_ptr<ZoneInputStream> Create(unsigned pointerBitCount,
                                                    unsigned blockBitCount,

@@ -86,6 +86,11 @@ namespace
             return m_pointer_byte_count * 8u;
         }
 
+        std::span<const StreamDelayInfo> GetDelayedLoads() const override
+        {
+            return m_delayed_loads;
+        }
+
         void PushBlock(const block_t block) override
         {
             assert(block < static_cast<block_t>(m_blocks.size()));
@@ -445,7 +450,7 @@ namespace
                 break;
 
             case XBlockType::BLOCK_TYPE_DELAY:
-                assert(false);
+                m_delayed_loads.push_back({dst, size});
                 break;
             }
 
@@ -512,6 +517,8 @@ namespace
         std::unique_ptr<ProgressCallback> m_progress_callback;
         size_t m_progress_current_size;
         size_t m_progress_total_size;
+
+        std::vector<StreamDelayInfo> m_delayed_loads;
     };
 } // namespace
 

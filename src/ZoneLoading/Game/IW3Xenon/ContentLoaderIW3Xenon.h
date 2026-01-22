@@ -17,6 +17,7 @@ namespace IW3Xenon
 
         void LoadXAsset(bool atStreamStart) const;
         void LoadXAssetArray(bool atStreamStart, size_t count);
+        void LoadDelayStream();
 
         XAssetList* varXAssetList;
         XAsset* varXAsset;

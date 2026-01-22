@@ -147,11 +147,15 @@ void ContentLoader::LoadXAssetArray(const bool atStreamStart, const size_t count
             break;
         }
         varXAsset++;
+}
 
-#ifdef DEBUG_OFFSETS
-        m_stream.DebugOffsets(index);
-#endif
+void ContentLoader::LoadDelayStream()
+{
+    for (const auto& delay : m_stream.GetDelayedLoads())
+    {
+        m_stream.LoadDataRaw(delay.dst, delay.size);
     }
+    // TODO: assert total_size matches the size of the large_runtime block
 }
 
 void ContentLoader::Load()
@@ -180,4 +184,6 @@ void ContentLoader::Load()
     }
 
     m_stream.PopBlock();
+
+    LoadDelayStream();
 }
