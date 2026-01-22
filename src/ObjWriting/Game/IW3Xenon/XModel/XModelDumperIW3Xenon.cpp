@@ -344,6 +344,26 @@ namespace
         }
     }
 
+    static inline int32_t SignExtend10(uint32_t v10)
+    {
+        // 10-bit signed two's complement: [-512, 511]
+        return (v10 & 0x200u) ? static_cast<int32_t>(v10 | ~0x3FFu) : static_cast<int32_t>(v10);
+    }
+
+    static inline void DecodeNormal_SNorm101010(uint32_t packed, float (&out)[3])
+    {
+        // x: bits 0..9, y: 10..19, z: 20..29
+        const int32_t xi = SignExtend10((packed >> 0) & 0x3FFu);
+        const int32_t yi = SignExtend10((packed >> 10) & 0x3FFu);
+        const int32_t zi = SignExtend10((packed >> 20) & 0x3FFu);
+
+        // Map to [-1, 1]. Use 511 so +511 hits +1.0 exactly.
+        constexpr float denom = 511.0f;
+        out[0] = static_cast<float>(xi) / denom;
+        out[1] = static_cast<float>(yi) / denom;
+        out[2] = static_cast<float>(zi) / denom;
+    }
+
     void AddXModelVertices(XModelCommon& out, const XModel* model, unsigned lod, std::vector<uint32_t>& baseVert)
     {
         XSurface* surfs;
@@ -368,8 +388,9 @@ namespace
                 vertex.coordinates[1] = SwapFloat(v.xyz[1]);
                 vertex.coordinates[2] = SwapFloat(v.xyz[2]);
 
-                pack32::Vec3UnpackUnitVecScaleBased(SwapU32(v.normal.packed), vertex.normal);
-
+                // Xenon IW3: PackedUnitVec is SNORM 10:10:10 in low 30 bits.
+                const uint32_t nPacked = SwapU32(v.normal.packed);
+                DecodeNormal_SNorm101010(nPacked, vertex.normal);
                 Normalize3(vertex.normal);
 
                 pack32::Vec4UnpackGfxColor(SwapU32(v.color.packed), vertex.color);
