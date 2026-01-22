@@ -578,9 +578,8 @@ namespace
 
                 XModelFace face{};
                 face.vertexIndex[0] = base + i0;
-                // Xenon needs to flip i1/i2
-                face.vertexIndex[1] = base + i2;
-                face.vertexIndex[2] = base + i1;
+                face.vertexIndex[1] = base + i1;
+                face.vertexIndex[2] = base + i2;
 
                 object.m_faces.emplace_back(face);
             }
