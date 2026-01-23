@@ -1,6 +1,7 @@
 #include "ObjWriterIW3Xenon.h"
 
 #include "Game/IW3Xenon/GameAssetPoolIW3Xenon.h"
+#include "Image/ImageDumperIW3Xenon.h"
 #include "Localize/LocalizeDumperIW3Xenon.h"
 #include "Maps/MapEntsDumperIW3Xenon.h"
 #include "ObjWriting.h"
@@ -22,6 +23,7 @@ bool ObjWriter::DumpZone(AssetDumpingContext& context) const
     std::vector<std::unique_ptr<IAssetDumper>> dumpers;
 
     REGISTER_DUMPER(xmodel::DumperIW3Xenon, m_xmodel)
+    REGISTER_DUMPER(image::DumperIW3Xenon, m_image)
     REGISTER_DUMPER(map_ents::DumperIW3Xenon, m_map_ents)
     REGISTER_DUMPER(localize::DumperIW3Xenon, m_localize)
     REGISTER_DUMPER(raw_file::DumperIW3Xenon, m_raw_file)
