@@ -398,7 +398,7 @@ namespace IW3Xenon
         unsigned __int8 pad[2];
     };
 
-    struct __declspec(align(2)) cbrushside_t
+    struct cbrushside_t
     {
         cplane_s* plane;
         unsigned int materialNum;

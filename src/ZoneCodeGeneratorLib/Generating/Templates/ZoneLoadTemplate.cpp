@@ -1100,7 +1100,7 @@ namespace
                     LINE("for (size_t index = 0; index < count; index++)")
                     LINE("{")
                     m_intendation++;
-                    LINEF("EndianFixup_{0}(&{1}[index]);", MakeSafeTypeName(info->m_definition), MakeTypeVarName(info->m_definition))
+                    LINEF("EndianSwap_{0}(&{1}[index]);", MakeSafeTypeName(info->m_definition), MakeTypeVarName(info->m_definition))
                     m_intendation--;
                     LINE("}")
                 }
@@ -1975,7 +1975,7 @@ namespace
                               info->m_definition->GetSize())
                         if (m_env.m_game == "IW3Xenon")
                         {
-                            LINEF("EndianFixup_{0}({1});", MakeSafeTypeName(info->m_definition), MakeTypeVarName(info->m_definition))
+                            LINEF("EndianSwap_{0}({1});", MakeSafeTypeName(info->m_definition), MakeTypeVarName(info->m_definition))
                         }
                     }
                     else
@@ -1986,7 +1986,7 @@ namespace
                               dynamicMember->m_member->m_name)
                         if (m_env.m_game == "IW3Xenon")
                         {
-                            LINEF("EndianFixup_{0}_Partial({1}, offsetof({2}, {3}));",
+                            LINEF("EndianSwap_{0}_Partial({1}, offsetof({2}, {3}));",
                                   MakeSafeTypeName(info->m_definition),
                                   MakeTypeVarName(info->m_definition),
                                   info->m_definition->GetFullName(),
@@ -2056,9 +2056,15 @@ namespace
             if (!m_env.m_architecture_mismatch)
             {
                 LINE("if (atStreamStart)")
+                LINE("{")
                 m_intendation++;
                 LINEF("m_stream.Load<{0}*>({1});", info->m_definition->GetFullName(), MakeTypePtrVarName(info->m_definition))
+                if (m_env.m_game == "IW3Xenon")
+                {
+                    LINEF("EndianSwap(*{0});", MakeTypePtrVarName(info->m_definition))
+                }
                 m_intendation--;
+                LINE("}")
             }
             else
             {

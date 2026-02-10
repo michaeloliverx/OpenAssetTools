@@ -48,7 +48,7 @@ static inline void EndianSwap(T& v)
 
 // ---- PhysPreset
 
-static inline void EndianFixup_PhysPreset(IW3Xenon::PhysPreset* v)
+static inline void EndianSwap_PhysPreset(IW3Xenon::PhysPreset* v)
 {
     EndianSwap(v->name);
     EndianSwap(v->type);
@@ -65,25 +65,25 @@ static inline void EndianFixup_PhysPreset(IW3Xenon::PhysPreset* v)
 
 // ---- XAnimParts
 
-static inline void EndianFixup_XAnimNotifyInfo(IW3Xenon::XAnimNotifyInfo* v)
+static inline void EndianSwap_XAnimNotifyInfo(IW3Xenon::XAnimNotifyInfo* v)
 {
     EndianSwap(v->name);
     EndianSwap(v->time);
 }
 
-static inline void EndianFixup_XAnimDeltaPart(IW3Xenon::XAnimDeltaPart* v)
+static inline void EndianSwap_XAnimDeltaPart(IW3Xenon::XAnimDeltaPart* v)
 {
     EndianSwap(v->trans);
     EndianSwap(v->quat);
 }
 
-static inline void EndianFixup_XAnimPartTrans_Partial(IW3Xenon::XAnimPartTrans* v, size_t loaded_size)
+static inline void EndianSwap_XAnimPartTrans_Partial(IW3Xenon::XAnimPartTrans* v, size_t loaded_size)
 {
     // hard coded not dynamic
     EndianSwap(v->size);
 }
 
-static inline void EndianFixup_XAnimPartTransFrames_Partial(IW3Xenon::XAnimPartTransFrames* v, size_t loaded_size)
+static inline void EndianSwap_XAnimPartTransFrames_Partial(IW3Xenon::XAnimPartTransFrames* v, size_t loaded_size)
 {
     EndianSwap(v->mins[0]);
     EndianSwap(v->mins[1]);
@@ -94,27 +94,27 @@ static inline void EndianFixup_XAnimPartTransFrames_Partial(IW3Xenon::XAnimPartT
     EndianSwap(v->frames._1);
 }
 
-static inline void EndianFixup_XAnimDynamicFrames(IW3Xenon::XAnimDynamicFrames* v)
+static inline void EndianSwap_XAnimDynamicFrames(IW3Xenon::XAnimDynamicFrames* v)
 {
     assert(false);
 }
 
-static inline void EndianFixup_XAnimDeltaPartQuat_Partial(IW3Xenon::XAnimDeltaPartQuat* v, size_t loaded_size)
+static inline void EndianSwap_XAnimDeltaPartQuat_Partial(IW3Xenon::XAnimDeltaPartQuat* v, size_t loaded_size)
 {
     EndianSwap(v->size);
 }
 
-static inline void EndianFixup_XAnimDeltaPartQuatDataFrames_Partial(IW3Xenon::XAnimDeltaPartQuatDataFrames* v, size_t loaded_size)
+static inline void EndianSwap_XAnimDeltaPartQuatDataFrames_Partial(IW3Xenon::XAnimDeltaPartQuatDataFrames* v, size_t loaded_size)
 {
     EndianSwap(v->frames);
 }
 
-static inline void EndianFixup_XAnimIndices(IW3Xenon::XAnimIndices* v)
+static inline void EndianSwap_XAnimIndices(IW3Xenon::XAnimIndices* v)
 {
     assert(false);
 }
 
-static inline void EndianFixup_XAnimParts(IW3Xenon::XAnimParts* v)
+static inline void EndianSwap_XAnimParts(IW3Xenon::XAnimParts* v)
 {
     EndianSwap(v->name);
     EndianSwap(v->dataByteCount);
@@ -146,7 +146,7 @@ static inline void EndianFixup_XAnimParts(IW3Xenon::XAnimParts* v)
 
 // ---- XModel
 
-static inline void EndianFixup_XSurface(IW3Xenon::XSurface* v)
+static inline void EndianSwap_XSurface(IW3Xenon::XSurface* v)
 {
     EndianSwap(v->vertCount);
     EndianSwap(v->triCount);
@@ -161,12 +161,12 @@ static inline void EndianFixup_XSurface(IW3Xenon::XSurface* v)
         EndianSwap(v->partBits[i]);
 }
 
-static inline void EndianFixup_XSurfaceVertexInfo(IW3Xenon::XSurfaceVertexInfo* v)
+static inline void EndianSwap_XSurfaceVertexInfo(IW3Xenon::XSurfaceVertexInfo* v)
 {
     assert(false);
 }
 
-static inline void EndianFixup_XRigidVertList(IW3Xenon::XRigidVertList* v)
+static inline void EndianSwap_XRigidVertList(IW3Xenon::XRigidVertList* v)
 {
     EndianSwap(v->boneOffset);
     EndianSwap(v->vertCount);
@@ -175,7 +175,7 @@ static inline void EndianFixup_XRigidVertList(IW3Xenon::XRigidVertList* v)
     EndianSwap(v->collisionTree);
 }
 
-static inline void EndianFixup_XSurfaceCollisionTree(IW3Xenon::XSurfaceCollisionTree* v)
+static inline void EndianSwap_XSurfaceCollisionTree(IW3Xenon::XSurfaceCollisionTree* v)
 {
     for (int i = 0; i < 3; i++)
         EndianSwap(v->trans[i]);
@@ -187,12 +187,12 @@ static inline void EndianFixup_XSurfaceCollisionTree(IW3Xenon::XSurfaceCollision
     EndianSwap(v->leafs);
 }
 
-static inline void EndianFixup_XModelStreamInfo(IW3Xenon::XModelStreamInfo* v)
+static inline void EndianSwap_XModelStreamInfo(IW3Xenon::XModelStreamInfo* v)
 {
     assert(false);
 }
 
-static inline void EndianFixup_PhysGeomList(IW3Xenon::PhysGeomList* v)
+static inline void EndianSwap_PhysGeomList(IW3Xenon::PhysGeomList* v)
 {
     EndianSwap(v->count);
     EndianSwap(v->geoms);
@@ -205,7 +205,7 @@ static inline void EndianFixup_PhysGeomList(IW3Xenon::PhysGeomList* v)
         EndianSwap(v->mass.productsOfInertia[i]);
 }
 
-static inline void EndianFixup_PhysGeomInfo(IW3Xenon::PhysGeomInfo* v)
+static inline void EndianSwap_PhysGeomInfo(IW3Xenon::PhysGeomInfo* v)
 {
     EndianSwap(v->brush);
     EndianSwap(v->type);
@@ -218,7 +218,7 @@ static inline void EndianFixup_PhysGeomInfo(IW3Xenon::PhysGeomInfo* v)
         EndianSwap(v->halfLengths[i]);
 }
 
-static inline void EndianFixup_BrushWrapper(IW3Xenon::BrushWrapper* v)
+static inline void EndianSwap_BrushWrapper(IW3Xenon::BrushWrapper* v)
 {
     for (int i = 0; i < 3; i++)
         EndianSwap(v->mins[i]);
@@ -239,7 +239,7 @@ static inline void EndianFixup_BrushWrapper(IW3Xenon::BrushWrapper* v)
     EndianSwap(v->planes);
 }
 
-static inline void EndianFixup_cbrushside_t(IW3Xenon::cbrushside_t* v)
+static inline void EndianSwap_cbrushside_t(IW3Xenon::cbrushside_t* v)
 {
     EndianSwap(v->plane);
     EndianSwap(v->materialNum);
@@ -247,7 +247,7 @@ static inline void EndianFixup_cbrushside_t(IW3Xenon::cbrushside_t* v)
     // edgeCount - unsigned __int8, no swap
 }
 
-static inline void EndianFixup_XModel(IW3Xenon::XModel* v)
+static inline void EndianSwap_XModel(IW3Xenon::XModel* v)
 {
     EndianSwap(v->name);
     EndianSwap(v->boneNames);
@@ -285,13 +285,13 @@ static inline void EndianFixup_XModel(IW3Xenon::XModel* v)
 
 // ---- Material
 
-static inline void EndianFixup_MaterialTextureDef(IW3Xenon::MaterialTextureDef* v)
+static inline void EndianSwap_MaterialTextureDef(IW3Xenon::MaterialTextureDef* v)
 {
     EndianSwap(v->nameHash);
     EndianSwap(v->u.image);
 }
 
-static inline void EndianFixup_MaterialInfo(IW3Xenon::MaterialInfo* v)
+static inline void EndianSwap_MaterialInfo(IW3Xenon::MaterialInfo* v)
 {
     // name: XString handle (zone pointer)
     EndianSwap(v->name);
@@ -305,14 +305,14 @@ static inline void EndianFixup_MaterialInfo(IW3Xenon::MaterialInfo* v)
     EndianSwap(v->surfaceTypeBits);
 }
 
-static inline void EndianFixup_MaterialTextureDefInfo(IW3Xenon::MaterialTextureDefInfo* v)
+static inline void EndianSwap_MaterialTextureDefInfo(IW3Xenon::MaterialTextureDefInfo* v)
 {
     // Union: could be either image or water pointer
     // Both are pointers, so we swap as a generic 32-bit pointer
     EndianSwap(v->image);
 }
 
-static inline void EndianFixup_water_t(IW3Xenon::water_t* v)
+static inline void EndianSwap_water_t(IW3Xenon::water_t* v)
 {
     // writable.floatTime: float (32-bit), needs swap
     EndianSwap(v->writable.floatTime);
@@ -343,10 +343,10 @@ static inline void EndianFixup_water_t(IW3Xenon::water_t* v)
     EndianSwap(v->image);
 }
 
-static inline void EndianFixup_Material(IW3Xenon::Material* v)
+static inline void EndianSwap_Material(IW3Xenon::Material* v)
 {
     // info: MaterialInfo struct - handle via its fixup function
-    EndianFixup_MaterialInfo(&v->info);
+    EndianSwap_MaterialInfo(&v->info);
 
     // stateBitsEntry[26]: array of uint8, no swap needed
     // textureCount, constantCount, stateBitsCount, stateFlags, cameraRegion: all uint8, no swap needed
@@ -360,7 +360,7 @@ static inline void EndianFixup_Material(IW3Xenon::Material* v)
 
 // ---- MaterialTechniqueSet
 
-static inline void EndianFixup_MaterialTechniqueSet(IW3Xenon::MaterialTechniqueSet* v)
+static inline void EndianSwap_MaterialTechniqueSet(IW3Xenon::MaterialTechniqueSet* v)
 {
     EndianSwap(v->name);
     EndianSwap(v->remappedTechniqueSet);
@@ -368,7 +368,7 @@ static inline void EndianFixup_MaterialTechniqueSet(IW3Xenon::MaterialTechniqueS
         EndianSwap(v->techniques[i]);
 }
 
-static inline void EndianFixup_MaterialVertexShader(IW3Xenon::MaterialVertexShader* v)
+static inline void EndianSwap_MaterialVertexShader(IW3Xenon::MaterialVertexShader* v)
 {
     EndianSwap(v->name);
 
@@ -379,18 +379,18 @@ static inline void EndianFixup_MaterialVertexShader(IW3Xenon::MaterialVertexShad
     EndianSwap(ld.physicalPartSize);
 }
 
-static inline void EndianFixup_MaterialVertexShaderProgram(IW3Xenon::MaterialVertexShaderProgram* v)
+static inline void EndianSwap_MaterialVertexShaderProgram(IW3Xenon::MaterialVertexShaderProgram* v)
 {
     // Embedded loadDef is handled separately to avoid double-swapping
     assert(false);
 }
 
-static inline void EndianFixup_GfxVertexShaderLoadDef(IW3Xenon::GfxVertexShaderLoadDef* v)
+static inline void EndianSwap_GfxVertexShaderLoadDef(IW3Xenon::GfxVertexShaderLoadDef* v)
 {
     assert(false);
 }
 
-static inline void EndianFixup_MaterialPixelShader(IW3Xenon::MaterialPixelShader* v)
+static inline void EndianSwap_MaterialPixelShader(IW3Xenon::MaterialPixelShader* v)
 {
     // name: XString handle (FOLLOWING / OFFSET / etc.)
     EndianSwap(v->name);
@@ -405,17 +405,17 @@ static inline void EndianFixup_MaterialPixelShader(IW3Xenon::MaterialPixelShader
     EndianSwap(ld.physicalPartSize);
 }
 
-static inline void EndianFixup_MaterialPixelShaderProgram(IW3Xenon::MaterialPixelShaderProgram* v)
+static inline void EndianSwap_MaterialPixelShaderProgram(IW3Xenon::MaterialPixelShaderProgram* v)
 {
     assert(false);
 }
 
-static inline void EndianFixup_GfxPixelShaderLoadDef(IW3Xenon::GfxPixelShaderLoadDef* v)
+static inline void EndianSwap_GfxPixelShaderLoadDef(IW3Xenon::GfxPixelShaderLoadDef* v)
 {
     assert(false);
 }
 
-static inline void EndianFixup_MaterialShaderArgument(IW3Xenon::MaterialShaderArgument* v)
+static inline void EndianSwap_MaterialShaderArgument(IW3Xenon::MaterialShaderArgument* v)
 {
     EndianSwap(v->type);
     EndianSwap(v->dest);
@@ -454,12 +454,12 @@ static inline void EndianFixup_MaterialShaderArgument(IW3Xenon::MaterialShaderAr
     }
 }
 
-static inline void EndianFixup_MaterialArgumentDef(IW3Xenon::MaterialArgumentDef* v)
+static inline void EndianSwap_MaterialArgumentDef(IW3Xenon::MaterialArgumentDef* v)
 {
     assert(false);
 }
 
-static inline void EndianFixup_MaterialPass(IW3Xenon::MaterialPass* v)
+static inline void EndianSwap_MaterialPass(IW3Xenon::MaterialPass* v)
 {
     EndianSwap(v->vertexDecl);
 
@@ -473,7 +473,7 @@ static inline void EndianFixup_MaterialPass(IW3Xenon::MaterialPass* v)
     // uint8 fields: no swap
 }
 
-static inline void EndianFixup_MaterialTechnique_Partial(IW3Xenon::MaterialTechnique* v, size_t loaded_size)
+static inline void EndianSwap_MaterialTechnique_Partial(IW3Xenon::MaterialTechnique* v, size_t loaded_size)
 {
     // TODO: not dynamic at the moment as we know the only callsite
 
@@ -484,13 +484,13 @@ static inline void EndianFixup_MaterialTechnique_Partial(IW3Xenon::MaterialTechn
 
 // ---- GfxImage
 
-static inline void EndianFixup_GfxTexture(IW3Xenon::GfxTexture* v)
+static inline void EndianSwap_GfxTexture(IW3Xenon::GfxTexture* v)
 {
     // Union with loadDef pointer
     EndianSwap(v->cubemap);
 }
 
-static inline void EndianFixup_GfxImageLoadDef(IW3Xenon::GfxImageLoadDef* v)
+static inline void EndianSwap_GfxImageLoadDef(IW3Xenon::GfxImageLoadDef* v)
 {
     // levelCount: uint8, no swap needed
     // flags: uint8, no swap needed
@@ -504,15 +504,15 @@ static inline void EndianFixup_GfxImageLoadDef(IW3Xenon::GfxImageLoadDef* v)
     EndianSwap(v->format);
 
     // texture: GfxTexture union - handle via its fixup function
-    EndianFixup_GfxTexture(&v->texture);
+    EndianSwap_GfxTexture(&v->texture);
 }
 
-static inline void EndianFixup_GfxTextureLoad(IW3Xenon::GfxTextureLoad* v)
+static inline void EndianSwap_GfxTextureLoad(IW3Xenon::GfxTextureLoad* v)
 {
     EndianSwap(v->loadDef);
 }
 
-static inline void EndianFixup_GfxImage(IW3Xenon::GfxImage* v)
+static inline void EndianSwap_GfxImage(IW3Xenon::GfxImage* v)
 {
     EndianSwap(v->mapType);
 
@@ -549,7 +549,7 @@ static inline void EndianFixup_GfxImage(IW3Xenon::GfxImage* v)
 
 // ---- snd_alias_list_t
 
-static inline void EndianFixup_snd_alias_t(IW3Xenon::snd_alias_t* v)
+static inline void EndianSwap_snd_alias_t(IW3Xenon::snd_alias_t* v)
 {
     EndianSwap(v->aliasName);
     EndianSwap(v->subtitle);
@@ -576,12 +576,12 @@ static inline void EndianFixup_snd_alias_t(IW3Xenon::snd_alias_t* v)
     EndianSwap(v->speakerMap);
 }
 
-static inline void EndianFixup_XAUDIOCHANNELMAP(IW3Xenon::XAUDIOCHANNELMAP* v)
+static inline void EndianSwap_XAUDIOCHANNELMAP(IW3Xenon::XAUDIOCHANNELMAP* v)
 {
     assert(false);
 }
 
-static inline void EndianFixup_SoundFile(IW3Xenon::SoundFile* v)
+static inline void EndianSwap_SoundFile(IW3Xenon::SoundFile* v)
 {
     // type and exists are bytes - no swap
     if (v->type == IW3Xenon::SAT_LOADED)
@@ -597,32 +597,32 @@ static inline void EndianFixup_SoundFile(IW3Xenon::SoundFile* v)
     }
 }
 
-static inline void EndianFixup_SoundFileRef(IW3Xenon::SoundFileRef* v)
+static inline void EndianSwap_SoundFileRef(IW3Xenon::SoundFileRef* v)
 {
     assert(false);
 }
 
-static inline void EndianFixup_StreamedSound(IW3Xenon::StreamedSound* v)
+static inline void EndianSwap_StreamedSound(IW3Xenon::StreamedSound* v)
 {
     assert(false);
 }
 
-static inline void EndianFixup_StreamFileName(IW3Xenon::StreamFileName* v)
+static inline void EndianSwap_StreamFileName(IW3Xenon::StreamFileName* v)
 {
     assert(false);
 }
 
-static inline void EndianFixup_StreamFileInfo(IW3Xenon::StreamFileInfo* v)
+static inline void EndianSwap_StreamFileInfo(IW3Xenon::StreamFileInfo* v)
 {
     assert(false);
 }
 
-static inline void EndianFixup_StreamFileNameRaw(IW3Xenon::StreamFileNameRaw* v)
+static inline void EndianSwap_StreamFileNameRaw(IW3Xenon::StreamFileNameRaw* v)
 {
     assert(false);
 }
 
-static inline void EndianFixup_SpeakerMap(IW3Xenon::SpeakerMap* v)
+static inline void EndianSwap_SpeakerMap(IW3Xenon::SpeakerMap* v)
 {
     // isDefault is bool (1 byte) - no swap
     EndianSwap(v->name);
@@ -637,7 +637,7 @@ static inline void EndianFixup_SpeakerMap(IW3Xenon::SpeakerMap* v)
     }
 }
 
-static inline void EndianFixup_snd_alias_list_t(IW3Xenon::snd_alias_list_t* v)
+static inline void EndianSwap_snd_alias_list_t(IW3Xenon::snd_alias_list_t* v)
 {
     EndianSwap(v->aliasName);
     EndianSwap(v->head);
@@ -646,7 +646,7 @@ static inline void EndianFixup_snd_alias_list_t(IW3Xenon::snd_alias_list_t* v)
 
 // ---- SndCurve
 
-static inline void EndianFixup_SndCurve(IW3Xenon::SndCurve* v)
+static inline void EndianSwap_SndCurve(IW3Xenon::SndCurve* v)
 {
     EndianSwap(v->filename);
     EndianSwap(v->knotCount);
@@ -662,22 +662,22 @@ static inline void EndianFixup_SndCurve(IW3Xenon::SndCurve* v)
 
 // ---- LoadedSound
 
-static inline void EndianFixup_XaSound(IW3Xenon::XaSound* v)
+static inline void EndianSwap_XaSound(IW3Xenon::XaSound* v)
 {
     assert(false);
 }
 
-static inline void EndianFixup_XAUDIOPACKET_ALIGNED(IW3Xenon::XAUDIOPACKET_ALIGNED* v)
+static inline void EndianSwap_XAUDIOPACKET_ALIGNED(IW3Xenon::XAUDIOPACKET_ALIGNED* v)
 {
     assert(false);
 }
 
-static inline void EndianFixup_XaSeekTable(IW3Xenon::XaSeekTable* v)
+static inline void EndianSwap_XaSeekTable(IW3Xenon::XaSeekTable* v)
 {
     assert(false);
 }
 
-static inline void EndianFixup_LoadedSound(IW3Xenon::LoadedSound* v)
+static inline void EndianSwap_LoadedSound(IW3Xenon::LoadedSound* v)
 {
     EndianSwap(v->name);
 
@@ -709,27 +709,27 @@ static inline void EndianFixup_LoadedSound(IW3Xenon::LoadedSound* v)
 
 // ---- clipMap_t
 
-static inline void EndianFixup_XModelPieces(IW3Xenon::XModelPieces* v)
+static inline void EndianSwap_XModelPieces(IW3Xenon::XModelPieces* v)
 {
     assert(false);
 }
 
-static inline void EndianFixup_cLeafBrushNodeLeaf_t(IW3Xenon::cLeafBrushNodeLeaf_t* v)
+static inline void EndianSwap_cLeafBrushNodeLeaf_t(IW3Xenon::cLeafBrushNodeLeaf_t* v)
 {
     assert(false);
 }
 
-static inline void EndianFixup_cLeafBrushNodeData_t(IW3Xenon::cLeafBrushNodeData_t* v)
+static inline void EndianSwap_cLeafBrushNodeData_t(IW3Xenon::cLeafBrushNodeData_t* v)
 {
     assert(false);
 }
 
-static inline void EndianFixup_XModelPiece(IW3Xenon::XModelPiece* v)
+static inline void EndianSwap_XModelPiece(IW3Xenon::XModelPiece* v)
 {
     assert(false);
 }
 
-static inline void EndianFixup_DynEntityDef(IW3Xenon::DynEntityDef* v)
+static inline void EndianSwap_DynEntityDef(IW3Xenon::DynEntityDef* v)
 {
     EndianSwap(v->type);
 
@@ -758,7 +758,7 @@ static inline void EndianFixup_DynEntityDef(IW3Xenon::DynEntityDef* v)
     EndianSwap(v->contents);
 }
 
-static inline void EndianFixup_cbrush_t(IW3Xenon::cbrush_t* v)
+static inline void EndianSwap_cbrush_t(IW3Xenon::cbrush_t* v)
 {
     for (int i = 0; i < 3; i++)
         EndianSwap(v->mins[i]);
@@ -777,7 +777,7 @@ static inline void EndianFixup_cbrush_t(IW3Xenon::cbrush_t* v)
     // edgeCount[2][3] - unsigned __int8, no swap
 }
 
-static inline void EndianFixup_CollisionPartition(IW3Xenon::CollisionPartition* v)
+static inline void EndianSwap_CollisionPartition(IW3Xenon::CollisionPartition* v)
 {
     // triCount - unsigned __int8, no swap
     // borderCount - unsigned __int8, no swap
@@ -785,7 +785,7 @@ static inline void EndianFixup_CollisionPartition(IW3Xenon::CollisionPartition* 
     EndianSwap(v->borders);
 }
 
-static inline void EndianFixup_cLeafBrushNode_s(IW3Xenon::cLeafBrushNode_s* v)
+static inline void EndianSwap_cLeafBrushNode_s(IW3Xenon::cLeafBrushNode_s* v)
 {
     // axis - unsigned __int8, no swap
     EndianSwap(v->leafBrushCount);
@@ -807,14 +807,14 @@ static inline void EndianFixup_cLeafBrushNode_s(IW3Xenon::cLeafBrushNode_s* v)
     }
 }
 
-static inline void EndianFixup_cNode_t(IW3Xenon::cNode_t* v)
+static inline void EndianSwap_cNode_t(IW3Xenon::cNode_t* v)
 {
     EndianSwap(v->plane);
     for (int i = 0; i < 2; i++)
         EndianSwap(v->children[i]);
 }
 
-static inline void EndianFixup_cStaticModel_s(IW3Xenon::cStaticModel_s* v)
+static inline void EndianSwap_cStaticModel_s(IW3Xenon::cStaticModel_s* v)
 {
     // cStaticModelWritable writable (embedded)
     EndianSwap(v->writable.nextModelInWorldSector);
@@ -831,7 +831,7 @@ static inline void EndianFixup_cStaticModel_s(IW3Xenon::cStaticModel_s* v)
         EndianSwap(v->absmax[i]);
 }
 
-static inline void EndianFixup_clipMap_t(IW3Xenon::clipMap_t* v)
+static inline void EndianSwap_clipMap_t(IW3Xenon::clipMap_t* v)
 {
     EndianSwap(v->name);
     EndianSwap(v->isInUse);
@@ -910,7 +910,7 @@ static inline void EndianFixup_clipMap_t(IW3Xenon::clipMap_t* v)
 
 // ---- ComWorld
 
-static inline void EndianFixup_ComPrimaryLight(IW3Xenon::ComPrimaryLight* v)
+static inline void EndianSwap_ComPrimaryLight(IW3Xenon::ComPrimaryLight* v)
 {
     for (int i = 0; i < 3; i++)
         EndianSwap(v->color[i]);
@@ -927,7 +927,7 @@ static inline void EndianFixup_ComPrimaryLight(IW3Xenon::ComPrimaryLight* v)
     EndianSwap(v->defName);
 }
 
-static inline void EndianFixup_ComWorld(IW3Xenon::ComWorld* v)
+static inline void EndianSwap_ComWorld(IW3Xenon::ComWorld* v)
 {
     EndianSwap(v->name);
     EndianSwap(v->isInUse);
@@ -937,7 +937,7 @@ static inline void EndianFixup_ComWorld(IW3Xenon::ComWorld* v)
 
 // ---- GameWorldSp
 
-static inline void EndianFixup_pathnode_t(IW3Xenon::pathnode_t* v)
+static inline void EndianSwap_pathnode_t(IW3Xenon::pathnode_t* v)
 {
     // pathnode_constant_t constant (embedded)
     EndianSwap(v->constant.type);
@@ -984,7 +984,7 @@ static inline void EndianFixup_pathnode_t(IW3Xenon::pathnode_t* v)
     EndianSwap(v->transient.costFactor);
 }
 
-static inline void EndianFixup_pathnode_tree_t(IW3Xenon::pathnode_tree_t* v)
+static inline void EndianSwap_pathnode_tree_t(IW3Xenon::pathnode_tree_t* v)
 {
     EndianSwap(v->axis);
     EndianSwap(v->dist);
@@ -1000,28 +1000,28 @@ static inline void EndianFixup_pathnode_tree_t(IW3Xenon::pathnode_tree_t* v)
     }
 }
 
-static inline void EndianFixup_PathData(IW3Xenon::PathData* v)
+static inline void EndianSwap_PathData(IW3Xenon::PathData* v)
 {
     assert(false);
 }
 
-static inline void EndianFixup_pathnode_constant_t(IW3Xenon::pathnode_constant_t* v)
+static inline void EndianSwap_pathnode_constant_t(IW3Xenon::pathnode_constant_t* v)
 {
     assert(false);
 }
 
-static inline void EndianFixup_pathnode_tree_info_t(IW3Xenon::pathnode_tree_info_t* v)
+static inline void EndianSwap_pathnode_tree_info_t(IW3Xenon::pathnode_tree_info_t* v)
 {
     assert(false);
 }
 
-static inline void EndianFixup_pathnode_tree_nodes_t(IW3Xenon::pathnode_tree_nodes_t* v)
+static inline void EndianSwap_pathnode_tree_nodes_t(IW3Xenon::pathnode_tree_nodes_t* v)
 {
     EndianSwap(v->nodeCount);
     EndianSwap(v->nodes);
 }
 
-static inline void EndianFixup_GameWorldSp(IW3Xenon::GameWorldSp* v)
+static inline void EndianSwap_GameWorldSp(IW3Xenon::GameWorldSp* v)
 {
     EndianSwap(v->name);
 
@@ -1040,14 +1040,14 @@ static inline void EndianFixup_GameWorldSp(IW3Xenon::GameWorldSp* v)
 
 // ---- GameWorldMp
 
-static inline void EndianFixup_GameWorldMp(IW3Xenon::GameWorldMp* v)
+static inline void EndianSwap_GameWorldMp(IW3Xenon::GameWorldMp* v)
 {
     EndianSwap(v->name);
 }
 
 // ---- MapEnts
 
-static inline void EndianFixup_MapEnts(IW3Xenon::MapEnts* v)
+static inline void EndianSwap_MapEnts(IW3Xenon::MapEnts* v)
 {
     EndianSwap(v->name);
     EndianSwap(v->entityString);
@@ -1056,14 +1056,14 @@ static inline void EndianFixup_MapEnts(IW3Xenon::MapEnts* v)
 
 // ---- GfxWorld
 
-static inline void EndianFixup_GfxReflectionProbe(IW3Xenon::GfxReflectionProbe* v)
+static inline void EndianSwap_GfxReflectionProbe(IW3Xenon::GfxReflectionProbe* v)
 {
     for (int i = 0; i < 3; i++)
         EndianSwap(v->origin[i]);
     EndianSwap(v->reflectionImage);
 }
 
-static inline void EndianFixup_GfxCell(IW3Xenon::GfxCell* v)
+static inline void EndianSwap_GfxCell(IW3Xenon::GfxCell* v)
 {
     for (int i = 0; i < 3; i++)
         EndianSwap(v->mins[i]);
@@ -1079,7 +1079,7 @@ static inline void EndianFixup_GfxCell(IW3Xenon::GfxCell* v)
     EndianSwap(v->reflectionProbes);
 }
 
-static inline void EndianFixup_GfxAabbTree(IW3Xenon::GfxAabbTree* v)
+static inline void EndianSwap_GfxAabbTree(IW3Xenon::GfxAabbTree* v)
 {
     for (int i = 0; i < 3; i++)
         EndianSwap(v->mins[i]);
@@ -1093,7 +1093,7 @@ static inline void EndianFixup_GfxAabbTree(IW3Xenon::GfxAabbTree* v)
     EndianSwap(v->childrenOffset);
 }
 
-static inline void EndianFixup_GfxPortal(IW3Xenon::GfxPortal* v)
+static inline void EndianSwap_GfxPortal(IW3Xenon::GfxPortal* v)
 {
     // GfxPortalWritable writable - embedded struct
     // isQueued, isAncestor, recursionDepth, hullPointCount are bytes - no swap
@@ -1111,19 +1111,19 @@ static inline void EndianFixup_GfxPortal(IW3Xenon::GfxPortal* v)
             EndianSwap(v->hullAxis[i][j]);
 }
 
-static inline void EndianFixup_GfxLightmapArray(IW3Xenon::GfxLightmapArray* v)
+static inline void EndianSwap_GfxLightmapArray(IW3Xenon::GfxLightmapArray* v)
 {
     EndianSwap(v->primary);
     EndianSwap(v->secondary);
 }
 
-static inline void EndianFixup_MaterialMemory(IW3Xenon::MaterialMemory* v)
+static inline void EndianSwap_MaterialMemory(IW3Xenon::MaterialMemory* v)
 {
     EndianSwap(v->material);
     EndianSwap(v->memory);
 }
 
-static inline void EndianFixup_GfxShadowGeometry(IW3Xenon::GfxShadowGeometry* v)
+static inline void EndianSwap_GfxShadowGeometry(IW3Xenon::GfxShadowGeometry* v)
 {
     EndianSwap(v->surfaceCount);
     EndianSwap(v->smodelCount);
@@ -1131,13 +1131,13 @@ static inline void EndianFixup_GfxShadowGeometry(IW3Xenon::GfxShadowGeometry* v)
     EndianSwap(v->smodelIndex);
 }
 
-static inline void EndianFixup_GfxLightRegion(IW3Xenon::GfxLightRegion* v)
+static inline void EndianSwap_GfxLightRegion(IW3Xenon::GfxLightRegion* v)
 {
     EndianSwap(v->hullCount);
     EndianSwap(v->hulls);
 }
 
-static inline void EndianFixup_GfxLightRegionHull(IW3Xenon::GfxLightRegionHull* v)
+static inline void EndianSwap_GfxLightRegionHull(IW3Xenon::GfxLightRegionHull* v)
 {
     for (int i = 0; i < 9; i++)
         EndianSwap(v->kdopMidPoint[i]);
@@ -1147,7 +1147,7 @@ static inline void EndianFixup_GfxLightRegionHull(IW3Xenon::GfxLightRegionHull* 
     EndianSwap(v->axis);
 }
 
-static inline void EndianFixup_GfxSurface(IW3Xenon::GfxSurface* v)
+static inline void EndianSwap_GfxSurface(IW3Xenon::GfxSurface* v)
 {
     // srfTriangles_t tris (embedded)
     EndianSwap(v->tris.vertexLayerData);
@@ -1170,7 +1170,7 @@ static inline void EndianFixup_GfxSurface(IW3Xenon::GfxSurface* v)
             EndianSwap(v->bounds[i][j]);
 }
 
-static inline void EndianFixup_GfxStaticModelDrawInst(IW3Xenon::GfxStaticModelDrawInst* v)
+static inline void EndianSwap_GfxStaticModelDrawInst(IW3Xenon::GfxStaticModelDrawInst* v)
 {
     EndianSwap(v->cullDist);
     // GfxPackedPlacement placement
@@ -1186,12 +1186,12 @@ static inline void EndianFixup_GfxStaticModelDrawInst(IW3Xenon::GfxStaticModelDr
     // unsigned __int8 flags;
 }
 
-static inline void EndianFixup_GfxWorldStreamInfo(IW3Xenon::GfxWorldStreamInfo* v)
+static inline void EndianSwap_GfxWorldStreamInfo(IW3Xenon::GfxWorldStreamInfo* v)
 {
     assert(false);
 }
 
-static inline void EndianFixup_GfxLight(IW3Xenon::GfxLight* v)
+static inline void EndianSwap_GfxLight(IW3Xenon::GfxLight* v)
 {
     // type, canUseShadowMap, unused[2] are bytes - no swap
     for (int i = 0; i < 3; i++)
@@ -1208,42 +1208,42 @@ static inline void EndianFixup_GfxLight(IW3Xenon::GfxLight* v)
     EndianSwap(v->def);
 }
 
-static inline void EndianFixup_GfxWorldDpvsPlanes(IW3Xenon::GfxWorldDpvsPlanes* v)
+static inline void EndianSwap_GfxWorldDpvsPlanes(IW3Xenon::GfxWorldDpvsPlanes* v)
 {
     assert(false);
 }
 
-static inline void EndianFixup_GfxLightGrid(IW3Xenon::GfxLightGrid* v)
+static inline void EndianSwap_GfxLightGrid(IW3Xenon::GfxLightGrid* v)
 {
     assert(false);
 }
 
-static inline void EndianFixup_GfxWorldVertexData(IW3Xenon::GfxWorldVertexData* v)
+static inline void EndianSwap_GfxWorldVertexData(IW3Xenon::GfxWorldVertexData* v)
 {
     assert(false);
 }
 
-static inline void EndianFixup_GfxWorldVertexLayerData(IW3Xenon::GfxWorldVertexLayerData* v)
+static inline void EndianSwap_GfxWorldVertexLayerData(IW3Xenon::GfxWorldVertexLayerData* v)
 {
     assert(false);
 }
 
-static inline void EndianFixup_sunflare_t(IW3Xenon::sunflare_t* v)
+static inline void EndianSwap_sunflare_t(IW3Xenon::sunflare_t* v)
 {
     assert(false);
 }
 
-static inline void EndianFixup_GfxWorldDpvsStatic(IW3Xenon::GfxWorldDpvsStatic* v)
+static inline void EndianSwap_GfxWorldDpvsStatic(IW3Xenon::GfxWorldDpvsStatic* v)
 {
     assert(false);
 }
 
-static inline void EndianFixup_GfxWorldDpvsDynamic(IW3Xenon::GfxWorldDpvsDynamic* v)
+static inline void EndianSwap_GfxWorldDpvsDynamic(IW3Xenon::GfxWorldDpvsDynamic* v)
 {
     assert(false);
 }
 
-static inline void EndianFixup_GfxWorld(IW3Xenon::GfxWorld* v)
+static inline void EndianSwap_GfxWorld(IW3Xenon::GfxWorld* v)
 {
     EndianSwap(v->name);
     EndianSwap(v->baseName);
@@ -1404,12 +1404,12 @@ static inline void EndianFixup_GfxWorld(IW3Xenon::GfxWorld* v)
 }
 
 // ---- GfxLightDef
-static inline void EndianFixup_GfxLightImage(IW3Xenon::GfxLightImage* v)
+static inline void EndianSwap_GfxLightImage(IW3Xenon::GfxLightImage* v)
 {
     assert(false);
 }
 
-static inline void EndianFixup_GfxLightDef(IW3Xenon::GfxLightDef* v)
+static inline void EndianSwap_GfxLightDef(IW3Xenon::GfxLightDef* v)
 {
     EndianSwap(v->name);
     // GfxLightImage attenuation
@@ -1420,7 +1420,7 @@ static inline void EndianFixup_GfxLightDef(IW3Xenon::GfxLightDef* v)
 
 // ---- Font_s
 
-static inline void EndianFixup_Font_s(IW3Xenon::Font_s* v)
+static inline void EndianSwap_Font_s(IW3Xenon::Font_s* v)
 {
     EndianSwap(v->fontName);
     EndianSwap(v->pixelHeight);
@@ -1432,7 +1432,7 @@ static inline void EndianFixup_Font_s(IW3Xenon::Font_s* v)
 
 // ---- MenuList
 
-static inline void EndianFixup_MenuList(IW3Xenon::MenuList* v)
+static inline void EndianSwap_MenuList(IW3Xenon::MenuList* v)
 {
     EndianSwap(v->name);
     EndianSwap(v->menuCount);
@@ -1441,7 +1441,7 @@ static inline void EndianFixup_MenuList(IW3Xenon::MenuList* v)
 
 // ---- menuDef_t
 
-static inline void EndianFixup_windowDef_t(IW3Xenon::windowDef_t* v)
+static inline void EndianSwap_windowDef_t(IW3Xenon::windowDef_t* v)
 {
     EndianSwap(v->name);
     EndianSwap(v->rect.x);
@@ -1477,24 +1477,24 @@ static inline void EndianFixup_windowDef_t(IW3Xenon::windowDef_t* v)
     EndianSwap(v->background);
 }
 
-static inline void EndianFixup_ItemKeyHandler(IW3Xenon::ItemKeyHandler* v)
+static inline void EndianSwap_ItemKeyHandler(IW3Xenon::ItemKeyHandler* v)
 {
     EndianSwap(v->key);
     EndianSwap(v->action);
     EndianSwap(v->next);
 }
 
-static inline void EndianFixup_statement_s(IW3Xenon::statement_s* v)
+static inline void EndianSwap_statement_s(IW3Xenon::statement_s* v)
 {
     assert(false);
 }
 
-static inline void EndianFixup_operandInternalDataUnion(IW3Xenon::operandInternalDataUnion* v)
+static inline void EndianSwap_operandInternalDataUnion(IW3Xenon::operandInternalDataUnion* v)
 {
     assert(false);
 }
 
-static inline void EndianFixup_Operand(IW3Xenon::Operand* v)
+static inline void EndianSwap_Operand(IW3Xenon::Operand* v)
 {
     EndianSwap(v->dataType);
 
@@ -1517,12 +1517,12 @@ static inline void EndianFixup_Operand(IW3Xenon::Operand* v)
     }
 }
 
-static inline void EndianFixup_entryInternalData(IW3Xenon::entryInternalData* v)
+static inline void EndianSwap_entryInternalData(IW3Xenon::entryInternalData* v)
 {
     // Union - contents swapped based on context in expressionEntry
 }
 
-static inline void EndianFixup_expressionEntry(IW3Xenon::expressionEntry* v)
+static inline void EndianSwap_expressionEntry(IW3Xenon::expressionEntry* v)
 {
     EndianSwap(v->type);
 
@@ -1532,7 +1532,7 @@ static inline void EndianFixup_expressionEntry(IW3Xenon::expressionEntry* v)
     }
     else if (v->type == IW3Xenon::EET_OPERAND)
     {
-        EndianFixup_Operand(&v->data.operand);
+        EndianSwap_Operand(&v->data.operand);
     }
     else
     {
@@ -1540,10 +1540,10 @@ static inline void EndianFixup_expressionEntry(IW3Xenon::expressionEntry* v)
     }
 }
 
-static inline void EndianFixup_itemDef_s(IW3Xenon::itemDef_s* v)
+static inline void EndianSwap_itemDef_s(IW3Xenon::itemDef_s* v)
 {
     // windowDef_t window
-    EndianFixup_windowDef_t(&v->window);
+    EndianSwap_windowDef_t(&v->window);
 
     // rectDef_s textRect[4]
     for (int i = 0; i < 4; i++)
@@ -1627,12 +1627,12 @@ static inline void EndianFixup_itemDef_s(IW3Xenon::itemDef_s* v)
     EndianSwap(v->forecolorAExp.entries);
 }
 
-static inline void EndianFixup_itemDefData_t(IW3Xenon::itemDefData_t* v)
+static inline void EndianSwap_itemDefData_t(IW3Xenon::itemDefData_t* v)
 {
     assert(false);
 }
 
-static inline void EndianFixup_listBoxDef_s(IW3Xenon::listBoxDef_s* v)
+static inline void EndianSwap_listBoxDef_s(IW3Xenon::listBoxDef_s* v)
 {
     // int startPos[4];
     for (int i = 0; i < 4; i++)
@@ -1672,7 +1672,7 @@ static inline void EndianFixup_listBoxDef_s(IW3Xenon::listBoxDef_s* v)
     EndianSwap(v->selectIcon);
 }
 
-static inline void EndianFixup_multiDef_s(IW3Xenon::multiDef_s* v)
+static inline void EndianSwap_multiDef_s(IW3Xenon::multiDef_s* v)
 {
     for (int i = 0; i < 32; i++)
         EndianSwap(v->dvarList[i]);
@@ -1684,10 +1684,10 @@ static inline void EndianFixup_multiDef_s(IW3Xenon::multiDef_s* v)
     EndianSwap(v->strDef);
 }
 
-static inline void EndianFixup_menuDef_t(IW3Xenon::menuDef_t* v)
+static inline void EndianSwap_menuDef_t(IW3Xenon::menuDef_t* v)
 {
     // windowDef_t window
-    EndianFixup_windowDef_t(&v->window);
+    EndianSwap_windowDef_t(&v->window);
 
     // menuDef_t members
     EndianSwap(v->font);
@@ -1723,7 +1723,7 @@ static inline void EndianFixup_menuDef_t(IW3Xenon::menuDef_t* v)
 
 // ---- LocalizeEntry
 
-static inline void EndianFixup_LocalizeEntry(IW3Xenon::LocalizeEntry* v)
+static inline void EndianSwap_LocalizeEntry(IW3Xenon::LocalizeEntry* v)
 {
     EndianSwap(v->name);
     EndianSwap(v->value);
@@ -1731,18 +1731,18 @@ static inline void EndianFixup_LocalizeEntry(IW3Xenon::LocalizeEntry* v)
 
 // ---- WeaponDef
 
-static inline void EndianFixup_snd_alias_list_name(IW3Xenon::snd_alias_list_name* v)
+static inline void EndianSwap_snd_alias_list_name(IW3Xenon::snd_alias_list_name* v)
 {
     EndianSwap(v->soundName);
 }
 
-static inline void EndianFixup_SndAliasCustom(IW3Xenon::SndAliasCustom* v)
+static inline void EndianSwap_SndAliasCustom(IW3Xenon::SndAliasCustom* v)
 {
     // union of pointers so swap any
     EndianSwap(v->name);
 }
 
-static inline void EndianFixup_WeaponDef(IW3Xenon::WeaponDef* v)
+static inline void EndianSwap_WeaponDef(IW3Xenon::WeaponDef* v)
 {
     EndianSwap(v->szInternalName);
     EndianSwap(v->szDisplayName);
@@ -2137,7 +2137,7 @@ static inline void EndianFixup_WeaponDef(IW3Xenon::WeaponDef* v)
 
 // ---- SndDriverGlobals
 
-static inline void EndianFixup_SndDriverGlobals(IW3Xenon::SndDriverGlobals* v)
+static inline void EndianSwap_SndDriverGlobals(IW3Xenon::SndDriverGlobals* v)
 {
     EndianSwap(v->reverbSettings);
     EndianSwap(v->name);
@@ -2145,7 +2145,7 @@ static inline void EndianFixup_SndDriverGlobals(IW3Xenon::SndDriverGlobals* v)
 
 // ---- FXEffectDef
 
-static inline void EndianFixup_FxElemDef(IW3Xenon::FxElemDef* v)
+static inline void EndianSwap_FxElemDef(IW3Xenon::FxElemDef* v)
 {
     EndianSwap(v->flags);
 
@@ -2253,29 +2253,29 @@ static inline void EndianFixup_FxElemDef(IW3Xenon::FxElemDef* v)
     // bytes: sortOrder, lightingFrac, useItemClip, unused - no swap
 }
 
-static inline void EndianFixup_FxElemMarkVisuals(IW3Xenon::FxElemMarkVisuals* v)
+static inline void EndianSwap_FxElemMarkVisuals(IW3Xenon::FxElemMarkVisuals* v)
 {
     for (int i = 0; i < 2; i++)
         EndianSwap(v->materials[i]);
 }
 
-static inline void EndianFixup_FxElemVisuals(IW3Xenon::FxElemVisuals* v)
+static inline void EndianSwap_FxElemVisuals(IW3Xenon::FxElemVisuals* v)
 {
     // Union of pointers - all members overlap, swap any one
     EndianSwap(v->anonymous);
 }
 
-static inline void EndianFixup_FxElemDefVisuals(IW3Xenon::FxElemDefVisuals* v)
+static inline void EndianSwap_FxElemDefVisuals(IW3Xenon::FxElemDefVisuals* v)
 {
     assert(false);
 }
 
-static inline void EndianFixup_FxEffectDefRef(IW3Xenon::FxEffectDefRef* v)
+static inline void EndianSwap_FxEffectDefRef(IW3Xenon::FxEffectDefRef* v)
 {
     assert(false);
 }
 
-static inline void EndianFixup_FxTrailDef(IW3Xenon::FxTrailDef* v)
+static inline void EndianSwap_FxTrailDef(IW3Xenon::FxTrailDef* v)
 {
     EndianSwap(v->scrollTimeMsec);
     EndianSwap(v->repeatDist);
@@ -2286,7 +2286,7 @@ static inline void EndianFixup_FxTrailDef(IW3Xenon::FxTrailDef* v)
     EndianSwap(v->inds);
 }
 
-static inline void EndianFixup_FxEffectDef(IW3Xenon::FxEffectDef* v)
+static inline void EndianSwap_FxEffectDef(IW3Xenon::FxEffectDef* v)
 {
     EndianSwap(v->name);
     EndianSwap(v->flags);
@@ -2300,7 +2300,7 @@ static inline void EndianFixup_FxEffectDef(IW3Xenon::FxEffectDef* v)
 
 // ---- FxImpactTable
 
-static inline void EndianFixup_FxImpactEntry(IW3Xenon::FxImpactEntry* v)
+static inline void EndianSwap_FxImpactEntry(IW3Xenon::FxImpactEntry* v)
 {
     for (int i = 0; i < 29; i++)
         EndianSwap(v->nonflesh[i]);
@@ -2308,7 +2308,7 @@ static inline void EndianFixup_FxImpactEntry(IW3Xenon::FxImpactEntry* v)
         EndianSwap(v->flesh[i]);
 }
 
-static inline void EndianFixup_FxImpactTable(IW3Xenon::FxImpactTable* v)
+static inline void EndianSwap_FxImpactTable(IW3Xenon::FxImpactTable* v)
 {
     EndianSwap(v->name);
     EndianSwap(v->table);
@@ -2316,7 +2316,7 @@ static inline void EndianFixup_FxImpactTable(IW3Xenon::FxImpactTable* v)
 
 // ---- RawFile
 
-static inline void EndianFixup_RawFile(IW3Xenon::RawFile* v)
+static inline void EndianSwap_RawFile(IW3Xenon::RawFile* v)
 {
     EndianSwap(v->name);
     EndianSwap(v->len);
@@ -2325,7 +2325,7 @@ static inline void EndianFixup_RawFile(IW3Xenon::RawFile* v)
 
 // ---- StringTable
 
-static inline void EndianFixup_StringTable(IW3Xenon::StringTable* v)
+static inline void EndianSwap_StringTable(IW3Xenon::StringTable* v)
 {
     EndianSwap(v->name);
     EndianSwap(v->columnCount);
