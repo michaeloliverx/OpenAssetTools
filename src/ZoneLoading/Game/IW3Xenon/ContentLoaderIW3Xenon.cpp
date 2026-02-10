@@ -1,5 +1,6 @@
 #include "ContentLoaderIW3Xenon.h"
 
+#include "Game/IW3Xenon/AssetEndianSwapIW3Xenon.h"
 #include "Game/IW3Xenon/IW3Xenon.h"
 #include "Game/IW3Xenon/XAssets/clipmap_t/clipmap_t_load_db.h"
 #include "Game/IW3Xenon/XAssets/comworld/comworld_load_db.h"
@@ -128,16 +129,17 @@ void ContentLoader::LoadXAssetArray(const bool atStreamStart, const size_t count
         m_stream.Load<XAsset>(varXAsset, count);
         for (size_t index = 0; index < count; index++)
         {
-            varXAsset[index].type = static_cast<XAssetType>(endianness::FromBigEndian(static_cast<int>(varXAsset[index].type)));
+            EndianSwap(varXAsset[index].type);
         }
     }
 
     for (size_t index = 0; index < count; index++)
     {
-        printf("Loading asset %zu: type=%d\n", index, static_cast<int>(varXAsset->type));
         try
         {
             LoadXAsset(false);
+            printf("Asset %3zu [type=%2d]\n", index, static_cast<int>(varXAsset->type));
+            // m_stream.DebugOffsets(0);
         }
         catch (const UnsupportedAssetTypeException& e)
         {
@@ -147,6 +149,7 @@ void ContentLoader::LoadXAssetArray(const bool atStreamStart, const size_t count
             break;
         }
         varXAsset++;
+    }
 }
 
 void ContentLoader::LoadDelayStream()
@@ -166,8 +169,8 @@ void ContentLoader::Load()
     m_stream.LoadDataRaw(&assetList, sizeof(assetList));
 
     // Endian swap the loaded data
-    varXAssetList->stringList.count = endianness::FromBigEndian(varXAssetList->stringList.count);
-    varXAssetList->assetCount = endianness::FromBigEndian(varXAssetList->assetCount);
+    EndianSwap(varXAssetList->stringList.count);
+    EndianSwap(varXAssetList->assetCount);
 
     m_stream.PushBlock(XFILE_BLOCK_VIRTUAL);
 

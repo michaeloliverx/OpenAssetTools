@@ -145,6 +145,10 @@ namespace
             LINE("")
             LINEF("#include \"{0}_load_db.h\"", Lower(m_env.m_asset->m_definition->m_name))
             LINE("")
+            if (m_env.m_game == "IW3Xenon")
+            {
+                LINE("#include \"Game/IW3Xenon/AssetEndianSwapIW3Xenon.h\"")
+            }
             LINEF("#include \"Game/{0}/AssetMarker{0}.h\"", m_env.m_game)
             LINE("")
             LINE("#include \"Loading/AssetInfoCollector.h\"")
@@ -1051,7 +1055,7 @@ namespace
                     LINE("for (size_t index = 0; index < count; index++)")
                     LINE("{")
                     m_intendation++;
-                    LINEF("SwapBigEndianPtr32({0}[index]);", MakeTypePtrVarName(def))
+                    LINEF("EndianSwap({0}[index]);", MakeTypePtrVarName(def))
                     m_intendation--;
                     LINE("}")
                 }

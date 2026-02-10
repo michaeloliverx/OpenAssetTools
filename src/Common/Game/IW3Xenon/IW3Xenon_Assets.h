@@ -2018,7 +2018,7 @@ namespace IW3Xenon
         GfxStaticModelDrawInst* smodelDrawInsts;
         GfxDrawSurf* surfaceMaterials;
         unsigned int* surfaceCastsSunShadow;
-        volatile int usageCount;
+        int usageCount;
     };
 
     struct GfxWorldDpvsDynamic
