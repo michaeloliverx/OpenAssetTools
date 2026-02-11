@@ -1432,6 +1432,19 @@ namespace
                       MakeTypeDecl(member->m_member->m_type_declaration.get()),
                       MakeFollowingReferences(modifier.GetFollowingDeclarationModifiers()),
                       MakeMemberAccess(info, member, modifier))
+                // Skip endian swap for single-byte types (char, bool, etc.)
+                if (m_env.m_game == "IW3Xenon" && member->m_member->m_type_declaration->m_type->GetSize() > 1)
+                {
+                    const auto defType = member->m_member->m_type_declaration->m_type->GetType();
+                    if (defType == DataDefinitionType::STRUCT || defType == DataDefinitionType::UNION)
+                    {
+                        LINEF("EndianSwap_{0}({1});", MakeSafeTypeName(member->m_member->m_type_declaration->m_type), MakeMemberAccess(info, member, modifier))
+                    }
+                    else
+                    {
+                        LINEF("EndianSwap({0});", MakeMemberAccess(info, member, modifier))
+                    }
+                }
             }
         }
 

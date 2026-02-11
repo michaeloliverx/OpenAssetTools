@@ -372,6 +372,13 @@ static inline void EndianSwap_XModel(IW3Xenon::XModel* v)
 
 // ---- Material
 
+static inline void EndianSwap_MaterialVertexDeclaration(IW3Xenon::MaterialVertexDeclaration* v)
+{
+    // unsigned __int8 streamCount;
+    // bool hasOptionalSource;
+    // MaterialVertexStreamRouting routing; - all unsigned __int8 fields
+}
+
 static inline void EndianSwap_MaterialConstantDef(IW3Xenon::MaterialConstantDef* v)
 {
     EndianSwap(v->nameHash);
@@ -582,6 +589,21 @@ static inline void EndianSwap_MaterialTechnique_Partial(IW3Xenon::MaterialTechni
 }
 
 // ---- GfxImage
+
+static inline void EndianSwap_DummyD3DVolumeTexture(IW3Xenon::DummyD3DVolumeTexture* v)
+{
+    return;
+}
+
+static inline void EndianSwap_DummyD3DCubeTexture(IW3Xenon::DummyD3DCubeTexture* v)
+{
+    return;
+}
+
+static inline void EndianSwap_DummyD3DTexture(IW3Xenon::DummyD3DTexture* v)
+{
+    return;
+}
 
 static inline void EndianSwap_GfxTexture(IW3Xenon::GfxTexture* v)
 {
@@ -1739,6 +1761,18 @@ static inline void EndianSwap_MenuList(IW3Xenon::MenuList* v)
 }
 
 // ---- menuDef_t
+
+static inline void EndianSwap_editFieldDef_s(IW3Xenon::editFieldDef_s* v)
+{
+    EndianSwap(v->minVal);
+    EndianSwap(v->maxVal);
+    EndianSwap(v->defVal);
+    EndianSwap(v->range);
+    EndianSwap(v->maxChars);
+    EndianSwap(v->maxCharsGotoNext);
+    EndianSwap(v->maxPaintChars);
+    EndianSwap(v->paintOffset);
+}
 
 static inline void EndianSwap_windowDef_t(IW3Xenon::windowDef_t* v)
 {
