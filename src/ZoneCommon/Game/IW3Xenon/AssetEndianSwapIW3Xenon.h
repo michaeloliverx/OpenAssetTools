@@ -46,6 +46,38 @@ static inline void EndianSwap(T& v)
     EndianSwap(reinterpret_cast<std::underlying_type_t<T>&>(v));
 }
 
+// 1D - swaps each element
+template<size_t N> static inline void EndianSwap(float (&v)[N])
+{
+    for (size_t i = 0; i < N; i++)
+        EndianSwap(v[i]);
+}
+
+// 2D - delegates to the 1D overload
+template<size_t N, size_t M> static inline void EndianSwap(float (&v)[N][M])
+{
+    for (size_t i = 0; i < N; i++)
+        EndianSwap(v[i]);
+}
+
+template<size_t N> static inline void EndianSwap(short (&v)[N])
+{
+    for (size_t i = 0; i < N; i++)
+        EndianSwap(v[i]);
+}
+
+template<size_t N> static inline void EndianSwap(unsigned short (&v)[N])
+{
+    for (size_t i = 0; i < N; i++)
+        EndianSwap(v[i]);
+}
+
+template<size_t N> static inline void EndianSwap(unsigned int (&v)[N])
+{
+    for (size_t i = 0; i < N; i++)
+        EndianSwap(v[i]);
+}
+
 // ---- PhysPreset
 
 static inline void EndianSwap_PhysPreset(IW3Xenon::PhysPreset* v)
@@ -146,6 +178,60 @@ static inline void EndianSwap_XAnimParts(IW3Xenon::XAnimParts* v)
 
 // ---- XModel
 
+static inline void EndianSwap_GfxPackedVertex(IW3Xenon::GfxPackedVertex* v)
+{
+    EndianSwap(v->xyz);
+    EndianSwap(v->binormalSign);
+    // TODO: check how to handle this union
+    // GfxColor color;
+    EndianSwap(v->texCoord.packed);
+    EndianSwap(v->normal.packed);
+    EndianSwap(v->tangent.packed);
+}
+
+static inline void EndianSwap_XSurfaceCollisionNode(IW3Xenon::XSurfaceCollisionNode* v)
+{
+    // XSurfaceCollisionAabb aabb;
+    EndianSwap(v->aabb.mins);
+    EndianSwap(v->aabb.maxs);
+    EndianSwap(v->childBeginIndex);
+    EndianSwap(v->childCount);
+}
+
+static inline void EndianSwap_XSurfaceCollisionLeaf(IW3Xenon::XSurfaceCollisionLeaf* v)
+{
+    EndianSwap(v->triangleBeginIndex);
+}
+
+static inline void EndianSwap_XModelHighMipBounds(IW3Xenon::XModelHighMipBounds* v)
+{
+    EndianSwap(v->mins);
+    EndianSwap(v->maxs);
+}
+
+static inline void EndianSwap_DObjAnimMat(IW3Xenon::DObjAnimMat* v)
+{
+    EndianSwap(v->quat);
+    EndianSwap(v->trans);
+    EndianSwap(v->transWeight);
+}
+
+static inline void EndianSwap_XModelCollSurf_s(IW3Xenon::XModelCollSurf_s* v)
+{
+    EndianSwap(v->mins);
+    EndianSwap(v->maxs);
+    EndianSwap(v->boneIdx);
+    EndianSwap(v->contents);
+    EndianSwap(v->surfFlags);
+}
+
+static inline void EndianSwap_XBoneInfo(IW3Xenon::XBoneInfo* v)
+{
+    EndianSwap(v->bounds);
+    EndianSwap(v->offset);
+    EndianSwap(v->radiusSquared);
+}
+
 static inline void EndianSwap_XSurface(IW3Xenon::XSurface* v)
 {
     EndianSwap(v->vertCount);
@@ -163,7 +249,8 @@ static inline void EndianSwap_XSurface(IW3Xenon::XSurface* v)
 
 static inline void EndianSwap_XSurfaceVertexInfo(IW3Xenon::XSurfaceVertexInfo* v)
 {
-    assert(false);
+    EndianSwap(v->vertCount);
+    EndianSwap(v->vertsBlend);
 }
 
 static inline void EndianSwap_XRigidVertList(IW3Xenon::XRigidVertList* v)
@@ -284,6 +371,18 @@ static inline void EndianSwap_XModel(IW3Xenon::XModel* v)
 }
 
 // ---- Material
+
+static inline void EndianSwap_MaterialConstantDef(IW3Xenon::MaterialConstantDef* v)
+{
+    EndianSwap(v->nameHash);
+    // char name[12];
+    EndianSwap(v->literal);
+}
+
+static inline void EndianSwap_GfxStateBits(IW3Xenon::GfxStateBits* v)
+{
+    EndianSwap(v->loadBits);
+}
 
 static inline void EndianSwap_MaterialTextureDef(IW3Xenon::MaterialTextureDef* v)
 {
@@ -549,6 +648,13 @@ static inline void EndianSwap_GfxImage(IW3Xenon::GfxImage* v)
 
 // ---- snd_alias_list_t
 
+static inline void EndianSwap_XAUDIOCHANNELMAPENTRY(IW3Xenon::XAUDIOCHANNELMAPENTRY* v)
+{
+    // unsigned __int8 InputChannel;
+    // unsigned __int8 OutputChannel;
+    EndianSwap(v->Volume);
+}
+
 static inline void EndianSwap_snd_alias_t(IW3Xenon::snd_alias_t* v)
 {
     EndianSwap(v->aliasName);
@@ -708,6 +814,85 @@ static inline void EndianSwap_LoadedSound(IW3Xenon::LoadedSound* v)
 }
 
 // ---- clipMap_t
+
+static inline void EndianSwap_cplane_s(IW3Xenon::cplane_s* v)
+{
+    EndianSwap(v->normal);
+    EndianSwap(v->dist);
+    // unsigned __int8 type;
+    // unsigned __int8 signbits;
+    // unsigned __int8 pad[2];
+}
+
+static inline void EndianSwap_dmaterial_t(IW3Xenon::dmaterial_t* v)
+{
+    // char material[64];
+    EndianSwap(v->surfaceFlags);
+    EndianSwap(v->contentFlags);
+}
+
+static inline void EndianSwap_cLeaf_t(IW3Xenon::cLeaf_t* v)
+{
+    EndianSwap(v->firstCollAabbIndex);
+    EndianSwap(v->collAabbCount);
+    EndianSwap(v->brushContents);
+    EndianSwap(v->terrainContents);
+    EndianSwap(v->mins);
+    EndianSwap(v->maxs);
+    EndianSwap(v->leafBrushNode);
+    EndianSwap(v->cluster);
+}
+
+static inline void EndianSwap_CollisionBorder(IW3Xenon::CollisionBorder* v)
+{
+    EndianSwap(v->distEq);
+    EndianSwap(v->zBase);
+    EndianSwap(v->zSlope);
+    EndianSwap(v->start);
+    EndianSwap(v->length);
+}
+
+static inline void EndianSwap_CollisionAabbTree(IW3Xenon::CollisionAabbTree* v)
+{
+    EndianSwap(v->origin);
+    EndianSwap(v->halfSize);
+    EndianSwap(v->materialIndex);
+    EndianSwap(v->childCount);
+    // Union of ints
+    EndianSwap(v->u.firstChildIndex);
+}
+
+static inline void EndianSwap_cmodel_t(IW3Xenon::cmodel_t* v)
+{
+    EndianSwap(v->mins);
+    EndianSwap(v->maxs);
+    EndianSwap(v->radius);
+    EndianSwap_cLeaf_t(&v->leaf);
+}
+
+static inline void EndianSwap_DynEntityPose(IW3Xenon::DynEntityPose* v)
+{
+    // GfxPlacement pose;
+    EndianSwap(v->pose.quat);
+    EndianSwap(v->pose.origin);
+    EndianSwap(v->radius);
+}
+
+static inline void EndianSwap_DynEntityClient(IW3Xenon::DynEntityClient* v)
+{
+    EndianSwap(v->physObjId);
+    EndianSwap(v->flags);
+    EndianSwap(v->lightingHandle);
+    EndianSwap(v->health);
+}
+
+static inline void EndianSwap_DynEntityColl(IW3Xenon::DynEntityColl* v)
+{
+    EndianSwap(v->sector);
+    EndianSwap(v->nextEntInSector);
+    EndianSwap(v->linkMins);
+    EndianSwap(v->linkMaxs);
+}
 
 static inline void EndianSwap_XModelPieces(IW3Xenon::XModelPieces* v)
 {
@@ -937,6 +1122,21 @@ static inline void EndianSwap_ComWorld(IW3Xenon::ComWorld* v)
 
 // ---- GameWorldSp
 
+static inline void EndianSwap_pathbasenode_t(IW3Xenon::pathbasenode_t* v)
+{
+    EndianSwap(v->vOrigin);
+    EndianSwap(v->type);
+}
+
+static inline void EndianSwap_pathlink_s(IW3Xenon::pathlink_s* v)
+{
+    EndianSwap(v->fDist);
+    EndianSwap(v->nodeNum);
+    //     unsigned __int8 disconnectCount;
+    // unsigned __int8 negotiationLink;
+    // unsigned __int8 ubBadPlaceCount[4];
+}
+
 static inline void EndianSwap_pathnode_t(IW3Xenon::pathnode_t* v)
 {
     // pathnode_constant_t constant (embedded)
@@ -1055,6 +1255,91 @@ static inline void EndianSwap_MapEnts(IW3Xenon::MapEnts* v)
 }
 
 // ---- GfxWorld
+
+static inline void EndianSwap_GfxStreamingAabbTree(IW3Xenon::GfxStreamingAabbTree* v)
+{
+    EndianSwap(v->firstItem);
+    EndianSwap(v->itemCount);
+    EndianSwap(v->firstChild);
+    EndianSwap(v->childCount);
+    EndianSwap(v->mins);
+    EndianSwap(v->maxs);
+}
+
+static inline void EndianSwap_GfxLightGridEntry(IW3Xenon::GfxLightGridEntry* v)
+{
+    EndianSwap(v->colorsIndex);
+    // unsigned __int8 primaryLightIndex;
+    // unsigned __int8 needsTrace;
+}
+
+static inline void EndianSwap_GfxLightGridColors(IW3Xenon::GfxLightGridColors* v)
+{
+    // unsigned __int8 rgb[56][3];
+}
+
+static inline void EndianSwap_GfxWorldVertex(IW3Xenon::GfxWorldVertex* v)
+{
+    EndianSwap(v->xyz);
+    EndianSwap(v->binormalSign);
+    // GfxColor color;
+    EndianSwap(v->texCoord);
+    EndianSwap(v->lmapCoord);
+    EndianSwap(v->normal.packed);
+    EndianSwap(v->tangent.packed);
+}
+
+static inline void EndianSwap_GfxLightRegionAxis(IW3Xenon::GfxLightRegionAxis* v)
+{
+    EndianSwap(v->dir);
+    EndianSwap(v->midPoint);
+    EndianSwap(v->halfSize);
+}
+
+static inline void EndianSwap_GfxStaticModelInst(IW3Xenon::GfxStaticModelInst* v)
+{
+    EndianSwap(v->mins);
+    EndianSwap(v->maxs);
+    // GfxColor groundLighting;
+}
+
+static inline void EndianSwap_GfxCullGroup(IW3Xenon::GfxCullGroup* v)
+{
+    EndianSwap(v->mins);
+    EndianSwap(v->maxs);
+    EndianSwap(v->surfaceCount);
+    EndianSwap(v->startSurfIndex);
+}
+
+static inline void EndianSwap_GfxDrawSurf(IW3Xenon::GfxDrawSurf* v)
+{
+    EndianSwap(v->packed);
+}
+
+static inline void EndianSwap_GfxBrushModel(IW3Xenon::GfxBrushModel* v)
+{
+    // GfxBrushModelWritable writable;
+    EndianSwap(v->writable.mins);
+    EndianSwap(v->writable.maxs);
+    EndianSwap(v->bounds);
+    EndianSwap(v->surfaceCount);
+    EndianSwap(v->startSurfIndex);
+}
+
+static inline void EndianSwap_GfxSceneDynModel(IW3Xenon::GfxSceneDynModel* v)
+{
+    // XModelDrawInfo info;
+    EndianSwap(v->info.lod);
+    EndianSwap(v->info.surfId);
+    EndianSwap(v->dynEntId);
+}
+
+static inline void EndianSwap_GfxSceneDynBrush(IW3Xenon::GfxSceneDynBrush* v)
+{
+    // BModelDrawInfo info;
+    EndianSwap(v->info.surfId);
+    EndianSwap(v->dynEntId);
+}
 
 static inline void EndianSwap_GfxReflectionProbe(IW3Xenon::GfxReflectionProbe* v)
 {
@@ -1419,6 +1704,20 @@ static inline void EndianSwap_GfxLightDef(IW3Xenon::GfxLightDef* v)
 }
 
 // ---- Font_s
+
+static inline void EndianSwap_Glyph(IW3Xenon::Glyph* v)
+{
+    EndianSwap(v->letter);
+    // char x0;
+    // char y0;
+    // unsigned __int8 dx;
+    // unsigned __int8 pixelWidth;
+    // unsigned __int8 pixelHeight;
+    EndianSwap(v->s0);
+    EndianSwap(v->t0);
+    EndianSwap(v->s1);
+    EndianSwap(v->t1);
+}
 
 static inline void EndianSwap_Font_s(IW3Xenon::Font_s* v)
 {
@@ -2137,6 +2436,33 @@ static inline void EndianSwap_WeaponDef(IW3Xenon::WeaponDef* v)
 
 // ---- SndDriverGlobals
 
+static inline void EndianSwap_XaReverbSettings(IW3Xenon::XaReverbSettings* v)
+{
+    EndianSwap(v->presetOverridden);
+    // XAUDIOREVERBSETTINGS reverbSettings;
+    EndianSwap(v->reverbSettings.ReflectionsDelay);
+    // unsigned __int8 ReverbDelay;
+    // unsigned __int8 RearDelay;
+    // unsigned __int8 PositionLeft;
+    // unsigned __int8 PositionRight;
+    // unsigned __int8 PositionMatrixLeft;
+    // unsigned __int8 PositionMatrixRight;
+    // unsigned __int8 EarlyDiffusion;
+    // unsigned __int8 LateDiffusion;
+    // unsigned __int8 LowEQGain;
+    // unsigned __int8 LowEQCutoff;
+    // unsigned __int8 HighEQGain;
+    // unsigned __int8 HighEQCutoff;
+    EndianSwap(v->reverbSettings.RoomFilterFreq);
+    EndianSwap(v->reverbSettings.RoomFilterMain);
+    EndianSwap(v->reverbSettings.RoomFilterHF);
+    EndianSwap(v->reverbSettings.ReflectionsGain);
+    EndianSwap(v->reverbSettings.ReverbGain);
+    EndianSwap(v->reverbSettings.DecayTime);
+    EndianSwap(v->reverbSettings.Density);
+    EndianSwap(v->reverbSettings.RoomSize);
+}
+
 static inline void EndianSwap_SndDriverGlobals(IW3Xenon::SndDriverGlobals* v)
 {
     EndianSwap(v->reverbSettings);
@@ -2144,6 +2470,37 @@ static inline void EndianSwap_SndDriverGlobals(IW3Xenon::SndDriverGlobals* v)
 }
 
 // ---- FXEffectDef
+
+static inline void EndianSwap_FxElemVelStateSample(IW3Xenon::FxElemVelStateSample* v)
+{
+    EndianSwap(v->local.velocity.base);
+    EndianSwap(v->local.velocity.amplitude);
+    EndianSwap(v->local.totalDelta.base);
+    EndianSwap(v->local.totalDelta.amplitude);
+    EndianSwap(v->world.velocity.base);
+    EndianSwap(v->world.velocity.amplitude);
+    EndianSwap(v->world.totalDelta.base);
+    EndianSwap(v->world.totalDelta.amplitude);
+}
+
+static inline void EndianSwap_FxElemVisStateSample(IW3Xenon::FxElemVisStateSample* v)
+{
+    EndianSwap(v->base.rotationDelta);
+    EndianSwap(v->base.rotationTotal);
+    EndianSwap(v->base.size);
+    EndianSwap(v->base.scale);
+    EndianSwap(v->amplitude.rotationDelta);
+    EndianSwap(v->amplitude.rotationTotal);
+    EndianSwap(v->amplitude.size);
+    EndianSwap(v->amplitude.scale);
+}
+
+static inline void EndianSwap_FxTrailVertex(IW3Xenon::FxTrailVertex* v)
+{
+    EndianSwap(v->pos);
+    EndianSwap(v->normal);
+    EndianSwap(v->texCoord);
+}
 
 static inline void EndianSwap_FxElemDef(IW3Xenon::FxElemDef* v)
 {
