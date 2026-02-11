@@ -46,33 +46,7 @@ static inline void EndianSwap(T& v)
     EndianSwap(reinterpret_cast<std::underlying_type_t<T>&>(v));
 }
 
-// 1D - swaps each element
-template<size_t N> static inline void EndianSwap(float (&v)[N])
-{
-    for (size_t i = 0; i < N; i++)
-        EndianSwap(v[i]);
-}
-
-// 2D - delegates to the 1D overload
-template<size_t N, size_t M> static inline void EndianSwap(float (&v)[N][M])
-{
-    for (size_t i = 0; i < N; i++)
-        EndianSwap(v[i]);
-}
-
-template<size_t N> static inline void EndianSwap(short (&v)[N])
-{
-    for (size_t i = 0; i < N; i++)
-        EndianSwap(v[i]);
-}
-
-template<size_t N> static inline void EndianSwap(unsigned short (&v)[N])
-{
-    for (size_t i = 0; i < N; i++)
-        EndianSwap(v[i]);
-}
-
-template<size_t N> static inline void EndianSwap(unsigned int (&v)[N])
+template<typename T, size_t N> static inline void EndianSwap(T (&v)[N])
 {
     for (size_t i = 0; i < N; i++)
         EndianSwap(v[i]);
@@ -237,14 +211,12 @@ static inline void EndianSwap_XSurface(IW3Xenon::XSurface* v)
     EndianSwap(v->vertCount);
     EndianSwap(v->triCount);
     EndianSwap(v->triIndices);
-    for (int i = 0; i < 4; i++)
-        EndianSwap(v->vertInfo.vertCount[i]);
+    EndianSwap(v->vertInfo.vertCount);
     EndianSwap(v->vertInfo.vertsBlend);
     EndianSwap(v->verts0);
     EndianSwap(v->vertListCount);
     EndianSwap(v->vertList);
-    for (int i = 0; i < 4; i++)
-        EndianSwap(v->partBits[i]);
+    EndianSwap(v->partBits);
 }
 
 static inline void EndianSwap_XSurfaceVertexInfo(IW3Xenon::XSurfaceVertexInfo* v)
@@ -264,10 +236,8 @@ static inline void EndianSwap_XRigidVertList(IW3Xenon::XRigidVertList* v)
 
 static inline void EndianSwap_XSurfaceCollisionTree(IW3Xenon::XSurfaceCollisionTree* v)
 {
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->trans[i]);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->scale[i]);
+    EndianSwap(v->trans);
+    EndianSwap(v->scale);
     EndianSwap(v->nodeCount);
     EndianSwap(v->nodes);
     EndianSwap(v->leafCount);
@@ -284,43 +254,30 @@ static inline void EndianSwap_PhysGeomList(IW3Xenon::PhysGeomList* v)
     EndianSwap(v->count);
     EndianSwap(v->geoms);
     // PhysMass mass
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->mass.centerOfMass[i]);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->mass.momentsOfInertia[i]);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->mass.productsOfInertia[i]);
+    EndianSwap(v->mass.centerOfMass);
+    EndianSwap(v->mass.momentsOfInertia);
+    EndianSwap(v->mass.productsOfInertia);
 }
 
 static inline void EndianSwap_PhysGeomInfo(IW3Xenon::PhysGeomInfo* v)
 {
     EndianSwap(v->brush);
     EndianSwap(v->type);
-    for (int i = 0; i < 3; i++)
-        for (int j = 0; j < 3; j++)
-            EndianSwap(v->orientation[i][j]);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->offset[i]);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->halfLengths[i]);
+    EndianSwap(v->orientation);
+    EndianSwap(v->offset);
+    EndianSwap(v->halfLengths);
 }
 
 static inline void EndianSwap_BrushWrapper(IW3Xenon::BrushWrapper* v)
 {
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->mins[i]);
+    EndianSwap(v->mins);
     EndianSwap(v->contents);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->maxs[i]);
+    EndianSwap(v->maxs);
     EndianSwap(v->numsides);
     EndianSwap(v->sides);
-    for (int i = 0; i < 2; i++)
-        for (int j = 0; j < 3; j++)
-            EndianSwap(v->axialMaterialNum[i][j]);
+    EndianSwap(v->axialMaterialNum);
     EndianSwap(v->baseAdjacentSide);
-    for (int i = 0; i < 2; i++)
-        for (int j = 0; j < 3; j++)
-            EndianSwap(v->firstAdjacentSideOffsets[i][j]);
+    EndianSwap(v->firstAdjacentSideOffsets);
     // edgeCount[2][3] - unsigned __int8, no swap
     EndianSwap(v->totalEdgeCount);
     EndianSwap(v->planes);
@@ -350,18 +307,15 @@ static inline void EndianSwap_XModel(IW3Xenon::XModel* v)
         EndianSwap(v->lodInfo[i].dist);
         EndianSwap(v->lodInfo[i].numsurfs);
         EndianSwap(v->lodInfo[i].surfIndex);
-        for (int j = 0; j < 4; j++)
-            EndianSwap(v->lodInfo[i].partBits[j]);
+        EndianSwap(v->lodInfo[i].partBits);
     }
     EndianSwap(v->collSurfs);
     EndianSwap(v->numCollSurfs);
     EndianSwap(v->contents);
     EndianSwap(v->boneInfo);
     EndianSwap(v->radius);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->mins[i]);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->maxs[i]);
+    EndianSwap(v->mins);
+    EndianSwap(v->maxs);
     EndianSwap(v->numLods);
     EndianSwap(v->collLod);
     EndianSwap(v->streamInfo.highMipBounds);
@@ -437,13 +391,11 @@ static inline void EndianSwap_water_t(IW3Xenon::water_t* v)
     EndianSwap(v->Lz);
     EndianSwap(v->gravity);
     EndianSwap(v->windvel);
-    EndianSwap(v->winddir[0]);
-    EndianSwap(v->winddir[1]);
+    EndianSwap(v->winddir);
     EndianSwap(v->amplitude);
 
     // Float array
-    for (int i = 0; i < 4; i++)
-        EndianSwap(v->codeConstant[i]);
+    EndianSwap(v->codeConstant);
 
     // Image pointer
     EndianSwap(v->image);
@@ -470,8 +422,7 @@ static inline void EndianSwap_MaterialTechniqueSet(IW3Xenon::MaterialTechniqueSe
 {
     EndianSwap(v->name);
     EndianSwap(v->remappedTechniqueSet);
-    for (int i = 0; i < 26; i++)
-        EndianSwap(v->techniques[i]);
+    EndianSwap(v->techniques);
 }
 
 static inline void EndianSwap_MaterialVertexShader(IW3Xenon::MaterialVertexShader* v)
@@ -569,8 +520,7 @@ static inline void EndianSwap_MaterialPass(IW3Xenon::MaterialPass* v)
 {
     EndianSwap(v->vertexDecl);
 
-    for (int i = 0; i < 15; i++)
-        EndianSwap(v->vertexShaderArray[i]);
+    EndianSwap(v->vertexShaderArray);
 
     EndianSwap(v->vertexShader);
     EndianSwap(v->pixelShader);
@@ -617,9 +567,7 @@ static inline void EndianSwap_GfxImageLoadDef(IW3Xenon::GfxImageLoadDef* v)
     // flags: uint8, no swap needed
 
     // dimensions[3]: array of int16
-    EndianSwap(v->dimensions[0]);
-    EndianSwap(v->dimensions[1]);
-    EndianSwap(v->dimensions[2]);
+    EndianSwap(v->dimensions);
 
     // format: int (32-bit)
     EndianSwap(v->format);
@@ -779,13 +727,7 @@ static inline void EndianSwap_SndCurve(IW3Xenon::SndCurve* v)
     EndianSwap(v->filename);
     EndianSwap(v->knotCount);
 
-    for (int i = 0; i < 8; i++)
-    {
-        for (int j = 0; j < 2; j++)
-        {
-            EndianSwap(v->knots[i][j]);
-        }
-    }
+    EndianSwap(v->knots);
 }
 
 // ---- LoadedSound
@@ -941,10 +883,8 @@ static inline void EndianSwap_DynEntityDef(IW3Xenon::DynEntityDef* v)
     EndianSwap(v->type);
 
     // GfxPlacement pose (embedded)
-    for (int i = 0; i < 4; i++)
-        EndianSwap(v->pose.quat[i]);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->pose.origin[i]);
+    EndianSwap(v->pose.quat);
+    EndianSwap(v->pose.origin);
 
     EndianSwap(v->xModel);
     EndianSwap(v->brushModel);
@@ -955,32 +895,23 @@ static inline void EndianSwap_DynEntityDef(IW3Xenon::DynEntityDef* v)
     EndianSwap(v->health);
 
     // PhysMass mass (embedded)
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->mass.centerOfMass[i]);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->mass.momentsOfInertia[i]);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->mass.productsOfInertia[i]);
+    EndianSwap(v->mass.centerOfMass);
+    EndianSwap(v->mass.momentsOfInertia);
+    EndianSwap(v->mass.productsOfInertia);
 
     EndianSwap(v->contents);
 }
 
 static inline void EndianSwap_cbrush_t(IW3Xenon::cbrush_t* v)
 {
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->mins[i]);
+    EndianSwap(v->mins);
     EndianSwap(v->contents);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->maxs[i]);
+    EndianSwap(v->maxs);
     EndianSwap(v->numsides);
     EndianSwap(v->sides);
-    for (int i = 0; i < 2; i++)
-        for (int j = 0; j < 3; j++)
-            EndianSwap(v->axialMaterialNum[i][j]);
+    EndianSwap(v->axialMaterialNum);
     EndianSwap(v->baseAdjacentSide);
-    for (int i = 0; i < 2; i++)
-        for (int j = 0; j < 3; j++)
-            EndianSwap(v->firstAdjacentSideOffsets[i][j]);
+    EndianSwap(v->firstAdjacentSideOffsets);
     // edgeCount[2][3] - unsigned __int8, no swap
 }
 
@@ -1009,16 +940,14 @@ static inline void EndianSwap_cLeafBrushNode_s(IW3Xenon::cLeafBrushNode_s* v)
         // children
         EndianSwap(v->data.children.dist);
         EndianSwap(v->data.children.range);
-        for (int i = 0; i < 2; i++)
-            EndianSwap(v->data.children.childOffset[i]);
+        EndianSwap(v->data.children.childOffset);
     }
 }
 
 static inline void EndianSwap_cNode_t(IW3Xenon::cNode_t* v)
 {
     EndianSwap(v->plane);
-    for (int i = 0; i < 2; i++)
-        EndianSwap(v->children[i]);
+    EndianSwap(v->children);
 }
 
 static inline void EndianSwap_cStaticModel_s(IW3Xenon::cStaticModel_s* v)
@@ -1027,15 +956,10 @@ static inline void EndianSwap_cStaticModel_s(IW3Xenon::cStaticModel_s* v)
     EndianSwap(v->writable.nextModelInWorldSector);
 
     EndianSwap(v->xmodel);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->origin[i]);
-    for (int i = 0; i < 3; i++)
-        for (int j = 0; j < 3; j++)
-            EndianSwap(v->invScaledAxis[i][j]);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->absmin[i]);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->absmax[i]);
+    EndianSwap(v->origin);
+    EndianSwap(v->invScaledAxis);
+    EndianSwap(v->absmin);
+    EndianSwap(v->absmax);
 }
 
 static inline void EndianSwap_clipMap_t(IW3Xenon::clipMap_t* v)
@@ -1085,33 +1009,24 @@ static inline void EndianSwap_clipMap_t(IW3Xenon::clipMap_t* v)
     EndianSwap(v->box_brush);
 
     // cmodel_t box_model (embedded)
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->box_model.mins[i]);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->box_model.maxs[i]);
+    EndianSwap(v->box_model.mins);
+    EndianSwap(v->box_model.maxs);
     EndianSwap(v->box_model.radius);
     // cLeaf_t leaf (embedded in box_model)
     EndianSwap(v->box_model.leaf.firstCollAabbIndex);
     EndianSwap(v->box_model.leaf.collAabbCount);
     EndianSwap(v->box_model.leaf.brushContents);
     EndianSwap(v->box_model.leaf.terrainContents);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->box_model.leaf.mins[i]);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->box_model.leaf.maxs[i]);
+    EndianSwap(v->box_model.leaf.mins);
+    EndianSwap(v->box_model.leaf.maxs);
     EndianSwap(v->box_model.leaf.leafBrushNode);
     EndianSwap(v->box_model.leaf.cluster);
 
-    for (int i = 0; i < 2; i++)
-        EndianSwap(v->dynEntCount[i]);
-    for (int i = 0; i < 2; i++)
-        EndianSwap(v->dynEntDefList[i]);
-    for (int i = 0; i < 2; i++)
-        EndianSwap(v->dynEntPoseList[i]);
-    for (int i = 0; i < 2; i++)
-        EndianSwap(v->dynEntClientList[i]);
-    for (int i = 0; i < 2; i++)
-        EndianSwap(v->dynEntCollList[i]);
+    EndianSwap(v->dynEntCount);
+    EndianSwap(v->dynEntDefList);
+    EndianSwap(v->dynEntPoseList);
+    EndianSwap(v->dynEntClientList);
+    EndianSwap(v->dynEntCollList);
     EndianSwap(v->checksum);
 }
 
@@ -1119,12 +1034,9 @@ static inline void EndianSwap_clipMap_t(IW3Xenon::clipMap_t* v)
 
 static inline void EndianSwap_ComPrimaryLight(IW3Xenon::ComPrimaryLight* v)
 {
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->color[i]);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->dir[i]);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->origin[i]);
+    EndianSwap(v->color);
+    EndianSwap(v->dir);
+    EndianSwap(v->origin);
     EndianSwap(v->radius);
     EndianSwap(v->cosHalfFovOuter);
     EndianSwap(v->cosHalfFovInner);
@@ -1170,15 +1082,12 @@ static inline void EndianSwap_pathnode_t(IW3Xenon::pathnode_t* v)
     EndianSwap(v->constant.target);
     EndianSwap(v->constant.animscript);
     EndianSwap(v->constant.animscriptfunc);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->constant.vOrigin[i]);
+    EndianSwap(v->constant.vOrigin);
     EndianSwap(v->constant.fAngle);
-    for (int i = 0; i < 2; i++)
-        EndianSwap(v->constant.forward[i]);
+    EndianSwap(v->constant.forward);
     EndianSwap(v->constant.fRadius);
     EndianSwap(v->constant.minUseDistSq);
-    for (int i = 0; i < 2; i++)
-        EndianSwap(v->constant.wOverlapNode[i]);
+    EndianSwap(v->constant.wOverlapNode);
     EndianSwap(v->constant.wChainId);
     EndianSwap(v->constant.wChainDepth);
     EndianSwap(v->constant.wChainParent);
@@ -1188,8 +1097,7 @@ static inline void EndianSwap_pathnode_t(IW3Xenon::pathnode_t* v)
     // pathnode_dynamic_t dynamic (embedded)
     EndianSwap(v->dynamic.pOwner);
     EndianSwap(v->dynamic.iFreeTime);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->dynamic.iValidTime[i]);
+    EndianSwap(v->dynamic.iValidTime);
     EndianSwap(v->dynamic.inPlayerLOSTime);
     EndianSwap(v->dynamic.wLinkCount);
     EndianSwap(v->dynamic.wOverlapCount);
@@ -1365,17 +1273,14 @@ static inline void EndianSwap_GfxSceneDynBrush(IW3Xenon::GfxSceneDynBrush* v)
 
 static inline void EndianSwap_GfxReflectionProbe(IW3Xenon::GfxReflectionProbe* v)
 {
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->origin[i]);
+    EndianSwap(v->origin);
     EndianSwap(v->reflectionImage);
 }
 
 static inline void EndianSwap_GfxCell(IW3Xenon::GfxCell* v)
 {
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->mins[i]);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->maxs[i]);
+    EndianSwap(v->mins);
+    EndianSwap(v->maxs);
     EndianSwap(v->aabbTreeCount);
     EndianSwap(v->aabbTree);
     EndianSwap(v->portalCount);
@@ -1388,10 +1293,8 @@ static inline void EndianSwap_GfxCell(IW3Xenon::GfxCell* v)
 
 static inline void EndianSwap_GfxAabbTree(IW3Xenon::GfxAabbTree* v)
 {
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->mins[i]);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->maxs[i]);
+    EndianSwap(v->mins);
+    EndianSwap(v->maxs);
     EndianSwap(v->childCount);
     EndianSwap(v->surfaceCount);
     EndianSwap(v->startSurfIndex);
@@ -1407,15 +1310,12 @@ static inline void EndianSwap_GfxPortal(IW3Xenon::GfxPortal* v)
     EndianSwap(v->writable.hullPoints);
     EndianSwap(v->writable.queuedParent);
     // DpvsPlane plane - embedded struct
-    for (int i = 0; i < 4; i++)
-        EndianSwap(v->plane.coeffs[i]);
+    EndianSwap(v->plane.coeffs);
     // side[3] and pad are bytes - no swap
     EndianSwap(v->cell);
     EndianSwap(v->vertices);
     // vertexCount is byte - no swap
-    for (int i = 0; i < 2; i++)
-        for (int j = 0; j < 3; j++)
-            EndianSwap(v->hullAxis[i][j]);
+    EndianSwap(v->hullAxis);
 }
 
 static inline void EndianSwap_GfxLightmapArray(IW3Xenon::GfxLightmapArray* v)
@@ -1446,10 +1346,8 @@ static inline void EndianSwap_GfxLightRegion(IW3Xenon::GfxLightRegion* v)
 
 static inline void EndianSwap_GfxLightRegionHull(IW3Xenon::GfxLightRegionHull* v)
 {
-    for (int i = 0; i < 9; i++)
-        EndianSwap(v->kdopMidPoint[i]);
-    for (int i = 0; i < 9; i++)
-        EndianSwap(v->kdopHalfSize[i]);
+    EndianSwap(v->kdopMidPoint);
+    EndianSwap(v->kdopHalfSize);
     EndianSwap(v->axisCount);
     EndianSwap(v->axis);
 }
@@ -1462,27 +1360,22 @@ static inline void EndianSwap_GfxSurface(IW3Xenon::GfxSurface* v)
     EndianSwap(v->tris.vertexCount);
     EndianSwap(v->tris.triCount);
     EndianSwap(v->tris.baseIndex);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->tris.topMipMins[i]);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->tris.topMipMaxs[i]);
+    EndianSwap(v->tris.topMipMins);
+    EndianSwap(v->tris.topMipMaxs);
 
     EndianSwap(v->material);
     // lightmapIndex - unsigned __int8, no swap
     // reflectionProbeIndex - unsigned __int8, no swap
     // primaryLightIndex - unsigned __int8, no swap
     // castsSunShadow - bool, no swap
-    for (int i = 0; i < 2; i++)
-        for (int j = 0; j < 3; j++)
-            EndianSwap(v->bounds[i][j]);
+    EndianSwap(v->bounds);
 }
 
 static inline void EndianSwap_GfxStaticModelDrawInst(IW3Xenon::GfxStaticModelDrawInst* v)
 {
     EndianSwap(v->cullDist);
     // GfxPackedPlacement placement
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->placement.origin[i]);
+    EndianSwap(v->placement.origin);
     for (int i = 0; i < 3; i++)
         EndianSwap(v->placement.axis[i].packed);
     EndianSwap(v->placement.scale);
@@ -1501,12 +1394,9 @@ static inline void EndianSwap_GfxWorldStreamInfo(IW3Xenon::GfxWorldStreamInfo* v
 static inline void EndianSwap_GfxLight(IW3Xenon::GfxLight* v)
 {
     // type, canUseShadowMap, unused[2] are bytes - no swap
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->color[i]);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->dir[i]);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->origin[i]);
+    EndianSwap(v->color);
+    EndianSwap(v->dir);
+    EndianSwap(v->origin);
     EndianSwap(v->radius);
     EndianSwap(v->cosHalfFovOuter);
     EndianSwap(v->cosHalfFovInner);
@@ -1580,20 +1470,15 @@ static inline void EndianSwap_GfxWorld(IW3Xenon::GfxWorld* v)
     // SunLightParseParams sunParse - embedded struct
     // name[64] is char array - no swap
     EndianSwap(v->sunParse.ambientScale);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->sunParse.ambientColor[i]);
+    EndianSwap(v->sunParse.ambientColor);
     EndianSwap(v->sunParse.diffuseFraction);
     EndianSwap(v->sunParse.sunLight);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->sunParse.sunColor[i]);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->sunParse.diffuseColor[i]);
+    EndianSwap(v->sunParse.sunColor);
+    EndianSwap(v->sunParse.diffuseColor);
     // diffuseColorHasBeenSet is bool - no swap
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->sunParse.angles[i]);
+    EndianSwap(v->sunParse.angles);
     EndianSwap(v->sunLight);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->sunColorFromBsp[i]);
+    EndianSwap(v->sunColorFromBsp);
     EndianSwap(v->sunPrimaryLightIndex);
     EndianSwap(v->primaryLightCount);
     EndianSwap(v->cullGroupCount);
@@ -1612,10 +1497,8 @@ static inline void EndianSwap_GfxWorld(IW3Xenon::GfxWorld* v)
     // GfxLightGrid lightGrid - embedded struct
     // hasLightRegions is bool - no swap
     EndianSwap(v->lightGrid.sunPrimaryLightIndex);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->lightGrid.mins[i]);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->lightGrid.maxs[i]);
+    EndianSwap(v->lightGrid.mins);
+    EndianSwap(v->lightGrid.maxs);
     EndianSwap(v->lightGrid.rowAxis);
     EndianSwap(v->lightGrid.colAxis);
     EndianSwap(v->lightGrid.rowDataStart);
@@ -1629,10 +1512,8 @@ static inline void EndianSwap_GfxWorld(IW3Xenon::GfxWorld* v)
     EndianSwap(v->lightmapSecondaryTextures);
     EndianSwap(v->modelCount);
     EndianSwap(v->models);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->mins[i]);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->maxs[i]);
+    EndianSwap(v->mins);
+    EndianSwap(v->maxs);
     EndianSwap(v->checksum);
     EndianSwap(v->materialMemoryCount);
     EndianSwap(v->materialMemory);
@@ -1658,19 +1539,15 @@ static inline void EndianSwap_GfxWorld(IW3Xenon::GfxWorld* v)
     EndianSwap(v->sun.glareMaxLighten);
     EndianSwap(v->sun.glareFadeInTime);
     EndianSwap(v->sun.glareFadeOutTime);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->sun.sunFxPosition[i]);
+    EndianSwap(v->sun.sunFxPosition);
     // outdoorLookupMatrix[4][4]
-    for (int i = 0; i < 4; i++)
-        for (int j = 0; j < 4; j++)
-            EndianSwap(v->outdoorLookupMatrix[i][j]);
+    EndianSwap(v->outdoorLookupMatrix);
     EndianSwap(v->outdoorImage);
     EndianSwap(v->cellCasterBits);
     EndianSwap(v->sceneDynModel);
     EndianSwap(v->sceneDynBrush);
     EndianSwap(v->primaryLightEntityShadowVis);
-    EndianSwap(v->primaryLightDynEntShadowVis[0]);
-    EndianSwap(v->primaryLightDynEntShadowVis[1]);
+    EndianSwap(v->primaryLightDynEntShadowVis);
     EndianSwap(v->nonSunPrimaryLightForModelDynEnt);
     EndianSwap(v->shadowGeom);
     EndianSwap(v->lightRegion);
@@ -1685,10 +1562,8 @@ static inline void EndianSwap_GfxWorld(IW3Xenon::GfxWorld* v)
     EndianSwap(v->dpvs.emissiveSurfsEnd);
     EndianSwap(v->dpvs.smodelVisDataCount);
     EndianSwap(v->dpvs.surfaceVisDataCount);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->dpvs.smodelVisData[i]);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->dpvs.surfaceVisData[i]);
+    EndianSwap(v->dpvs.smodelVisData);
+    EndianSwap(v->dpvs.surfaceVisData);
     EndianSwap(v->dpvs.lodData);
     EndianSwap(v->dpvs.sortedSurfIndex);
     EndianSwap(v->dpvs.smodelInsts);
@@ -1699,15 +1574,10 @@ static inline void EndianSwap_GfxWorld(IW3Xenon::GfxWorld* v)
     EndianSwap(v->dpvs.surfaceCastsSunShadow);
     EndianSwap(v->dpvs.usageCount);
     // GfxWorldDpvsDynamic dpvsDyn - embedded struct
-    EndianSwap(v->dpvsDyn.dynEntClientWordCount[0]);
-    EndianSwap(v->dpvsDyn.dynEntClientWordCount[1]);
-    EndianSwap(v->dpvsDyn.dynEntClientCount[0]);
-    EndianSwap(v->dpvsDyn.dynEntClientCount[1]);
-    EndianSwap(v->dpvsDyn.dynEntCellBits[0]);
-    EndianSwap(v->dpvsDyn.dynEntCellBits[1]);
-    for (int i = 0; i < 2; i++)
-        for (int j = 0; j < 3; j++)
-            EndianSwap(v->dpvsDyn.dynEntVisData[i][j]);
+    EndianSwap(v->dpvsDyn.dynEntClientWordCount);
+    EndianSwap(v->dpvsDyn.dynEntClientCount);
+    EndianSwap(v->dpvsDyn.dynEntCellBits);
+    EndianSwap(v->dpvsDyn.dynEntVisData);
 }
 
 // ---- GfxLightDef
@@ -1796,17 +1666,12 @@ static inline void EndianSwap_windowDef_t(IW3Xenon::windowDef_t* v)
     EndianSwap(v->ownerDrawFlags);
     EndianSwap(v->borderSize);
     EndianSwap(v->staticFlags);
-    for (int i = 0; i < 4; i++)
-        EndianSwap(v->dynamicFlags[i]);
+    EndianSwap(v->dynamicFlags);
     EndianSwap(v->nextTime);
-    for (int i = 0; i < 4; i++)
-        EndianSwap(v->foreColor[i]);
-    for (int i = 0; i < 4; i++)
-        EndianSwap(v->backColor[i]);
-    for (int i = 0; i < 4; i++)
-        EndianSwap(v->borderColor[i]);
-    for (int i = 0; i < 4; i++)
-        EndianSwap(v->outlineColor[i]);
+    EndianSwap(v->foreColor);
+    EndianSwap(v->backColor);
+    EndianSwap(v->borderColor);
+    EndianSwap(v->outlineColor);
     EndianSwap(v->background);
 }
 
@@ -1919,8 +1784,7 @@ static inline void EndianSwap_itemDef_s(IW3Xenon::itemDef_s* v)
     EndianSwap(v->dvarFlags);
     EndianSwap(v->focusSound);
     EndianSwap(v->special);
-    for (int i = 0; i < 4; i++)
-        EndianSwap(v->cursorPos[i]);
+    EndianSwap(v->cursorPos);
 
     // itemDefData_t typeData (union with pointer)
     EndianSwap(v->typeData.data);
@@ -1968,12 +1832,10 @@ static inline void EndianSwap_itemDefData_t(IW3Xenon::itemDefData_t* v)
 static inline void EndianSwap_listBoxDef_s(IW3Xenon::listBoxDef_s* v)
 {
     // int startPos[4];
-    for (int i = 0; i < 4; i++)
-        EndianSwap(v->startPos[i]);
+    EndianSwap(v->startPos);
 
     // int endPos[4];
-    for (int i = 0; i < 4; i++)
-        EndianSwap(v->endPos[i]);
+    EndianSwap(v->endPos);
 
     EndianSwap(v->drawPadding);
     EndianSwap(v->elementWidth);
@@ -1995,24 +1857,19 @@ static inline void EndianSwap_listBoxDef_s(IW3Xenon::listBoxDef_s* v)
     EndianSwap(v->usePaging);
 
     // int selectBorder[4];
-    for (int i = 0; i < 4; i++)
-        EndianSwap(v->selectBorder[i]);
+    EndianSwap(v->selectBorder);
 
     // int disableColor[4];
-    for (int i = 0; i < 4; i++)
-        EndianSwap(v->disableColor[i]);
+    EndianSwap(v->disableColor);
 
     EndianSwap(v->selectIcon);
 }
 
 static inline void EndianSwap_multiDef_s(IW3Xenon::multiDef_s* v)
 {
-    for (int i = 0; i < 32; i++)
-        EndianSwap(v->dvarList[i]);
-    for (int i = 0; i < 32; i++)
-        EndianSwap(v->dvarStr[i]);
-    for (int i = 0; i < 32; i++)
-        EndianSwap(v->dvarValue[i]);
+    EndianSwap(v->dvarList);
+    EndianSwap(v->dvarStr);
+    EndianSwap(v->dvarValue);
     EndianSwap(v->count);
     EndianSwap(v->strDef);
 }
@@ -2027,8 +1884,7 @@ static inline void EndianSwap_menuDef_t(IW3Xenon::menuDef_t* v)
     EndianSwap(v->fullScreen);
     EndianSwap(v->itemCount);
     EndianSwap(v->fontIndex);
-    for (int i = 0; i < 4; i++)
-        EndianSwap(v->cursorItem[i]);
+    EndianSwap(v->cursorItem);
     EndianSwap(v->fadeCycle);
     EndianSwap(v->fadeClamp);
     EndianSwap(v->fadeAmount);
@@ -2043,10 +1899,8 @@ static inline void EndianSwap_menuDef_t(IW3Xenon::menuDef_t* v)
     EndianSwap(v->allowedBinding);
     EndianSwap(v->soundName);
     EndianSwap(v->imageTrack);
-    for (int i = 0; i < 4; i++)
-        EndianSwap(v->focusColor[i]);
-    for (int i = 0; i < 4; i++)
-        EndianSwap(v->disableColor[i]);
+    EndianSwap(v->focusColor);
+    EndianSwap(v->disableColor);
     EndianSwap(v->rectXExp.numEntries);
     EndianSwap(v->rectXExp.entries);
     EndianSwap(v->rectYExp.numEntries);
@@ -2080,18 +1934,13 @@ static inline void EndianSwap_WeaponDef(IW3Xenon::WeaponDef* v)
     EndianSwap(v->szInternalName);
     EndianSwap(v->szDisplayName);
     EndianSwap(v->szOverlayName);
-    for (int i = 0; i < 16; i++)
-        EndianSwap(v->gunXModel[i]);
+    EndianSwap(v->gunXModel);
     EndianSwap(v->handXModel);
-    for (int i = 0; i < 33; i++)
-        EndianSwap(v->szXAnims[i]);
+    EndianSwap(v->szXAnims);
     EndianSwap(v->szModeName);
-    for (int i = 0; i < 8; i++)
-        EndianSwap(v->hideTags[i]);
-    for (int i = 0; i < 16; i++)
-        EndianSwap(v->notetrackSoundMapKeys[i]);
-    for (int i = 0; i < 16; i++)
-        EndianSwap(v->notetrackSoundMapValues[i]);
+    EndianSwap(v->hideTags);
+    EndianSwap(v->notetrackSoundMapKeys);
+    EndianSwap(v->notetrackSoundMapValues);
     EndianSwap(v->playerAnimType);
     EndianSwap(v->weapType);
     EndianSwap(v->weapClass);
@@ -2159,22 +2008,14 @@ static inline void EndianSwap_WeaponDef(IW3Xenon::WeaponDef* v)
     EndianSwap(v->iReticleSideSize);
     EndianSwap(v->iReticleMinOfs);
     EndianSwap(v->activeReticleType);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->vStandMove[i]);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->vStandRot[i]);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->vDuckedOfs[i]);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->vDuckedMove[i]);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->vDuckedRot[i]);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->vProneOfs[i]);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->vProneMove[i]);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->vProneRot[i]);
+    EndianSwap(v->vStandMove);
+    EndianSwap(v->vStandRot);
+    EndianSwap(v->vDuckedOfs);
+    EndianSwap(v->vDuckedMove);
+    EndianSwap(v->vDuckedRot);
+    EndianSwap(v->vProneOfs);
+    EndianSwap(v->vProneMove);
+    EndianSwap(v->vProneRot);
     EndianSwap(v->fPosMoveRate);
     EndianSwap(v->fPosProneMoveRate);
     EndianSwap(v->fStandMoveMinSpeed);
@@ -2185,8 +2026,7 @@ static inline void EndianSwap_WeaponDef(IW3Xenon::WeaponDef* v)
     EndianSwap(v->fStandRotMinSpeed);
     EndianSwap(v->fDuckedRotMinSpeed);
     EndianSwap(v->fProneRotMinSpeed);
-    for (int i = 0; i < 16; i++)
-        EndianSwap(v->worldModel[i]);
+    EndianSwap(v->worldModel);
     EndianSwap(v->worldClipModel);
     EndianSwap(v->rocketModel);
     EndianSwap(v->knifeModel);
@@ -2364,13 +2204,10 @@ static inline void EndianSwap_WeaponDef(IW3Xenon::WeaponDef* v)
     EndianSwap(v->holdButtonToThrow);
     EndianSwap(v->freezeMovementWhenFiring);
     EndianSwap(v->lowAmmoWarningThreshold);
-    for (int i = 0; i < 29; i++)
-        EndianSwap(v->parallelBounce[i]);
-    for (int i = 0; i < 29; i++)
-        EndianSwap(v->perpendicularBounce[i]);
+    EndianSwap(v->parallelBounce);
+    EndianSwap(v->perpendicularBounce);
     EndianSwap(v->projTrailEffect);
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->vProjectileColor[i]);
+    EndianSwap(v->vProjectileColor);
     EndianSwap(v->guidedMissileType);
     EndianSwap(v->maxSteeringAccel);
     EndianSwap(v->projIgnitionDelay);
@@ -2434,10 +2271,8 @@ static inline void EndianSwap_WeaponDef(IW3Xenon::WeaponDef* v)
     EndianSwap(v->accuracy);
     EndianSwap(v->aiSpread);
     EndianSwap(v->playerSpread);
-    for (int i = 0; i < 2; i++)
-        EndianSwap(v->minTurnSpeed[i]);
-    for (int i = 0; i < 2; i++)
-        EndianSwap(v->maxTurnSpeed[i]);
+    EndianSwap(v->minTurnSpeed);
+    EndianSwap(v->maxTurnSpeed);
     EndianSwap(v->pitchConvergenceTime);
     EndianSwap(v->yawConvergenceTime);
     EndianSwap(v->suppressTime);
@@ -2451,8 +2286,7 @@ static inline void EndianSwap_WeaponDef(IW3Xenon::WeaponDef* v)
     EndianSwap(v->horizViewJitter);
     EndianSwap(v->vertViewJitter);
     EndianSwap(v->szScript);
-    for (int i = 0; i < 2; i++)
-        EndianSwap(v->fOOPosAnimLength[i]);
+    EndianSwap(v->fOOPosAnimLength);
     EndianSwap(v->minDamage);
     EndianSwap(v->minPlayerDamage);
     EndianSwap(v->fMaxDamageRange);
@@ -2460,8 +2294,7 @@ static inline void EndianSwap_WeaponDef(IW3Xenon::WeaponDef* v)
     EndianSwap(v->destabilizationRateTime);
     EndianSwap(v->destabilizationCurvatureMax);
     EndianSwap(v->destabilizeDistance);
-    for (int i = 0; i < 19; i++)
-        EndianSwap(v->locationDamageMultipliers[i]);
+    EndianSwap(v->locationDamageMultipliers);
     EndianSwap(v->fireRumble);
     EndianSwap(v->meleeImpactRumble);
     EndianSwap(v->adsDofStart);
@@ -2619,12 +2452,10 @@ static inline void EndianSwap_FxElemDef(IW3Xenon::FxElemDef* v)
     EndianSwap(v->visuals.markArray);
 
     // float collMins[3]
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->collMins[i]);
+    EndianSwap(v->collMins);
 
     // float collMaxs[3]
-    for (int i = 0; i < 3; i++)
-        EndianSwap(v->collMaxs[i]);
+    EndianSwap(v->collMaxs);
 
     // FxEffectDefRef - union of pointers
     EndianSwap(v->effectOnImpact.handle);
@@ -2646,8 +2477,7 @@ static inline void EndianSwap_FxElemDef(IW3Xenon::FxElemDef* v)
 
 static inline void EndianSwap_FxElemMarkVisuals(IW3Xenon::FxElemMarkVisuals* v)
 {
-    for (int i = 0; i < 2; i++)
-        EndianSwap(v->materials[i]);
+    EndianSwap(v->materials);
 }
 
 static inline void EndianSwap_FxElemVisuals(IW3Xenon::FxElemVisuals* v)
@@ -2693,10 +2523,8 @@ static inline void EndianSwap_FxEffectDef(IW3Xenon::FxEffectDef* v)
 
 static inline void EndianSwap_FxImpactEntry(IW3Xenon::FxImpactEntry* v)
 {
-    for (int i = 0; i < 29; i++)
-        EndianSwap(v->nonflesh[i]);
-    for (int i = 0; i < 4; i++)
-        EndianSwap(v->flesh[i]);
+    EndianSwap(v->nonflesh);
+    EndianSwap(v->flesh);
 }
 
 static inline void EndianSwap_FxImpactTable(IW3Xenon::FxImpactTable* v)
