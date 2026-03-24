@@ -14,7 +14,7 @@ public:
     std::unique_ptr<AssetPool<IW3Xenon::XAnimParts>> m_xanim_parts;
     std::unique_ptr<AssetPool<IW3Xenon::XModel>> m_xmodel;
     std::unique_ptr<AssetPool<IW3Xenon::Material>> m_material;
-    std::unique_ptr<AssetPool<IW3Xenon::MaterialTechniqueSet>> m_pixel_shader;
+    std::unique_ptr<AssetPool<IW3Xenon::MaterialPixelShader>> m_pixel_shader;
     std::unique_ptr<AssetPool<IW3Xenon::MaterialTechniqueSet>> m_technique_set;
     std::unique_ptr<AssetPool<IW3Xenon::GfxImage>> m_image;
     std::unique_ptr<AssetPool<IW3Xenon::snd_alias_list_t>> m_sound;
