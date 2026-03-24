@@ -686,7 +686,7 @@ namespace IW3Xenon
 
     union MaterialArgumentDef
     {
-        const float (*literalConst)[4];
+        float (*literalConst)[4];
         MaterialArgumentCodeConst codeConst;
         unsigned int codeSampler;
         unsigned int nameHash;
