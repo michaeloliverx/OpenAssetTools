@@ -16,6 +16,7 @@
 #include "Game/IW3Xenon/XAssets/localizeentry/localizeentry_load_db.h"
 #include "Game/IW3Xenon/XAssets/mapents/mapents_load_db.h"
 #include "Game/IW3Xenon/XAssets/material/material_load_db.h"
+#include "Game/IW3Xenon/XAssets/materialpixelshader/materialpixelshader_load_db.h"
 #include "Game/IW3Xenon/XAssets/materialtechniqueset/materialtechniqueset_load_db.h"
 #include "Game/IW3Xenon/XAssets/menudef_t/menudef_t_load_db.h"
 #include "Game/IW3Xenon/XAssets/menulist/menulist_load_db.h"
@@ -86,6 +87,7 @@ void ContentLoader::LoadXAsset(const bool atStreamStart) const
         LOAD_ASSET(ASSET_TYPE_XMODEL, XModel, model)
         LOAD_ASSET(ASSET_TYPE_XANIMPARTS, XAnimParts, parts)
         LOAD_ASSET(ASSET_TYPE_MATERIAL, Material, material)
+        LOAD_ASSET(ASSET_TYPE_PIXELSHADER, MaterialPixelShader, pixelShader)
         LOAD_ASSET(ASSET_TYPE_TECHNIQUE_SET, MaterialTechniqueSet, techniqueSet)
         LOAD_ASSET(ASSET_TYPE_IMAGE, GfxImage, image)
         LOAD_ASSET(ASSET_TYPE_SOUND, snd_alias_list_t, sound)
@@ -130,6 +132,7 @@ void ContentLoader::LoadXAssetArray(const bool atStreamStart, const size_t count
         for (size_t index = 0; index < count; index++)
         {
             EndianSwap(varXAsset[index].type);
+            EndianSwap(varXAsset[index].header.data);
         }
     }
 

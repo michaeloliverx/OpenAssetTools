@@ -17,6 +17,7 @@ set conditional block pixels delayLoadPixels XFILE_BLOCK_LARGE_RUNTIME XFILE_BLO
 use GfxTextureLoad;
 set reusable loadDef;
 set block loadDef XFILE_BLOCK_TEMP;
+set action LoadImageData(GfxImageLoadDef, GfxImage);
 
 set block GfxImageLoadDef XFILE_BLOCK_VIRTUAL;
 
