@@ -3,8 +3,10 @@
 #include <cassert>
 #include <cstring>
 
-InMemoryZoneOutputStream::InMemoryZoneOutputStream(InMemoryZoneData* zoneData, std::vector<XBlock*> blocks, const int blockBitCount, const block_t insertBlock)
+InMemoryZoneOutputStream::InMemoryZoneOutputStream(
+    InMemoryZoneData* zoneData, InMemoryZoneData* delayData, std::vector<XBlock*> blocks, const int blockBitCount, const block_t insertBlock)
     : m_zone_data(zoneData),
+      m_delay_data(delayData),
       m_blocks(std::move(blocks)),
       m_block_bit_count(blockBitCount),
       m_insert_block(m_blocks[insertBlock])
@@ -106,7 +108,8 @@ void* InMemoryZoneOutputStream::WriteDataInBlock(const void* src, const size_t s
         break;
 
     case XBlockType::BLOCK_TYPE_DELAY:
-        assert(false);
+        result = m_delay_data->GetBufferOfSize(size);
+        memcpy(result, src, size);
         break;
     }
 

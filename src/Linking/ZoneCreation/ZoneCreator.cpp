@@ -1,5 +1,6 @@
 #include "ZoneCreator.h"
 
+#include "Game/IW3Xenon/GameAssetPoolIW3Xenon.h"
 #include "Gdt/GdtLookup.h"
 #include "IObjCompiler.h"
 #include "IObjLoader.h"
@@ -11,7 +12,12 @@ namespace
 {
     std::unique_ptr<Zone> CreateZone(const ZoneCreationContext& context, const GameId gameId)
     {
-        return std::make_unique<Zone>(context.m_definition->m_name, 0, gameId, GamePlatform::PC);
+        auto zone = std::make_unique<Zone>(context.m_definition->m_name, 0, gameId, context.m_definition->m_platform);
+
+        if (gameId == GameId::IW3 && context.m_definition->m_platform == GamePlatform::XBOX)
+            zone->m_pools = std::make_unique<GameAssetPoolIW3Xenon>(zone.get(), 0);
+
+        return zone;
     }
 
     std::vector<Gdt*> CreateGdtList(const ZoneCreationContext& context)

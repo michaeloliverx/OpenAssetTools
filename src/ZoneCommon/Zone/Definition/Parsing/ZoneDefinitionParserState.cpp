@@ -1,5 +1,7 @@
 #include "ZoneDefinitionParserState.h"
 
+#include "Game/IW3Xenon/AssetNameResolverIW3Xenon.h"
+
 #include <algorithm>
 
 ZoneDefinitionParserState::ZoneDefinitionParserState(std::string targetName, ISearchPath& searchPath, IParserLineStream& underlyingStream)
@@ -17,6 +19,22 @@ void ZoneDefinitionParserState::SetGame(const GameId game)
 {
     m_definition->m_game = game;
     m_asset_name_resolver = IAssetNameResolver::GetResolverForGame(game);
+}
+
+void ZoneDefinitionParserState::SetGame(const GameId game, const GamePlatform platform)
+{
+    m_definition->m_game = game;
+    m_definition->m_platform = platform;
+
+    if (game == GameId::IW3 && platform == GamePlatform::XBOX)
+    {
+        static const auto iw3XenonResolver = IW3Xenon::AssetNameResolver();
+        m_asset_name_resolver = &iw3XenonResolver;
+    }
+    else
+    {
+        m_asset_name_resolver = IAssetNameResolver::GetResolverForGame(game);
+    }
 }
 
 namespace

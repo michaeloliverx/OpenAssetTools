@@ -16,6 +16,7 @@ public:
     ZoneDefinitionParserState(std::string targetName, ISearchPath& searchPath, IParserLineStream& underlyingStream);
 
     void SetGame(GameId game);
+    void SetGame(GameId game, GamePlatform platform);
 
     void StartIPak(std::string ipakName);
     void StartIwd(std::string iwdName);

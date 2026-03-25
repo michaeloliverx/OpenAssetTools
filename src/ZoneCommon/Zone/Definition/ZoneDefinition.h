@@ -63,6 +63,7 @@ public:
 
     std::string m_name;
     GameId m_game;
+    GamePlatform m_platform;
     ZoneDefinitionProperties m_properties;
     std::vector<std::string> m_ignores;
     std::vector<std::string> m_targets_to_build;

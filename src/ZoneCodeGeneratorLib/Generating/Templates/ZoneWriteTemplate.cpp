@@ -132,6 +132,11 @@ namespace
 
             LINE("")
             LINE("#include <cassert>")
+            if (m_env.m_game == "IW3Xenon")
+            {
+                LINE("")
+                LINE("#include \"Game/IW3Xenon/AssetEndianSwapIW3Xenon.h\"")
+            }
             LINE("")
             LINEF("using namespace {0};", m_env.m_game)
             LINE("")
@@ -381,7 +386,7 @@ namespace
             }
         }
 
-        void WriteMember_ArrayPointer(const StructureInformation* info, const MemberInformation* member, const DeclarationModifierComputations& modifier) const
+        void WriteMember_ArrayPointer(const StructureInformation* info, const MemberInformation* member, const DeclarationModifierComputations& modifier)
         {
             const MemberComputations computations(member);
             LINEF("m_stream->MarkFollowing({0});", MakeWrittenMemberAccess(info, member, modifier))
@@ -394,11 +399,34 @@ namespace
             }
             else
             {
-                LINEF("m_stream->Write<{0}{1}>({2}, {3});",
-                      MakeTypeDecl(member->m_member->m_type_declaration.get()),
-                      MakeFollowingReferences(modifier.GetFollowingDeclarationModifiers()),
-                      MakeMemberAccess(info, member, modifier),
-                      MakeEvaluation(modifier.GetArrayPointerCountEvaluation()))
+                if (m_env.m_game == "IW3Xenon" && member->m_member->m_type_declaration->m_type->GetSize() > 1)
+                {
+                    LINEF("auto* arrayWritten = m_stream->Write<{0}{1}>({2}, {3});",
+                          MakeTypeDecl(member->m_member->m_type_declaration.get()),
+                          MakeFollowingReferences(modifier.GetFollowingDeclarationModifiers()),
+                          MakeMemberAccess(info, member, modifier),
+                          MakeEvaluation(modifier.GetArrayPointerCountEvaluation()))
+                    const auto defType = member->m_member->m_type_declaration->m_type->GetType();
+                    LINEF("for (size_t index = 0; index < {0}; index++)", MakeEvaluation(modifier.GetArrayPointerCountEvaluation()))
+                    m_intendation++;
+                    if (defType == DataDefinitionType::STRUCT || defType == DataDefinitionType::UNION)
+                    {
+                        LINEF("EndianSwap_{0}(&arrayWritten[index]);", MakeSafeTypeName(member->m_member->m_type_declaration->m_type))
+                    }
+                    else
+                    {
+                        LINE("EndianSwap(arrayWritten[index]);")
+                    }
+                    m_intendation--;
+                }
+                else
+                {
+                    LINEF("m_stream->Write<{0}{1}>({2}, {3});",
+                          MakeTypeDecl(member->m_member->m_type_declaration.get()),
+                          MakeFollowingReferences(modifier.GetFollowingDeclarationModifiers()),
+                          MakeMemberAccess(info, member, modifier),
+                          MakeEvaluation(modifier.GetArrayPointerCountEvaluation()))
+                }
             }
         }
 
@@ -499,7 +527,7 @@ namespace
             }
         }
 
-        void WriteMember_SinglePointer(const StructureInformation* info, const MemberInformation* member, const DeclarationModifierComputations& modifier) const
+        void WriteMember_SinglePointer(const StructureInformation* info, const MemberInformation* member, const DeclarationModifierComputations& modifier)
         {
             const MemberComputations computations(member);
             LINEF("m_stream->MarkFollowing({0});", MakeWrittenMemberAccess(info, member, modifier))
@@ -510,17 +538,36 @@ namespace
             }
             else
             {
-                LINEF("m_stream->Write<{0}{1}>({2});",
-                      MakeTypeDecl(member->m_member->m_type_declaration.get()),
-                      MakeFollowingReferences(modifier.GetFollowingDeclarationModifiers()),
-                      MakeMemberAccess(info, member, modifier))
+                if (m_env.m_game == "IW3Xenon" && member->m_member->m_type_declaration->m_type->GetSize() > 1)
+                {
+                    LINEF("auto* written = m_stream->Write<{0}{1}>({2});",
+                          MakeTypeDecl(member->m_member->m_type_declaration.get()),
+                          MakeFollowingReferences(modifier.GetFollowingDeclarationModifiers()),
+                          MakeMemberAccess(info, member, modifier))
+                    const auto defType = member->m_member->m_type_declaration->m_type->GetType();
+                    if (defType == DataDefinitionType::STRUCT || defType == DataDefinitionType::UNION)
+                    {
+                        LINEF("EndianSwap_{0}(written);", MakeSafeTypeName(member->m_member->m_type_declaration->m_type))
+                    }
+                    else
+                    {
+                        LINE("EndianSwap(*written);")
+                    }
+                }
+                else
+                {
+                    LINEF("m_stream->Write<{0}{1}>({2});",
+                          MakeTypeDecl(member->m_member->m_type_declaration.get()),
+                          MakeFollowingReferences(modifier.GetFollowingDeclarationModifiers()),
+                          MakeMemberAccess(info, member, modifier))
+                }
             }
         }
 
         void WriteMember_TypeCheck(const StructureInformation* info,
                                    const MemberInformation* member,
                                    const DeclarationModifierComputations& modifier,
-                                   const MemberWriteType writeType) const
+                                   const MemberWriteType writeType)
         {
             if (member->m_is_string)
             {
@@ -604,7 +651,7 @@ namespace
         void WriteMember_InsertReuse(const StructureInformation* info,
                                      const MemberInformation* member,
                                      const DeclarationModifierComputations& modifier,
-                                     const MemberWriteType writeType) const
+                                     const MemberWriteType writeType)
         {
             if (!WriteMember_ShouldMakeInsertReuse(member, modifier, writeType))
             {
@@ -670,7 +717,7 @@ namespace
         void WriteMember_Align(const StructureInformation* info,
                                const MemberInformation* member,
                                const DeclarationModifierComputations& modifier,
-                               const MemberWriteType writeType) const
+                               const MemberWriteType writeType)
         {
             if (!WriteMember_ShouldMakeAlign(member, modifier, writeType))
             {
@@ -781,15 +828,33 @@ namespace
         {
             const MemberComputations computations(member);
 
+            const auto hasConditionalBlock = computations.HasConditionalBlock();
             const auto notInDefaultNormalBlock = computations.IsNotInDefaultNormalBlock();
-            if (notInDefaultNormalBlock)
+
+            if (hasConditionalBlock)
+            {
+                LINEF("if ({0})", MakeEvaluation(member->m_conditional_block_condition.get()))
+                LINE("{")
+                m_intendation++;
+                LINEF("m_stream->PushBlock({0});", member->m_conditional_block_true->m_name)
+                m_intendation--;
+                LINE("}")
+                LINE("else")
+                LINE("{")
+                m_intendation++;
+                LINEF("m_stream->PushBlock({0});", member->m_conditional_block_false->m_name)
+                m_intendation--;
+                LINE("}")
+                LINE("")
+            }
+            else if (notInDefaultNormalBlock)
             {
                 LINEF("m_stream->PushBlock({0});", member->m_fast_file_block->m_name)
             }
 
             WriteMember_PointerCheck(info, member, modifier, writeType);
 
-            if (notInDefaultNormalBlock)
+            if (hasConditionalBlock || notInDefaultNormalBlock)
             {
                 LINE("m_stream->PopBlock();")
             }
@@ -1019,6 +1084,26 @@ namespace
                 LINE("m_stream->PopBlock();")
             }
 
+            if (m_env.m_game == "IW3Xenon" && !(info->m_definition->GetType() == DataDefinitionType::UNION && dynamicMember))
+            {
+                LINE("")
+                LINE("if (atStreamStart)")
+                m_intendation++;
+                if (dynamicMember == nullptr)
+                {
+                    LINEF("EndianSwap_{0}({1});", MakeSafeTypeName(info->m_definition), MakeTypeWrittenVarName(info->m_definition))
+                }
+                else
+                {
+                    LINEF("EndianSwap_{0}_Partial({1}, offsetof({2}, {3}));",
+                          MakeSafeTypeName(info->m_definition),
+                          MakeTypeWrittenVarName(info->m_definition),
+                          info->m_definition->GetFullName(),
+                          dynamicMember->m_member->m_name)
+                }
+                m_intendation--;
+            }
+
             m_intendation--;
             LINE("}")
         }
@@ -1178,6 +1263,10 @@ namespace
             LINE("")
             LINEF("{0}** var = {1};", def->GetFullName(), MakeTypePtrVarName(def))
             LINEF("{0}** varWritten = {1};", def->GetFullName(), MakeTypeWrittenPtrVarName(def))
+            if (m_env.m_game == "IW3Xenon")
+            {
+                LINEF("{0}** varWrittenStart = varWritten;", def->GetFullName())
+            }
             LINE("for (size_t index = 0; index < count; index++)")
             LINE("{")
             m_intendation++;
@@ -1191,6 +1280,18 @@ namespace
 
             m_intendation--;
             LINE("}")
+
+            if (m_env.m_game == "IW3Xenon")
+            {
+                LINE("")
+                LINE("for (size_t swapIndex = 0; swapIndex < count; swapIndex++)")
+                LINE("{")
+                m_intendation++;
+                LINE("EndianSwap(varWrittenStart[swapIndex]);")
+                m_intendation--;
+                LINE("}")
+            }
+
             m_intendation--;
             LINE("}")
         }
@@ -1221,6 +1322,10 @@ namespace
             LINEF("{0} = var;", MakeTypeVarName(info->m_definition))
             LINEF("{0} = varWritten;", MakeTypeWrittenVarName(info->m_definition))
             LINEF("Write_{0}(false);", info->m_definition->m_name)
+            if (m_env.m_game == "IW3Xenon")
+            {
+                LINEF("EndianSwap_{0}(varWritten);", MakeSafeTypeName(info->m_definition))
+            }
             LINE("var++;")
             LINE("varWritten++;")
 

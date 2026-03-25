@@ -19,15 +19,18 @@ void ZoneDefWriter::WriteContent(ZoneDefinitionOutputStream& stream, const Zone&
         if (!pools)
             return;
 
+        // Use Xenon enum values (shifted by 1 vs PC due to pixelshader asset type)
+        constexpr auto xenonLocalizeType = static_cast<asset_type_t>(IW3Xenon::ASSET_TYPE_LOCALIZE_ENTRY);
+
         // Localized strings are all collected in one string file. So only add this to the zone file.
         if (!pools->m_localize->m_asset_lookup.empty())
-            stream.WriteEntry(*pools->GetAssetTypeName(ASSET_TYPE_LOCALIZE_ENTRY), zone.m_name);
+            stream.WriteEntry(*pools->GetAssetTypeName(xenonLocalizeType), zone.m_name);
 
         for (const auto& asset : *pools)
         {
             switch (asset->m_type)
             {
-            case ASSET_TYPE_LOCALIZE_ENTRY:
+            case xenonLocalizeType:
                 break;
 
             default:

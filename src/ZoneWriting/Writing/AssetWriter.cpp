@@ -1,5 +1,7 @@
 #include "AssetWriter.h"
 
+#include "Utils/Endianness.h"
+
 #include <cassert>
 
 AssetWriter::AssetWriter(XAssetInfoGeneric* asset, const Zone& zone, IZoneOutputStream& stream)
@@ -45,5 +47,15 @@ void AssetWriter::WriteScriptStringArray(const bool atStreamStart, const size_t 
     {
         *ptr = UseScriptString(*ptr);
         ptr++;
+    }
+
+    if (atStreamStart && m_zone.m_platform == GamePlatform::XBOX)
+    {
+        ptr = varScriptStringWritten;
+        for (size_t index = 0; index < count; index++)
+        {
+            *ptr = endianness::ToBigEndian(*ptr);
+            ptr++;
+        }
     }
 }

@@ -22,6 +22,7 @@ class InMemoryZoneOutputStream final : public IZoneOutputStream
     };
 
     InMemoryZoneData* m_zone_data;
+    InMemoryZoneData* m_delay_data;
     std::vector<XBlock*> m_blocks;
 
     std::stack<XBlock*> m_block_stack;
@@ -36,7 +37,7 @@ class InMemoryZoneOutputStream final : public IZoneOutputStream
     uintptr_t InsertPointer();
 
 public:
-    InMemoryZoneOutputStream(InMemoryZoneData* zoneData, std::vector<XBlock*> blocks, int blockBitCount, block_t insertBlock);
+    InMemoryZoneOutputStream(InMemoryZoneData* zoneData, InMemoryZoneData* delayData, std::vector<XBlock*> blocks, int blockBitCount, block_t insertBlock);
 
     void PushBlock(block_t block) override;
     block_t PopBlock() override;

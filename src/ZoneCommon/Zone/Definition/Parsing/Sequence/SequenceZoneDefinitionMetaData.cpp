@@ -18,15 +18,25 @@ namespace
     constexpr auto METADATA_IPAK = "ipak";
     constexpr auto METADATA_IWD = "iwd";
 
-    std::optional<GameId> GetGameByName(const std::string& gameName)
+    struct GameWithPlatform
+    {
+        GameId m_game_id;
+        GamePlatform m_platform;
+    };
+
+    std::optional<GameWithPlatform> GetGameByName(const std::string& gameName)
     {
         auto upperGameName = gameName;
         utils::MakeStringUpperCase(upperGameName);
 
+        // Check platform-specific game names first
+        if (upperGameName == "IW3XENON")
+            return GameWithPlatform{GameId::IW3, GamePlatform::XBOX};
+
         for (auto i = 0u; i < static_cast<unsigned>(GameId::COUNT); i++)
         {
             if (upperGameName == GameId_Names[i])
-                return static_cast<GameId>(i);
+                return GameWithPlatform{static_cast<GameId>(i), GamePlatform::PC};
         }
 
         return std::nullopt;
@@ -83,10 +93,10 @@ namespace
             throw ParsingException(valueToken.GetPos(), "Unknown game name");
 
         const auto previousGame = state->m_definition->m_game;
-        if (previousGame != GameId::COUNT && previousGame != *game)
+        if (previousGame != GameId::COUNT && previousGame != game->m_game_id)
             throw ParsingException(valueToken.GetPos(), std::format("Game was previously defined as: {}", GameId_Names[static_cast<unsigned>(previousGame)]));
 
-        state->SetGame(*game);
+        state->SetGame(game->m_game_id, game->m_platform);
     }
 
     void ProcessMetaDataType(ZoneDefinitionParserState* state, const ZoneDefinitionParserValue& keyToken, const ZoneDefinitionParserValue& valueToken)
