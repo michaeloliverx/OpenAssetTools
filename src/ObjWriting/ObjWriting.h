@@ -19,6 +19,7 @@ enum class ModelOutputFormat_e
 {
     XMODEL_EXPORT,
     XMODEL_BIN,
+    IW3_RAW,
     OBJ,
     GLTF,
     GLB

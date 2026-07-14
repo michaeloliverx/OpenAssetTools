@@ -48,6 +48,10 @@
 #include "XModel/Obj/ObjWriter.h"
 #include "XModel/XModelWriter.h"
 
+#ifdef FEATURE_IW3
+#include "Game/IW3/XModel/XModelRawDumperIW3.h"
+#endif
+
 #include <cassert>
 #include <format>
 
@@ -62,7 +66,7 @@ namespace
 
         return input;
     }
-    
+
     std::string GetFileNameForLod(const std::string& modelName, const unsigned lod, const std::string& extension)
     {
         return std::format("model_export/{}_lod{}{}", modelName, lod, extension);
@@ -92,8 +96,7 @@ namespace
             return;
 
         const auto* game = IGame::GetGameById(context.m_zone.m_game_id);
-        const auto writer =
-            obj::CreateObjWriter(*assetFile, std::format("{}.mtl", model.name), game->GetShortName(), context.m_zone.m_name);
+        const auto writer = obj::CreateObjWriter(*assetFile, std::format("{}.mtl", model.name), game->GetShortName(), context.m_zone.m_name);
         DistinctMapper<Material*> materialMapper(model.numsurfs);
 
         writer->Write(common);
@@ -187,7 +190,7 @@ namespace
             }
         }
     }
-    
+
     const char* GetExtensionForModelByConfig()
     {
         switch (ObjWriting::Configuration.ModelOutputFormat)
@@ -207,7 +210,7 @@ namespace
             return "";
         }
     }
-    
+
     bool IsAnimated(const XModel& model)
     {
 #if defined(FEATURE_IW4) || defined(FEATURE_IW5)
@@ -235,7 +238,7 @@ namespace
 
         return false;
     }
-    
+
     bool HasNulledTrans(const XModel& model)
     {
         if (model.trans == nullptr)
@@ -250,7 +253,7 @@ namespace
 
         return true;
     }
-    
+
     bool HasNonNullBoneInfoTrans(const XModel& model)
     {
         if (model.boneInfo == nullptr)
@@ -270,7 +273,7 @@ namespace
 
         return false;
     }
-    
+
     JsonXModelType GetType(const XModel& model)
     {
         if (!IsAnimated(model))
@@ -281,18 +284,18 @@ namespace
 
         return JsonXModelType::ANIMATED;
     }
-    
+
     void SetJsonRootBoneName(AssetDumpingContext& context, JsonXModel& jXModel, const XModel& model)
     {
         assert(model.boneNames);
         assert(model.boneNames[0] < context.m_zone.m_script_strings.Count());
         assert(model.numRootBones <= 1);
-        
+
         if (!model.boneNames || model.boneNames[0] >= context.m_zone.m_script_strings.Count() || model.numRootBones == 0)
             return;
-            
+
         const auto& rootBoneName = context.m_zone.m_script_strings[model.boneNames[0]];
-        
+
         if (rootBoneName != xmodel::DEFAULT_XMODEL_ROOT_BONE_NAME)
             jXModel.rootBoneName = rootBoneName;
     }
@@ -348,7 +351,7 @@ namespace
 
         return true;
     }
-    
+
     bool HasDefaultArmatureForAllLods(const XModel& model)
     {
         for (auto lod = 0u; lod < model.numLods; lod++)
@@ -356,7 +359,7 @@ namespace
             if (!HasDefaultArmatureForLod(model, lod))
                 return false;
         }
-        
+
         return true;
     }
 
@@ -365,14 +368,14 @@ namespace
         return ObjWriting::Configuration.ModelOutputFormat != ModelOutputFormat_e::XMODEL_EXPORT
                && ObjWriting::Configuration.ModelOutputFormat != ModelOutputFormat_e::XMODEL_BIN;
     }
-    
+
     void CreateJsonXModel(AssetDumpingContext& context, JsonXModel& jXModel, const XModel& model)
     {
         if (model.collLod >= 0)
             jXModel.collLod = model.collLod;
 
         jXModel.type = GetType(model);
-        
+
         if (CanOmitDefaultArmature() && HasDefaultArmatureForAllLods(model))
         {
             // If we are going to omit the armature, we need to make sure we remember the root bone name.
@@ -418,7 +421,7 @@ namespace
         const auto assetFile = context.OpenAssetFile(xmodel::GetJsonFileNameForAssetName(asset.m_name));
         if (!assetFile)
             return;
-            
+
         const auto& model = *asset.Asset();
 
         JsonXModel jsonXModel;
@@ -441,6 +444,21 @@ namespace xmodel
     void CLASS_NAME::DumpAsset(AssetDumpingContext& context, const XAssetInfo<AssetXModel::Type>& asset)
     {
         DumpXModelJson(context, asset);
+
+#ifdef FEATURE_IW3
+        if (ObjWriting::Configuration.ModelOutputFormat == ModelOutputFormat_e::IW3_RAW)
+        {
+            DumpRawXModelIW3(context, asset);
+            return;
+        }
+#else
+        if (ObjWriting::Configuration.ModelOutputFormat == ModelOutputFormat_e::IW3_RAW)
+        {
+            con::error("IW3_RAW model output is only supported for IW3 assets");
+            return;
+        }
+#endif
+
         DumpXModelSurfs(context, asset);
     }
-}
+} // namespace xmodel
