@@ -38,26 +38,20 @@ namespace state_map
 
     class SequenceStateMapEntryClose final : public StateMapParser::sequence_t
     {
-        static constexpr auto CAPTURE_FIRST_TOKEN = 1;
-
     public:
         SequenceStateMapEntryClose()
         {
             const SimpleMatcherFactory create(this);
 
             AddMatchers({
-                create.Char('}').Capture(CAPTURE_FIRST_TOKEN),
+                create.Char('}'),
             });
         }
 
     protected:
-        void ProcessMatch(StateMapParserState* state, SequenceResult<SimpleParserValue>& result) const override
+        void ProcessMatch(StateMapParserState* state, SequenceResult<SimpleParserValue>&) const override
         {
-            if (!state->m_entry_has_default)
-                throw ParsingException(result.NextCapture(CAPTURE_FIRST_TOKEN).GetPos(), "Entry must have a default case");
-
             state->m_in_entry = false;
-            state->m_entry_has_default = false;
         }
     };
 
@@ -104,7 +98,6 @@ namespace state_map
             {
                 assert(result.PeekAndRemoveIfTag(TAG_DEFAULT) == TAG_DEFAULT);
                 auto& entry = state->m_definition->m_state_map_entries[state->m_current_entry_index];
-                state->m_entry_has_default = true;
                 entry.m_default_index = entry.m_rules.size() - 1;
             }
         }

@@ -20,7 +20,6 @@ namespace state_map
         std::unique_ptr<StateMapDefinition> m_definition;
 
         bool m_in_entry;
-        bool m_entry_has_default;
         size_t m_current_entry_index;
         StateMapRule* m_current_rule;
 

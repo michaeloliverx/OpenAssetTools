@@ -57,7 +57,7 @@ void StateMapHandler::ApplyStateMap(const uint32_t* baseStateBits, uint32_t* out
 
         if (matchingRule != entry.m_rules.end())
             ApplyRule(m_state_map_layout.m_entry_layout.m_entries[entryIndex], **matchingRule, outStateBits);
-        else
+        else if (entry.m_default_index < entry.m_rules.size())
             ApplyRule(m_state_map_layout.m_entry_layout.m_entries[entryIndex], *entry.m_rules[entry.m_default_index], outStateBits);
     }
 }
@@ -68,11 +68,15 @@ StateMapVars StateMapHandler::BuildVars(const uint32_t* baseStateBits) const
 
     for (const auto& var : m_state_map_layout.m_var_layout.m_vars)
     {
-        const auto baseStateBitField = baseStateBits[var.m_state_bits_index];
+        auto varMask = 0uz;
+        for (const auto& value : var.m_values)
+            varMask |= value.m_state_bits_mask;
+
+        const auto baseStateBitField = static_cast<size_t>(baseStateBits[var.m_state_bits_index]) & varMask;
         const auto matchingValue = std::ranges::find_if(var.m_values,
                                                         [&baseStateBitField](const StateMapLayoutVarValue& value)
                                                         {
-                                                            return (baseStateBitField & value.m_state_bits_mask) == value.m_state_bits_mask;
+                                                            return baseStateBitField == value.m_state_bits_mask;
                                                         });
 
         if (matchingValue != var.m_values.end())

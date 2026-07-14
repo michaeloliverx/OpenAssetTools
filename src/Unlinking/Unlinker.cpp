@@ -9,6 +9,8 @@
 #include "SearchPath/SharedSearchPaths.h"
 #include "UnlinkerArgs.h"
 #include "Utils/Logging/Log.h"
+#include "Utils/PathUtils.h"
+#include "Utils/StringUtils.h"
 #include "Zone/Definition/ZoneDefWriter.h"
 #include "Zone/LoadedZoneInformation.h"
 #include "ZoneLoading.h"
@@ -78,7 +80,16 @@ namespace
 
     [[nodiscard]] std::vector<std::string> GetSearchPathsForZone(const std::string& zonePath, const GameId gameId)
     {
-        return AutoSearchPaths::GetForGame(gameId)->GetSearchPathsForZonePath(zonePath);
+        auto searchPaths = AutoSearchPaths::GetForGame(gameId)->GetSearchPathsForZonePath(zonePath);
+
+        std::string gameName(GameId_Names[static_cast<unsigned>(gameId)]);
+        utils::MakeStringLowerCase(gameName);
+
+        const auto bundledRawPath = fs::path(utils::GetExecutablePath()).parent_path() / "raw" / gameName;
+        if (fs::is_directory(bundledRawPath))
+            searchPaths.emplace_back(fs::weakly_canonical(bundledRawPath).string());
+
+        return searchPaths;
     }
 
     class UnlinkerImpl : public Unlinker

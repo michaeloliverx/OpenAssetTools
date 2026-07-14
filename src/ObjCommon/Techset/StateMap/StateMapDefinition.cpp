@@ -1,5 +1,7 @@
 #include "StateMapDefinition.h"
 
+#include <limits>
+
 using namespace state_map;
 
 StateMapRule::StateMapRule()
@@ -9,7 +11,7 @@ StateMapRule::StateMapRule()
 }
 
 StateMapEntry::StateMapEntry()
-    : m_default_index(0u)
+    : m_default_index(std::numeric_limits<size_t>::max())
 {
 }
 

@@ -3,6 +3,7 @@
 #include "Game/IW3/Font/FontDumperIW3.h"
 #include "Game/IW3/Image/ImageDumperIW3.h"
 #include "Game/IW3/Material/MaterialJsonDumperIW3.h"
+#include "Game/IW3/Material/MaterialRawDumperIW3.h"
 #include "Game/IW3/Techset/TechsetDumperIW3.h"
 #include "Game/IW3/XAnim/XAnimDumperIW3.h"
 #include "Game/IW3/XModel/XModelDumperIW3.h"
@@ -24,6 +25,7 @@ void ObjWriter::RegisterAssetDumpers(AssetDumpingContext& context)
     RegisterAssetDumper(std::make_unique<xanim::DumperIW3>());
     RegisterAssetDumper(std::make_unique<xmodel::DumperIW3>());
     RegisterAssetDumper(std::make_unique<material::JsonDumperIW3>());
+    RegisterAssetDumper(std::make_unique<material::RawDumperIW3>());
     RegisterAssetDumper(std::make_unique<techset::DumperIW3>(
 #ifdef TECHSET_DEBUG
         true

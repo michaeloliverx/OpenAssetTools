@@ -6,7 +6,6 @@ StateMapParserState::StateMapParserState(std::string stateMapName, const StateMa
     : m_layout(layout),
       m_definition(std::make_unique<StateMapDefinition>(std::move(stateMapName), layout.m_entry_layout.m_entries.size())),
       m_in_entry(false),
-      m_entry_has_default(false),
       m_current_entry_index(0u),
       m_current_rule(nullptr)
 {
