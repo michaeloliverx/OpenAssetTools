@@ -1,0 +1,2 @@
+Retail IW4 Xenon shared-loader RawFile smoke test.
+The payload must survive big-endian metadata conversion unchanged.

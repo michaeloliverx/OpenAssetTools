@@ -272,3 +272,5 @@ DEFINE_ASSET_NAME_ACCESSOR(IW4::AssetStructuredDataDef, name);
 DEFINE_ASSET_NAME_ACCESSOR(IW4::AssetTracer, name);
 DEFINE_ASSET_NAME_ACCESSOR(IW4::AssetVehicle, name);
 DEFINE_ASSET_NAME_ACCESSOR(IW4::AssetAddonMapEnts, name);
+
+#include "IW4_Endian.h"

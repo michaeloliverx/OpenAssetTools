@@ -1,7 +1,9 @@
 #pragma once
 
+#include "Game/IGame.h"
 #include "Loading/Exception/InvalidLookupPositionException.h"
 #include "Loading/ILoadingStream.h"
+#include "Utils/Endianness.h"
 #include "Utils/MemoryManager.h"
 #include "Utils/ProgressCallback.h"
 #include "Zone/Stream/IZoneStream.h"
@@ -20,7 +22,7 @@
 class ZoneStreamFillReadAccessor
 {
 public:
-    ZoneStreamFillReadAccessor(void* blockBuffer, size_t bufferSize, unsigned pointerByteCount, size_t offset);
+    ZoneStreamFillReadAccessor(void* blockBuffer, size_t bufferSize, unsigned pointerByteCount, size_t offset, GameEndianness endianness);
 
     [[nodiscard]] ZoneStreamFillReadAccessor AtOffset(size_t offset) const;
     [[nodiscard]] size_t Offset() const;
@@ -30,7 +32,9 @@ public:
     {
         assert(offset + sizeof(T) <= m_buffer_size);
 
-        value = *reinterpret_cast<const T*>(static_cast<const char*>(m_block_buffer) + offset);
+        std::memcpy(&value, static_cast<const char*>(m_block_buffer) + offset, sizeof(T));
+        if (m_endianness == GameEndianness::BE)
+            endianness::FromBigEndianInPlace(value);
     }
 
     template<typename T, size_t S> void FillArray(T (&value)[S], const size_t offset) const
@@ -38,6 +42,11 @@ public:
         assert(offset + sizeof(T) * S <= m_buffer_size);
 
         std::memcpy(value, static_cast<const char*>(m_block_buffer) + offset, sizeof(T) * S);
+        if (m_endianness == GameEndianness::BE)
+        {
+            for (auto& entry : value)
+                endianness::FromBigEndianInPlace(entry);
+        }
     }
 
     template<typename T> void FillPtr(T*& value, const size_t offset) const
@@ -45,8 +54,26 @@ public:
         assert(offset + m_pointer_byte_count <= m_buffer_size);
         assert(m_pointer_byte_count <= sizeof(uintptr_t));
 
-        value = nullptr;
-        std::memcpy(&value, static_cast<const char*>(m_block_buffer) + offset, m_pointer_byte_count);
+        uintptr_t pointerValue;
+        if (m_pointer_byte_count == sizeof(uint32_t))
+        {
+            uint32_t serializedValue;
+            std::memcpy(&serializedValue, static_cast<const char*>(m_block_buffer) + offset, sizeof(serializedValue));
+            if (m_endianness == GameEndianness::BE)
+                serializedValue = endianness::FromBigEndian(serializedValue);
+            pointerValue = serializedValue;
+        }
+        else
+        {
+            assert(m_pointer_byte_count == sizeof(uint64_t));
+            uint64_t serializedValue;
+            std::memcpy(&serializedValue, static_cast<const char*>(m_block_buffer) + offset, sizeof(serializedValue));
+            if (m_endianness == GameEndianness::BE)
+                serializedValue = endianness::FromBigEndian(serializedValue);
+            pointerValue = static_cast<uintptr_t>(serializedValue);
+        }
+
+        value = reinterpret_cast<T*>(pointerValue);
     }
 
 private:
@@ -54,6 +81,7 @@ private:
     size_t m_buffer_size;
     unsigned m_pointer_byte_count;
     size_t m_offset;
+    GameEndianness m_endianness;
 };
 
 template<typename T> class MaybePointerFromLookup
@@ -128,6 +156,11 @@ public:
     [[nodiscard]] virtual unsigned GetPointerBitCount() const = 0;
 
     /**
+     * \brief Returns the byte order used by serialized values in this stream.
+     */
+    [[nodiscard]] virtual GameEndianness GetEndianness() const = 0;
+
+    /**
      * \brief Retrieves the new read position in the current block by aligning the position with the specified value and then returning the current read
      * position in the block.
      * \param align The alignment value that the read position is aligned with before being returned. This should typically be the alignment of the struct that
@@ -179,16 +212,25 @@ public:
     template<typename T> void Load(T* dst)
     {
         LoadDataInBlock(const_cast<void*>(reinterpret_cast<const void*>(dst)), sizeof(T));
+        if (GetEndianness() == GameEndianness::BE)
+            endianness::FromBigEndianInPlace(*dst);
     }
 
     template<typename T> void Load(T* dst, const size_t count)
     {
         LoadDataInBlock(const_cast<void*>(reinterpret_cast<const void*>(dst)), count * sizeof(T));
+        if (GetEndianness() == GameEndianness::BE)
+        {
+            for (size_t index = 0; index < count; index++)
+                endianness::FromBigEndianInPlace(dst[index]);
+        }
     }
 
     template<typename T> void LoadPartial(T* dst, const size_t size)
     {
         LoadDataInBlock(const_cast<void*>(reinterpret_cast<const void*>(dst)), size);
+        if (GetEndianness() == GameEndianness::BE)
+            throw std::logic_error("Partial loads of big-endian structures require generated endian conversion");
     }
 
     virtual void* InsertPointerNative() = 0;
@@ -246,5 +288,6 @@ public:
                                                    block_t insertBlock,
                                                    ILoadingStream& stream,
                                                    MemoryManager& memory,
-                                                   std::optional<std::unique_ptr<ProgressCallback>> progressCallback);
+                                                   std::optional<std::unique_ptr<ProgressCallback>> progressCallback,
+                                                   GameEndianness endianness = GameEndianness::LE);
 };

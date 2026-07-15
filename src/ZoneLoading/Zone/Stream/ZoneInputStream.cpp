@@ -14,11 +14,13 @@
 #include <stack>
 #include <unordered_map>
 
-ZoneStreamFillReadAccessor::ZoneStreamFillReadAccessor(void* blockBuffer, const size_t bufferSize, const unsigned pointerByteCount, const size_t offset)
+ZoneStreamFillReadAccessor::ZoneStreamFillReadAccessor(
+    void* blockBuffer, const size_t bufferSize, const unsigned pointerByteCount, const size_t offset, const GameEndianness endianness)
     : m_block_buffer(blockBuffer),
       m_buffer_size(bufferSize),
       m_pointer_byte_count(pointerByteCount),
-      m_offset(offset)
+      m_offset(offset),
+      m_endianness(endianness)
 {
     // Otherwise we cannot insert alias
     assert(m_pointer_byte_count <= sizeof(uintptr_t));
@@ -27,7 +29,8 @@ ZoneStreamFillReadAccessor::ZoneStreamFillReadAccessor(void* blockBuffer, const 
 ZoneStreamFillReadAccessor ZoneStreamFillReadAccessor::AtOffset(const size_t offset) const
 {
     assert(offset <= m_buffer_size);
-    return ZoneStreamFillReadAccessor(static_cast<char*>(m_block_buffer) + offset, m_buffer_size - offset, m_pointer_byte_count, m_offset + offset);
+    return ZoneStreamFillReadAccessor(
+        static_cast<char*>(m_block_buffer) + offset, m_buffer_size - offset, m_pointer_byte_count, m_offset + offset, m_endianness);
 }
 
 size_t ZoneStreamFillReadAccessor::Offset() const
@@ -51,11 +54,13 @@ namespace
                           const block_t insertBlock,
                           ILoadingStream& stream,
                           MemoryManager& memory,
-                          std::optional<std::unique_ptr<ProgressCallback>> progressCallback)
+                          std::optional<std::unique_ptr<ProgressCallback>> progressCallback,
+                          const GameEndianness endianness)
             : m_blocks(blocks),
               m_block_offsets(blocks.size()),
               m_stream(stream),
               m_memory(memory),
+              m_endianness(endianness),
               m_pointer_byte_count(pointerBitCount / 8u),
               m_block_mask((std::numeric_limits<uintptr_t>::max() >> (sizeof(uintptr_t) * 8 - blockBitCount)) << (pointerBitCount - blockBitCount)),
               m_block_shift(pointerBitCount - blockBitCount),
@@ -83,6 +88,11 @@ namespace
         [[nodiscard]] unsigned GetPointerBitCount() const override
         {
             return m_pointer_byte_count * 8u;
+        }
+
+        [[nodiscard]] GameEndianness GetEndianness() const override
+        {
+            return m_endianness;
         }
 
         void PushBlock(const block_t block) override
@@ -223,12 +233,12 @@ namespace
 
                 LoadDataFromBlock(*block, blockBufferForFill, size);
 
-                return ZoneStreamFillReadAccessor(blockBufferForFill, size, m_pointer_byte_count, 0);
+                return ZoneStreamFillReadAccessor(blockBufferForFill, size, m_pointer_byte_count, 0, m_endianness);
             }
 
             m_fill_buffer.resize(size);
             m_stream.Load(m_fill_buffer.data(), size);
-            return ZoneStreamFillReadAccessor(m_fill_buffer.data(), size, m_pointer_byte_count, 0);
+            return ZoneStreamFillReadAccessor(m_fill_buffer.data(), size, m_pointer_byte_count, 0, m_endianness);
         }
 
         ZoneStreamFillReadAccessor AppendToFill(const size_t appendSize) override
@@ -243,12 +253,12 @@ namespace
                 auto* blockBufferForFill = &block->m_buffer[m_block_offsets[block->m_index]] - appendOffset;
                 LoadDataFromBlock(*block, &block->m_buffer[m_block_offsets[block->m_index]], appendSize);
 
-                return ZoneStreamFillReadAccessor(blockBufferForFill, m_last_fill_size, m_pointer_byte_count, 0);
+                return ZoneStreamFillReadAccessor(blockBufferForFill, m_last_fill_size, m_pointer_byte_count, 0, m_endianness);
             }
 
             m_fill_buffer.resize(appendOffset + appendSize);
             m_stream.Load(m_fill_buffer.data() + appendOffset, appendSize);
-            return ZoneStreamFillReadAccessor(m_fill_buffer.data(), m_last_fill_size, m_pointer_byte_count, 0);
+            return ZoneStreamFillReadAccessor(m_fill_buffer.data(), m_last_fill_size, m_pointer_byte_count, 0, m_endianness);
         }
 
         ZoneStreamFillReadAccessor GetLastFill() override
@@ -260,11 +270,11 @@ namespace
                 const auto* block = m_block_stack.top();
                 auto* blockBufferForFill = &block->m_buffer[m_block_offsets[block->m_index]] - m_last_fill_size;
 
-                return ZoneStreamFillReadAccessor(blockBufferForFill, m_last_fill_size, m_pointer_byte_count, 0);
+                return ZoneStreamFillReadAccessor(blockBufferForFill, m_last_fill_size, m_pointer_byte_count, 0, m_endianness);
             }
 
             assert(m_fill_buffer.size() == m_last_fill_size);
-            return ZoneStreamFillReadAccessor(m_fill_buffer.data(), m_last_fill_size, m_pointer_byte_count, 0);
+            return ZoneStreamFillReadAccessor(m_fill_buffer.data(), m_last_fill_size, m_pointer_byte_count, 0, m_endianness);
         }
 
         void* InsertPointerNative() override
@@ -495,6 +505,7 @@ namespace
 
         MemoryManager& m_memory;
 
+        GameEndianness m_endianness;
         unsigned m_pointer_byte_count;
         uintptr_t m_block_mask;
         unsigned m_block_shift;
@@ -520,7 +531,8 @@ std::unique_ptr<ZoneInputStream> ZoneInputStream::Create(const unsigned pointerB
                                                          const block_t insertBlock,
                                                          ILoadingStream& stream,
                                                          MemoryManager& memory,
-                                                         std::optional<std::unique_ptr<ProgressCallback>> progressCallback)
+                                                         std::optional<std::unique_ptr<ProgressCallback>> progressCallback,
+                                                         const GameEndianness endianness)
 {
-    return std::make_unique<XBlockInputStream>(pointerBitCount, blockBitCount, blocks, insertBlock, stream, memory, std::move(progressCallback));
+    return std::make_unique<XBlockInputStream>(pointerBitCount, blockBitCount, blocks, insertBlock, stream, memory, std::move(progressCallback), endianness);
 }

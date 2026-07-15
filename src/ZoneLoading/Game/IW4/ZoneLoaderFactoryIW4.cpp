@@ -5,13 +5,13 @@
 #include "Game/IW4/GameIW4.h"
 #include "Game/IW4/IW4.h"
 #include "Game/IW4/ZoneConstantsIW4.h"
+#include "IW4PlatformTraits.h"
 #include "Loading/Processor/ProcessorAuthedBlocks.h"
 #include "Loading/Processor/ProcessorCaptureData.h"
 #include "Loading/Processor/ProcessorIW4xDecryption.h"
 #include "Loading/Processor/ProcessorInflate.h"
 #include "Loading/Steps/StepAddProcessor.h"
 #include "Loading/Steps/StepAllocXBlocks.h"
-#include "Loading/Steps/StepDumpData.h"
 #include "Loading/Steps/StepLoadHash.h"
 #include "Loading/Steps/StepLoadSignature.h"
 #include "Loading/Steps/StepLoadZoneContent.h"
@@ -29,12 +29,10 @@
 
 #include <cassert>
 #include <cstring>
-#include <filesystem>
 #include <iostream>
 #include <type_traits>
 
 using namespace IW4;
-namespace fs = std::filesystem;
 
 namespace
 {
@@ -57,7 +55,7 @@ namespace
                         .m_generic_result =
                             ZoneLoaderInspectionResult{
                                                        .m_game_id = GameId::IW4,
-                                                       .m_endianness = GameEndianness::LE,
+                                                       .m_endianness = PLATFORM_TRAITS_PC.m_endianness,
                                                        .m_word_size = GameWordSize::ARCH_32,
                                                        .m_platform = GamePlatform::PC,
                                                        .m_is_official = false,
@@ -77,7 +75,7 @@ namespace
                     .m_generic_result =
                         ZoneLoaderInspectionResult{
                                                    .m_game_id = GameId::IW4,
-                                                   .m_endianness = GameEndianness::LE,
+                                                   .m_endianness = PLATFORM_TRAITS_PC.m_endianness,
                                                    .m_word_size = GameWordSize::ARCH_32,
                                                    .m_platform = GamePlatform::PC,
                                                    .m_is_official = true,
@@ -94,7 +92,7 @@ namespace
                     .m_generic_result =
                         ZoneLoaderInspectionResult{
                                                    .m_game_id = GameId::IW4,
-                                                   .m_endianness = GameEndianness::LE,
+                                                   .m_endianness = PLATFORM_TRAITS_PC.m_endianness,
                                                    .m_word_size = GameWordSize::ARCH_32,
                                                    .m_platform = GamePlatform::PC,
                                                    .m_is_official = false,
@@ -105,8 +103,7 @@ namespace
                 };
             }
         }
-        else if (endianness::FromBigEndian(header.m_version) == ZoneConstants::ZONE_VERSION_XENON
-                 || endianness::FromBigEndian(header.m_version) == ZoneConstants::ZONE_VERSION_XENON_ALPHA)
+        else if (endianness::FromBigEndian(header.m_version) == ZoneConstants::ZONE_VERSION_XENON)
         {
             if (!memcmp(header.m_magic, ZoneConstants::MAGIC_UNSIGNED, std::char_traits<char>::length(ZoneConstants::MAGIC_UNSIGNED)))
             {
@@ -114,7 +111,7 @@ namespace
                     .m_generic_result =
                         ZoneLoaderInspectionResult{
                                                    .m_game_id = GameId::IW4,
-                                                   .m_endianness = GameEndianness::BE,
+                                                   .m_endianness = PLATFORM_TRAITS_XBOX.m_endianness,
                                                    .m_word_size = GameWordSize::ARCH_32,
                                                    .m_platform = GamePlatform::XBOX,
                                                    .m_is_official = false,
@@ -130,7 +127,7 @@ namespace
                     .m_generic_result =
                         ZoneLoaderInspectionResult{
                                                    .m_game_id = GameId::IW4,
-                                                   .m_endianness = GameEndianness::BE,
+                                                   .m_endianness = PLATFORM_TRAITS_XBOX.m_endianness,
                                                    .m_word_size = GameWordSize::ARCH_32,
                                                    .m_platform = GamePlatform::XBOX,
                                                    .m_is_official = true,
@@ -145,7 +142,7 @@ namespace
         return std::nullopt;
     }
 
-    void SetupBlock(ZoneLoader& zoneLoader)
+    void SetupBlock(ZoneLoader& zoneLoader, const PlatformTraits& platformTraits)
     {
 #define XBLOCK_DEF(name, type) std::make_unique<XBlock>(STR(name), name, type)
 
@@ -155,8 +152,12 @@ namespace
         zoneLoader.AddXBlock(XBLOCK_DEF(IW4::XFILE_BLOCK_VIRTUAL, XBlockType::BLOCK_TYPE_NORMAL));
         zoneLoader.AddXBlock(XBLOCK_DEF(IW4::XFILE_BLOCK_LARGE, XBlockType::BLOCK_TYPE_NORMAL));
         zoneLoader.AddXBlock(XBLOCK_DEF(IW4::XFILE_BLOCK_CALLBACK, XBlockType::BLOCK_TYPE_NORMAL));
-        zoneLoader.AddXBlock(XBLOCK_DEF(IW4::XFILE_BLOCK_VERTEX, XBlockType::BLOCK_TYPE_NORMAL));
-        zoneLoader.AddXBlock(XBLOCK_DEF(IW4::XFILE_BLOCK_INDEX, XBlockType::BLOCK_TYPE_NORMAL));
+
+        if (platformTraits.m_has_vertex_and_index_blocks)
+        {
+            zoneLoader.AddXBlock(XBLOCK_DEF(IW4::XFILE_BLOCK_VERTEX, XBlockType::BLOCK_TYPE_NORMAL));
+            zoneLoader.AddXBlock(XBLOCK_DEF(IW4::XFILE_BLOCK_INDEX, XBlockType::BLOCK_TYPE_NORMAL));
+        }
 
 #undef XBLOCK_DEF
     }
@@ -273,7 +274,8 @@ std::unique_ptr<ZoneLoader> ZoneLoaderFactory::CreateLoaderForHeader(const ZoneH
     // File is supported. Now setup all required steps for loading this file.
     auto zoneLoader = std::make_unique<ZoneLoader>(std::move(zone));
 
-    SetupBlock(*zoneLoader);
+    const auto& platformTraits = GetPlatformTraits(inspectResult->m_generic_result.m_platform);
+    SetupBlock(*zoneLoader, platformTraits);
 
     // Skip unknown 1 byte field that the game ignores as well
     zoneLoader->AddLoadingStep(step::CreateStepSkipBytes(1));
@@ -296,32 +298,27 @@ std::unique_ptr<ZoneLoader> ZoneLoaderFactory::CreateLoaderForHeader(const ZoneH
         zoneLoader->AddLoadingStep(step::CreateStepSkipBytes(1));
     }
 
-    if (inspectResult->m_generic_result.m_endianness == GameEndianness::LE)
-    {
-        // Start of the XFile struct
-        zoneLoader->AddLoadingStep(step::CreateStepLoadZoneSizes());
-        zoneLoader->AddLoadingStep(step::CreateStepAllocXBlocks());
+    const auto endianness = platformTraits.m_endianness;
 
-        // Start of the zone content
-        zoneLoader->AddLoadingStep(step::CreateStepLoadZoneContent(
-            [zonePtr](ZoneInputStream& stream)
-            {
-                return std::make_unique<ContentLoader>(*zonePtr, stream);
-            },
-            32u,
-            ZoneConstants::OFFSET_BLOCK_BIT_COUNT,
-            ZoneConstants::INSERT_BLOCK,
-            zonePtr->Memory(),
-            std::move(progressCallback)));
-    }
-    else
-    {
-        fs::path dumpFileNamePath = fs::path(fileName).filename();
-        dumpFileNamePath.replace_extension(".dat");
-        std::string dumpFileName = dumpFileNamePath.string();
-        con::warn("Dumping xbox assets is not supported, making a full fastfile data dump to {}", dumpFileName);
-        zoneLoader->AddLoadingStep(step::CreateStepDumpData(dumpFileName, 0xFFFFFFFF));
-    }
+    // Start of the XFile struct. IW4 PC and retail Xenon share this high-level
+    // shape, but the scalar values and block table use the platform byte order.
+    zoneLoader->AddLoadingStep(step::CreateStepLoadZoneSizes(endianness));
+    zoneLoader->AddLoadingStep(step::CreateStepAllocXBlocks(endianness));
+
+    // Start of the zone content. ContentLoader dispatches the serialized asset
+    // enum through the selected platform profile and reuses compatible IW4
+    // generated loaders.
+    zoneLoader->AddLoadingStep(step::CreateStepLoadZoneContent(
+        [zonePtr](ZoneInputStream& stream)
+        {
+            return std::make_unique<ContentLoader>(*zonePtr, stream);
+        },
+        32u,
+        ZoneConstants::OFFSET_BLOCK_BIT_COUNT,
+        ZoneConstants::INSERT_BLOCK,
+        zonePtr->Memory(),
+        std::move(progressCallback),
+        endianness));
 
     return zoneLoader;
 }

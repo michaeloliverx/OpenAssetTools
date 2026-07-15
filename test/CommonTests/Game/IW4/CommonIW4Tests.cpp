@@ -1,5 +1,8 @@
 #include "Game/IW4/CommonIW4.h"
+#include "Game/IW4/IW4.h"
+#include "Utils/Endianness.h"
 
+#include <bit>
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>
 
@@ -46,4 +49,94 @@ TEST_CASE("IW4: Check checksums", "[iw4]")
         const auto hash = IW4::Common::R_HashString(str);
         REQUIRE(hash == expectedHash);
     }
+}
+
+TEST_CASE("IW4: Convert shared retail Xenon assets from big endian", "[iw4][endianness]")
+{
+    IW4::PhysPreset physPreset{};
+    physPreset.type = 0x02000000;
+    physPreset.mass = std::bit_cast<float>(0x0000803fu);
+    physPreset.bounce = std::bit_cast<float>(0x0000003fu);
+
+    endianness::FromBigEndianInPlace(physPreset);
+
+    REQUIRE(physPreset.type == 2);
+    REQUIRE(physPreset.mass == 1.0f);
+    REQUIRE(physPreset.bounce == 0.5f);
+
+    IW4::StringTableCell cells[1]{};
+    cells[0].hash = 0x78563412;
+
+    IW4::StringTable stringTable{};
+    stringTable.columnCount = 0x02000000;
+    stringTable.rowCount = 0x03000000;
+
+    endianness::FromBigEndianInPlace(cells);
+    endianness::FromBigEndianInPlace(stringTable);
+
+    REQUIRE(cells[0].hash == 0x12345678);
+    REQUIRE(stringTable.columnCount == 2);
+    REQUIRE(stringTable.rowCount == 3);
+
+    IW4::RawFile rawFile{};
+    rawFile.compressedLen = 0x0c000000;
+    rawFile.len = 0x2a000000;
+
+    endianness::FromBigEndianInPlace(rawFile);
+
+    REQUIRE(rawFile.compressedLen == 12);
+    REQUIRE(rawFile.len == 42);
+
+    IW4::SndCurve soundCurve{};
+    soundCurve.knotCount = 0x0300;
+    soundCurve.knots[0][0] = std::bit_cast<float>(0x0000803fu);
+    soundCurve.knots[0][1] = std::bit_cast<float>(0x00000040u);
+
+    endianness::FromBigEndianInPlace(soundCurve);
+
+    REQUIRE(soundCurve.knotCount == 3);
+    REQUIRE(soundCurve.knots[0][0] == 1.0f);
+    REQUIRE(soundCurve.knots[0][1] == 2.0f);
+
+    IW4::PhysCollmap physCollmap{};
+    physCollmap.count = 0x02000000;
+    physCollmap.mass.centerOfMass[0] = std::bit_cast<float>(0x0000803fu);
+    physCollmap.bounds.halfSize.v[2] = std::bit_cast<float>(0x00000040u);
+
+    endianness::FromBigEndianInPlace(physCollmap);
+
+    REQUIRE(physCollmap.count == 2);
+    REQUIRE(physCollmap.mass.centerOfMass[0] == 1.0f);
+    REQUIRE(physCollmap.bounds.halfSize.v[2] == 2.0f);
+
+    IW4::MapEnts mapEnts{};
+    mapEnts.numEntityChars = 0x2a000000;
+    mapEnts.trigger.count = 0x02000000;
+    mapEnts.trigger.hullCount = 0x03000000;
+
+    endianness::FromBigEndianInPlace(mapEnts);
+
+    REQUIRE(mapEnts.numEntityChars == 42);
+    REQUIRE(mapEnts.trigger.count == 2);
+    REQUIRE(mapEnts.trigger.hullCount == 3);
+
+    IW4::LeaderboardDef leaderboard{};
+    leaderboard.id = 0x07000000;
+    leaderboard.columnCount = 0x04000000;
+
+    endianness::FromBigEndianInPlace(leaderboard);
+
+    REQUIRE(leaderboard.id == 7);
+    REQUIRE(leaderboard.columnCount == 4);
+
+    IW4::TracerDef tracer{};
+    tracer.drawInterval = 0x08000000;
+    tracer.speed = std::bit_cast<float>(0x0000803fu);
+    tracer.colors[4][3] = std::bit_cast<float>(0x00000040u);
+
+    endianness::FromBigEndianInPlace(tracer);
+
+    REQUIRE(tracer.drawInterval == 8);
+    REQUIRE(tracer.speed == 1.0f);
+    REQUIRE(tracer.colors[4][3] == 2.0f);
 }

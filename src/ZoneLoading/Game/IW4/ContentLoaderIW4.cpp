@@ -2,6 +2,7 @@
 
 #include "Game/IW4/AssetLoaderIW4.h"
 #include "Game/IW4/IW4.h"
+#include "IW4PlatformTraits.h"
 #include "Loading/Exception/UnsupportedAssetTypeException.h"
 
 #include <cassert>
@@ -57,6 +58,33 @@ void ContentLoader::LoadXAsset(const bool atStreamStart) const
     if (atStreamStart)
         m_stream.Load<XAsset>(varXAsset);
 
+    if (m_zone.m_platform == GamePlatform::XBOX)
+    {
+        // The serialized asset table uses the Xenon enum values, while the
+        // shared generated loaders link into IW4's existing logical asset
+        // pools. Only layouts verified identical across PC and retail Xenon
+        // are enabled in this first platform slice.
+        switch (static_cast<int>(varXAsset->type))
+        {
+            LOAD_ASSET(PLATFORM_TRAITS_XBOX.GetSerializedAssetType(ASSET_TYPE_PHYSPRESET), PhysPreset, physPreset)
+            LOAD_ASSET(PLATFORM_TRAITS_XBOX.GetSerializedAssetType(ASSET_TYPE_PHYSCOLLMAP), PhysCollmap, physCollmap)
+            LOAD_ASSET(PLATFORM_TRAITS_XBOX.GetSerializedAssetType(ASSET_TYPE_SOUND_CURVE), SndCurve, sndCurve)
+            LOAD_ASSET(PLATFORM_TRAITS_XBOX.GetSerializedAssetType(ASSET_TYPE_MAP_ENTS), MapEnts, mapEnts)
+            LOAD_ASSET(PLATFORM_TRAITS_XBOX.GetSerializedAssetType(ASSET_TYPE_LIGHT_DEF), GfxLightDef, lightDef)
+            LOAD_ASSET(PLATFORM_TRAITS_XBOX.GetSerializedAssetType(ASSET_TYPE_LOCALIZE_ENTRY), LocalizeEntry, localize)
+            LOAD_ASSET(PLATFORM_TRAITS_XBOX.GetSerializedAssetType(ASSET_TYPE_RAWFILE), RawFile, rawfile)
+            LOAD_ASSET(PLATFORM_TRAITS_XBOX.GetSerializedAssetType(ASSET_TYPE_STRINGTABLE), StringTable, stringTable)
+            LOAD_ASSET(PLATFORM_TRAITS_XBOX.GetSerializedAssetType(ASSET_TYPE_LEADERBOARD), LeaderboardDef, leaderboardDef)
+            LOAD_ASSET(PLATFORM_TRAITS_XBOX.GetSerializedAssetType(ASSET_TYPE_TRACER), TracerDef, tracerDef)
+            LOAD_ASSET(PLATFORM_TRAITS_XBOX.GetSerializedAssetType(ASSET_TYPE_ADDON_MAP_ENTS), AddonMapEnts, addonMapEnts)
+
+        default:
+            throw UnsupportedAssetTypeException(static_cast<int>(varXAsset->type));
+        }
+
+        return;
+    }
+
     switch (varXAsset->type)
     {
         LOAD_ASSET(ASSET_TYPE_PHYSPRESET, PhysPreset, physPreset)
@@ -104,6 +132,7 @@ void ContentLoader::LoadXAsset(const bool atStreamStart) const
     }
 
 #undef LOAD_ASSET
+#undef SKIP_ASSET
 }
 
 void ContentLoader::LoadXAssetArray(const bool atStreamStart, const size_t count)
@@ -143,7 +172,7 @@ void ContentLoader::Load()
     varXAssetList = &assetList;
 
 #ifdef ARCH_x86
-    m_stream.LoadDataRaw(&assetList, sizeof(assetList));
+    m_stream.Load<XAssetList>(&assetList);
 #else
     const auto fillAccessor = m_stream.LoadWithFill(16u);
     varScriptStringList = &varXAssetList->stringList;

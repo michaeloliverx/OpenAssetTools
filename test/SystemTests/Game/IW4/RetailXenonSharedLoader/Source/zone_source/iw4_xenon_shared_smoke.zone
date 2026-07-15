@@ -1,0 +1,15 @@
+// Retail IW4 Xenon shared-loader smoke test.
+>game,IW4Xenon
+>name,iw4_xenon_shared_smoke
+
+physpreset,,iw4_xenon_test_phys
+phys_collmap,,iw4_xenon_test_collmap
+sndcurve,,iw4_xenon_test_curve
+map_ents,,iw4_xenon_test_mapents
+lightdef,,iw4_xenon_test_light
+localize,,IW4_XENON_TEST_LOCALIZE
+rawfile,iw4_xenon_test.txt
+stringtable,iw4_xenon_test.csv
+leaderboarddef,,iw4_xenon_test_leaderboard
+tracer,,iw4_xenon_test_tracer
+addon_map_ents,,iw4_xenon_test_addon_mapents
