@@ -303,7 +303,35 @@ namespace test::parsing::menu::sequence::item
         REQUIRE(item->m_rect.verticalAlign == 2);
     }
 
-    TEST_CASE("ItemScopeSequences: Rect reports a missing vertical align", "[parsing][sequence][menu]")
+    TEST_CASE("ItemScopeSequences: Rect reports invalid value counts", "[parsing][sequence][menu]")
+    {
+        ItemSequenceTestsHelper helper(FeatureLevel::IW4, false);
+        const TokenPos pos;
+        const auto valueCount = GENERATE(0u, 1u, 2u, 3u, 5u, 7u);
+
+        std::vector<SimpleParserValue> tokens;
+        tokens.emplace_back(SimpleParserValue::Identifier(pos, new std::string("rect")));
+        for (auto i = 0u; i < valueCount; i++)
+            tokens.emplace_back(SimpleParserValue::Integer(pos, static_cast<int>(i)));
+        tokens.emplace_back(SimpleParserValue::EndOfFile(pos));
+
+        helper.Tokens(std::move(tokens));
+
+        try
+        {
+            helper.PerformTest();
+            FAIL("Expected invalid rect syntax");
+        }
+        catch (const ParsingException& e)
+        {
+            REQUIRE(e.Message()
+                    == "Invalid rect syntax. Expected one of:\n\n"
+                       "rect <x> <y> <width> <height>\n\n"
+                       "rect <x> <y> <width> <height> <horizontalAlign> <verticalAlign>");
+        }
+    }
+
+    TEST_CASE("ItemScopeSequences: Rect reports invalid value types", "[parsing][sequence][menu]")
     {
         ItemSequenceTestsHelper helper(FeatureLevel::IW4, false);
         const TokenPos pos;
@@ -311,8 +339,7 @@ namespace test::parsing::menu::sequence::item
             SimpleParserValue::Identifier(pos, new std::string("rect")),
             SimpleParserValue::Integer(pos, 0),
             SimpleParserValue::Integer(pos, 0),
-            SimpleParserValue::Integer(pos, 1),
-            SimpleParserValue::Integer(pos, 3),
+            SimpleParserValue::String(pos, new std::string("invalid")),
             SimpleParserValue::Integer(pos, 3),
             SimpleParserValue::EndOfFile(pos),
         });

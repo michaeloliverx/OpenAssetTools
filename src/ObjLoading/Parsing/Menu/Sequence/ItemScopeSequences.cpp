@@ -192,30 +192,48 @@ namespace menu::item_scope_sequences
     class SequenceRect final : public MenuFileParser::sequence_t
     {
         static constexpr auto TAG_ALIGN = 1;
-        static constexpr auto TAG_INVALID_ALIGN = 2;
+        static constexpr auto TAG_INVALID_RECT = 2;
         static constexpr auto CAPTURE_FIRST_TOKEN = 1;
 
     public:
         SequenceRect()
         {
             const MenuMatcherFactory create(this);
+            const auto rectEnd = [&create]()
+            {
+                auto matcher = create.Or({
+                    create.Identifier(),
+                    create.Char('}'),
+                    create.Char(';'),
+                    create.Type(SimpleParserValueType::END_OF_FILE),
+                });
+                matcher.NoConsume();
+                return matcher;
+            };
 
             AddLabeledMatchers(MenuExpressionMatchers().Expression(this), MenuExpressionMatchers::LABEL_EXPRESSION);
             AddMatchers({
                 create.KeywordIgnoreCase("rect").Capture(CAPTURE_FIRST_TOKEN),
-                create.NumericExpression(), // x
-                create.NumericExpression(), // y
-                create.NumericExpression(), // w
-                create.NumericExpression(), // h
-                create.Optional(create.Or({
-                    create
-                        .And({
-                            create.IntExpression(), // Align horizontal
-                            create.IntExpression(), // Align vertical
-                        })
-                        .Tag(TAG_ALIGN),
-                    create.IntExpression().Tag(TAG_INVALID_ALIGN),
-                })),
+                create.Or({
+                    create.And({
+                        create.NumericExpression(), // x
+                        create.NumericExpression(), // y
+                        create.NumericExpression(), // w
+                        create.NumericExpression(), // h
+                        create.True().Tag(TAG_ALIGN),
+                        create.IntExpression(), // Align horizontal
+                        create.IntExpression(), // Align vertical
+                        rectEnd(),
+                    }),
+                    create.And({
+                        create.NumericExpression(), // x
+                        create.NumericExpression(), // y
+                        create.NumericExpression(), // w
+                        create.NumericExpression(), // h
+                        rectEnd(),
+                    }),
+                    create.True().Tag(TAG_INVALID_RECT),
+                }),
             });
         }
 
@@ -225,17 +243,17 @@ namespace menu::item_scope_sequences
             assert(state->m_current_item);
 
             const auto& firstToken = result.NextCapture(CAPTURE_FIRST_TOKEN);
+            if (result.PeekAndRemoveIfTag(TAG_INVALID_RECT) == TAG_INVALID_RECT)
+                throw ParsingException(firstToken.GetPos(),
+                                       "Invalid rect syntax. Expected one of:\n\n"
+                                       "rect <x> <y> <width> <height>\n\n"
+                                       "rect <x> <y> <width> <height> <horizontalAlign> <verticalAlign>");
+
             const auto x = MenuMatcherFactory::TokenNumericExpressionValue(state, result);
             const auto y = MenuMatcherFactory::TokenNumericExpressionValue(state, result);
             const auto w = MenuMatcherFactory::TokenNumericExpressionValue(state, result);
             const auto h = MenuMatcherFactory::TokenNumericExpressionValue(state, result);
             CommonRect rect{x, y, w, h, 0, 0};
-
-            if (result.PeekAndRemoveIfTag(TAG_INVALID_ALIGN) == TAG_INVALID_ALIGN)
-                throw ParsingException(firstToken.GetPos(),
-                                       "Invalid rect syntax. Expected one of:\n\n"
-                                       "rect <x> <y> <width> <height>\n\n"
-                                       "rect <x> <y> <width> <height> <horizontalAlign> <verticalAlign>");
 
             if (result.PeekAndRemoveIfTag(TAG_ALIGN) == TAG_ALIGN)
             {
