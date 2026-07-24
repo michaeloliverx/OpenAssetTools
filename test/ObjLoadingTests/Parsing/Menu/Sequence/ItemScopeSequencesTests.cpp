@@ -303,6 +303,34 @@ namespace test::parsing::menu::sequence::item
         REQUIRE(item->m_rect.verticalAlign == 2);
     }
 
+    TEST_CASE("ItemScopeSequences: Rect reports a missing vertical align", "[parsing][sequence][menu]")
+    {
+        ItemSequenceTestsHelper helper(FeatureLevel::IW4, false);
+        const TokenPos pos;
+        helper.Tokens({
+            SimpleParserValue::Identifier(pos, new std::string("rect")),
+            SimpleParserValue::Integer(pos, 0),
+            SimpleParserValue::Integer(pos, 0),
+            SimpleParserValue::Integer(pos, 1),
+            SimpleParserValue::Integer(pos, 3),
+            SimpleParserValue::Integer(pos, 3),
+            SimpleParserValue::EndOfFile(pos),
+        });
+
+        try
+        {
+            helper.PerformTest();
+            FAIL("Expected invalid rect syntax");
+        }
+        catch (const ParsingException& e)
+        {
+            REQUIRE(e.Message()
+                    == "Invalid rect syntax. Expected one of:\n\n"
+                       "rect <x> <y> <width> <height>\n\n"
+                       "rect <x> <y> <width> <height> <horizontalAlign> <verticalAlign>");
+        }
+    }
+
     TEST_CASE("ItemScopeSequences: Origin offsets the item rect", "[parsing][sequence][menu]")
     {
         ItemSequenceTestsHelper helper(FeatureLevel::IW4, false);

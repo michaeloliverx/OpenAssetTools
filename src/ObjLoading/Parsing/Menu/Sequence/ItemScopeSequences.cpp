@@ -192,6 +192,8 @@ namespace menu::item_scope_sequences
     class SequenceRect final : public MenuFileParser::sequence_t
     {
         static constexpr auto TAG_ALIGN = 1;
+        static constexpr auto TAG_INVALID_ALIGN = 2;
+        static constexpr auto CAPTURE_FIRST_TOKEN = 1;
 
     public:
         SequenceRect()
@@ -200,17 +202,20 @@ namespace menu::item_scope_sequences
 
             AddLabeledMatchers(MenuExpressionMatchers().Expression(this), MenuExpressionMatchers::LABEL_EXPRESSION);
             AddMatchers({
-                create.KeywordIgnoreCase("rect"),
+                create.KeywordIgnoreCase("rect").Capture(CAPTURE_FIRST_TOKEN),
                 create.NumericExpression(), // x
                 create.NumericExpression(), // y
                 create.NumericExpression(), // w
                 create.NumericExpression(), // h
-                create.Optional(create
-                                    .And({
-                                        create.IntExpression(), // Align horizontal
-                                        create.IntExpression(), // Align vertical
-                                    })
-                                    .Tag(TAG_ALIGN)),
+                create.Optional(create.Or({
+                    create
+                        .And({
+                            create.IntExpression(), // Align horizontal
+                            create.IntExpression(), // Align vertical
+                        })
+                        .Tag(TAG_ALIGN),
+                    create.IntExpression().Tag(TAG_INVALID_ALIGN),
+                })),
             });
         }
 
@@ -219,11 +224,18 @@ namespace menu::item_scope_sequences
         {
             assert(state->m_current_item);
 
+            const auto& firstToken = result.NextCapture(CAPTURE_FIRST_TOKEN);
             const auto x = MenuMatcherFactory::TokenNumericExpressionValue(state, result);
             const auto y = MenuMatcherFactory::TokenNumericExpressionValue(state, result);
             const auto w = MenuMatcherFactory::TokenNumericExpressionValue(state, result);
             const auto h = MenuMatcherFactory::TokenNumericExpressionValue(state, result);
             CommonRect rect{x, y, w, h, 0, 0};
+
+            if (result.PeekAndRemoveIfTag(TAG_INVALID_ALIGN) == TAG_INVALID_ALIGN)
+                throw ParsingException(firstToken.GetPos(),
+                                       "Invalid rect syntax. Expected one of:\n\n"
+                                       "rect <x> <y> <width> <height>\n\n"
+                                       "rect <x> <y> <width> <height> <horizontalAlign> <verticalAlign>");
 
             if (result.PeekAndRemoveIfTag(TAG_ALIGN) == TAG_ALIGN)
             {
