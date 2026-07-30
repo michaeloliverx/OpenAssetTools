@@ -3,6 +3,7 @@
 #include "Dumping/AbstractTextDumper.h"
 
 #include <ostream>
+#include <string_view>
 
 class MapFileDumper : AbstractTextDumper
 {
@@ -72,7 +73,7 @@ public:
     void EndBrush();
 
     void WriteKeyValue(const std::string& key, const std::string& value) const;
-    void WriteBrushPlane(BrushPlane plane) const;
+    void WriteBrushPlane(BrushPlane plane, std::string_view material = "clip_player") const;
     void WritePhysicsBox(PhysicsBox box);
     void WritePhysicsCylinder(PhysicsCylinder cylinder);
 };

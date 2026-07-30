@@ -175,7 +175,7 @@ void MapFileDumper::WriteKeyValue(const std::string& key, const std::string& val
     m_stream << "\"" << key << "\" \"" << value << "\"\n";
 }
 
-void MapFileDumper::WriteBrushPlane(const BrushPlane plane) const
+void MapFileDumper::WriteBrushPlane(const BrushPlane plane, const std::string_view material) const
 {
     assert(m_flags.m_in_brush);
 
@@ -197,8 +197,8 @@ void MapFileDumper::WriteBrushPlane(const BrushPlane plane) const
     Indent();
     m_stream << "( " << FormatFloat(origin.m_x) << " " << FormatFloat(origin.m_y) << " " << FormatFloat(origin.m_z) << " ) "
              << "( " << FormatFloat(point2.m_x) << " " << FormatFloat(point2.m_y) << " " << FormatFloat(point2.m_z) << " ) "
-             << "( " << FormatFloat(point3.m_x) << " " << FormatFloat(point3.m_y) << " " << FormatFloat(point3.m_z) << " ) "
-             << "clip_player 64 64 0 0 0 0 lightmap_gray 16384 16384 0 0 0 0\n";
+             << "( " << FormatFloat(point3.m_x) << " " << FormatFloat(point3.m_y) << " " << FormatFloat(point3.m_z) << " ) " << material
+             << " 64 64 0 0 0 0 lightmap_gray 16384 16384 0 0 0 0\n";
 }
 
 void MapFileDumper::WritePhysicsBox(const PhysicsBox box)

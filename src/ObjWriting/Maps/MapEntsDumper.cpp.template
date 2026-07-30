@@ -11,6 +11,10 @@
 
 #include "Maps/MapEntsCommon.h"
 
+#if GAME == "IW4"
+#include "Game/IW4/Maps/MapEntsTriggerMapDumperIW4.h"
+#endif
+
 #include <algorithm>
 
 using namespace GAME;
@@ -22,6 +26,11 @@ namespace map_ents
     void CLASS_NAME::DumpAsset(AssetDumpingContext& context, const XAssetInfo<AssetMapEnts::Type>& asset)
     {
         const auto* mapEnts = asset.Asset();
+
+#if GAME == "IW4"
+        DumpMapEntsTriggerMapIW4(asset.m_name, context, mapEnts->trigger);
+#endif
+
         const auto assetFile = context.OpenAssetFile(GetEntsFileNameForAssetName(asset.m_name));
 
         if (!assetFile)

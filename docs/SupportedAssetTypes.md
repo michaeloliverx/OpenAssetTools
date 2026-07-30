@@ -59,7 +59,7 @@ using `Linker`):
 | ComWorld                  | ❌               | ❌               |                                                                              |
 | GameWorldSp               | ❌               | ❌               |                                                                              |
 | GameWorldMp               | ❌               | ❌               |                                                                              |
-| MapEnts                   | ⁉️              | ❌               | Entity string can be exported. Binary data currently not.                    |
+| MapEnts                   | ⁉️              | ❌               | Entity string and trigger geometry can be exported. Stage data currently not. |
 | FxWorld                   | ❌               | ❌               |                                                                              |
 | GfxWorld                  | ❌               | ❌               |                                                                              |
 | GfxLightDef               | ✅               | ✅               |                                                                              |
