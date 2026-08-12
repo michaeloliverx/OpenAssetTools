@@ -44,7 +44,7 @@ using `Linker`):
 |---------------------------|-----------------|-----------------|------------------------------------------------------------------------------|
 | PhysPreset                | ✅               | ✅               |                                                                              |
 | PhysCollmap               | ❌               | ❌               |                                                                              |
-| XAnimParts                | ✅               | ✅               |                                                                              |
+| XAnimParts                | ✅               | ✅               | IW4 animations can be dumped and loaded as `XANIM_BIN`, `GLB`, or `GLTF`. See [Blender preview workflow](BlenderXAnimPreview.md). |
 | XModel                    | ✅               | ✅               | Model data can be exported to `XMODEL_EXPORT/XMODEL_BIN`, `OBJ`, `GLB/GLTF`. |
 | Material                  | ✅               | ✅               |                                                                              |
 | MaterialPixelShader       | ✅               | ✅               | Only dumps/loads shader bytecode.                                            |

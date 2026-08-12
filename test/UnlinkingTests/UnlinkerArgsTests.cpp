@@ -42,4 +42,20 @@ namespace
 
         REQUIRE(args.GetOutputFolderPathForZone(zone) == "zone_dump/iw4/iw4/test_zone");
     }
+
+    TEST_CASE("Unlinker accepts an IW4 XAnim output format", "[unlinker][arguments]")
+    {
+        const char* argStrings[]{
+            "Unlinker",
+            "--xanim-format",
+            "gLtF",
+            "test.ff",
+        };
+
+        UnlinkerArgs args;
+        bool shouldContinue = true;
+
+        REQUIRE(args.ParseArgs(std::extent_v<decltype(argStrings)>, argStrings, shouldContinue));
+        REQUIRE(shouldContinue);
+    }
 } // namespace
