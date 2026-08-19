@@ -110,6 +110,10 @@ namespace
 
 #ifdef DX9
         textureLoader.Format(static_cast<oat::D3DFORMAT>(loadDef.format));
+#ifdef FEATURE_IW3
+        // IW3 stores embedded cube maps as complete mip chains for each face.
+        textureLoader.CubeMapOrder(Dx9TextureLoader::CubeMapDataOrder::FaceMajor);
+#endif
 #ifdef FEATURE_QOS
         // The QOS executable uploads embedded load-def mip data from the smallest mip to the largest.
         textureLoader.MipMapOrder(Dx9TextureLoader::MipMapDataOrder::SmallestToLargest);
