@@ -3370,6 +3370,27 @@ namespace T5
         int vertAlign;
     };
 
+    enum WindowStaticFlag
+    {
+        WINDOW_FLAG_DECORATION = 0x100000,
+        WINDOW_FLAG_HORIZONTAL_SCROLL = 0x200000,
+        WINDOW_FLAG_AUTO_WRAPPED = 0x800000,
+        WINDOW_FLAG_POPUP = 0x1000000,
+        WINDOW_FLAG_OUT_OF_BOUNDS_CLICK = 0x2000000,
+        WINDOW_FLAG_LEGACY_SPLIT_SCREEN_SCALE = 0x4000000,
+        WINDOW_FLAG_ALLOW_SIGN_IN = 0x8000000,
+        WINDOW_FLAG_HIDDEN_DURING_FLASH_BANG = 0x10000000,
+        WINDOW_FLAG_HIDDEN_DURING_SCOPE = 0x20000000,
+        WINDOW_FLAG_HIDDEN_DURING_UI = 0x40000000,
+    };
+
+    enum WindowDynamicFlag
+    {
+        WINDOW_FLAG_VISIBLE = 0x4,
+        WINDOW_FLAG_NON_DEFAULT_BACKCOLOR = 0x8000,
+        WINDOW_FLAG_NON_DEFAULT_FORECOLOR = 0x10000,
+    };
+
     struct windowDef_t
     {
         const char* name;
@@ -3415,7 +3436,7 @@ namespace T5
     {
         int intVal;
         float floatVal;
-        const char* string;
+        const char* stringVal;
     };
 
     struct Operand
@@ -3432,34 +3453,34 @@ namespace T5
         RPN_END = 0x3,
     };
 
-    enum expressionOperatorType_e
+    enum expOperationEnum
     {
         OP_NOOP = 0x0,
         OP_RIGHTPAREN = 0x1,
-        OP_MUL = 0x2,
-        OP_DIV = 0x3,
-        OP_MOD = 0x4,
-        OP_PLUS = 0x5,
-        OP_MINUS = 0x6,
-        OP_MINUS_2 = 0x7,
-        OP_NEG = 0x8,
-        OP_SMALLER = 0x9,
-        OP_SMALLEREQ = 0xA,
-        OP_GREATER = 0xB,
-        OP_GREATEREQ = 0xC,
-        OP_EQ = 0xD,
-        OP_NOTEQ = 0xE,
-        OP_LOGAND = 0xF,
-        OP_LOGOR = 0x10,
+        OP_MULTIPLY = 0x2,
+        OP_DIVIDE = 0x3,
+        OP_MODULUS = 0x4,
+        OP_ADD = 0x5,
+        OP_SUBTRACT = 0x6,
+        OP_NEGATE = 0x7,
+        OP_NOT = 0x8,
+        OP_LESSTHAN = 0x9,
+        OP_LESSTHANEQUALTO = 0xA,
+        OP_GREATERTHAN = 0xB,
+        OP_GREATERTHANEQUALTO = 0xC,
+        OP_EQUALS = 0xD,
+        OP_NOTEQUAL = 0xE,
+        OP_AND = 0xF,
+        OP_OR = 0x10,
         OP_LEFTPAREN = 0x11,
         OP_COMMA = 0x12,
-        OP_BITAND = 0x13,
-        OP_BITOR = 0x14,
-        OP_BITNEG = 0x15,
-        OP_SHIFTLEFT = 0x16,
-        OP_SHIFTRIGHT = 0x17,
-
-        OP_COUNT
+        OP_BITWISEAND = 0x13,
+        OP_BITWISEOR = 0x14,
+        OP_BITWISENOT = 0x15,
+        OP_BITSHIFTLEFT = 0x16,
+        OP_BITSHIFTRIGHT = 0x17,
+        NUM_EXPRESSION_OPERATORS = 0x18,
+        MAX_OPERATOR_VALUE = 0x4000,
     };
 
     union expressionRpnDataUnion
@@ -3493,6 +3514,14 @@ namespace T5
         int blockID;
         int constructID;
         GenericEventScript* next;
+    };
+
+    enum GenericEventScriptType
+    {
+        EVENT_UNCONDITIONAL = 0x0,
+        EVENT_IF = 0x1,
+        EVENT_ELSE_IF = 0x2,
+        EVENT_ELSE = 0x3,
     };
 
     struct GenericEventHandler
@@ -3727,6 +3756,21 @@ namespace T5
         ITEM_TYPE_DECIMALFIELD = 0x1E,
         ITEM_TYPE_CONFEDITFIELD = 0x1F,
         ITEM_TYPE_MENUMODEL = 0x27
+    };
+
+    enum ItemDvarFlag
+    {
+        ITEM_DVAR_FLAG_ENABLE = 0x1,
+        ITEM_DVAR_FLAG_DISABLE = 0x2,
+        ITEM_DVAR_FLAG_SHOW = 0x4,
+        ITEM_DVAR_FLAG_HIDE = 0x8,
+        ITEM_DVAR_FLAG_FOCUS = 0x10,
+    };
+
+    enum ItemTextFlag
+    {
+        ITEM_TEXT_FLAG_SAVE_GAME_INFO = 0x1,
+        ITEM_TEXT_FLAG_CINEMATIC_SUBTITLE = 0x2,
     };
 
     struct type_align32(8) itemDef_s

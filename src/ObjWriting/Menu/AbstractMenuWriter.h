@@ -37,7 +37,7 @@ namespace menu
         void StartFunctionDefScope();
         void EndScope();
 
-        static std::vector<std::string> CreateScriptTokenList(const char* script);
+        static std::vector<std::string> CreateScriptTokenList(const char* script, bool readNumbers = false);
         static bool DoesTokenNeedQuotationMarks(const std::string& token);
 
         void WriteEscapedString(const std::string_view& str) const;

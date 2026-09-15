@@ -36,8 +36,8 @@ set condition data::cmd never;
 use Operand;
 set condition internals::intVal dataType == VAL_INT;
 set condition internals::floatVal dataType == VAL_FLOAT;
-set condition internals::string dataType == VAL_STRING;
-set string internals::string;
+set condition internals::stringVal dataType == VAL_STRING;
+set string internals::stringVal;
 
 // itemDef_s
 use itemDef_s;
@@ -51,7 +51,7 @@ type == ITEM_TYPE_TEXT || type == ITEM_TYPE_BUTTON || type == ITEM_TYPE_LISTBOX
 || type == ITEM_TYPE_YESNO || type == ITEM_TYPE_MULTI || type == ITEM_TYPE_DVARENUM
 || type == ITEM_TYPE_BIND || type == ITEM_TYPE_VALIDFILEFIELD || type == ITEM_TYPE_UPREDITFIELD
 || type == ITEM_TYPE_GAME_MESSAGE_WINDOW || type == ITEM_TYPE_BIND2 || type == ITEM_TYPE_OWNERDRAW_TEXT
-|| type == ITEM_TYPE_OD_TEXT_BUTTON || type == ITEM_TYPE_ALPHANUMERICFIELD;
+|| type == ITEM_TYPE_OD_TEXT_BUTTON || type == ITEM_TYPE_ALPHANUMERICFIELD || type == ITEM_TYPE_DECIMALFIELD;
 set condition typeData::imageDef type == ITEM_TYPE_IMAGE;
 set condition typeData::blankButtonDef type == ITEM_TYPE_OD_BUTTON || type == ITEM_TYPE_BUTTON_NO_TEXT;
 set condition typeData::ownerDrawDef type == ITEM_TYPE_OWNERDRAW;

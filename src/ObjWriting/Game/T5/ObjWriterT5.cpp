@@ -9,6 +9,8 @@
 #include "Game/T5/XModel/XModelDumperT5.h"
 #include "LightDef/LightDefDumperT5.h"
 #include "Localize/LocalizeDumperT5.h"
+#include "Menu/MenuDumperT5.h"
+#include "Menu/MenuListDumperT5.h"
 #include "PhysConstraints/PhysConstraintsInfoStringDumperT5.h"
 #include "PhysPreset/PhysPresetInfoStringDumperT5.h"
 #include "RawFile/RawFileDumperT5.h"
@@ -43,8 +45,8 @@ void ObjWriter::RegisterAssetDumpers(AssetDumpingContext& context)
     // REGISTER_DUMPER(AssetDumperGfxWorld, m_gfx_world)
     RegisterAssetDumper(std::make_unique<light_def::DumperT5>());
     RegisterAssetDumper(std::make_unique<font::JsonDumperT5>());
-    // REGISTER_DUMPER(AssetDumperMenuList, m_menu_list)
-    // REGISTER_DUMPER(AssetDumperMenuDef, m_menu_def)
+    RegisterAssetDumper(std::make_unique<menu::MenuListDumperT5>());
+    RegisterAssetDumper(std::make_unique<menu::MenuDumperT5>());
     RegisterAssetDumper(std::make_unique<localize::DumperT5>());
     RegisterAssetDumper(std::make_unique<weapon::DumperT5>());
     // REGISTER_DUMPER(AssetDumperSndDriverGlobals, m_snd_driver_globals)

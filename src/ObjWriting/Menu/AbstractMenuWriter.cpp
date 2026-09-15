@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <cmath>
 #include <cstdlib>
+#include <format>
 #include <sstream>
 
 namespace menu
@@ -64,7 +65,7 @@ namespace menu
         m_stream << "}\n";
     }
 
-    std::vector<std::string> AbstractBaseWriter::CreateScriptTokenList(const char* script)
+    std::vector<std::string> AbstractBaseWriter::CreateScriptTokenList(const char* script, const bool readNumbers)
     {
         const std::string scriptString(script);
         std::istringstream stringStream(scriptString);
@@ -74,8 +75,8 @@ namespace menu
         lexerConfig.m_emit_new_line_tokens = false;
         lexerConfig.m_read_strings = true;
         lexerConfig.m_string_escape_sequences = true;
-        lexerConfig.m_read_integer_numbers = false;
-        lexerConfig.m_read_floating_point_numbers = false;
+        lexerConfig.m_read_integer_numbers = readNumbers;
+        lexerConfig.m_read_floating_point_numbers = readNumbers;
         SimpleLexer lexer(&inputStream, std::move(lexerConfig));
 
         std::vector<std::string> result;
@@ -95,6 +96,14 @@ namespace menu
 
             case SimpleParserValueType::CHARACTER:
                 result.emplace_back(1, token.CharacterValue());
+                break;
+
+            case SimpleParserValueType::INTEGER:
+                result.emplace_back(std::to_string(token.IntegerValue()));
+                break;
+
+            case SimpleParserValueType::FLOATING_POINT:
+                result.emplace_back(std::format("{}", token.FloatingPointValue()));
                 break;
 
             case SimpleParserValueType::INVALID:
