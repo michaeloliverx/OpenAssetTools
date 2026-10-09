@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GameLanguage.h"
+#include "GamePlatform.h"
 #include "IAsset.h"
 #include "Zone/ZoneTypes.h"
 
@@ -37,14 +38,6 @@ enum class GameWordSize : std::uint8_t
 {
     ARCH_32,
     ARCH_64
-};
-
-enum class GamePlatform : std::uint8_t
-{
-    PC,
-    XBOX,
-    PS3,
-    WIIU
 };
 
 static constexpr const char* GameId_Names[]{
