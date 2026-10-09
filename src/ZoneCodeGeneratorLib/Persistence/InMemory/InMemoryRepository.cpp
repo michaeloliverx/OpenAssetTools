@@ -1,7 +1,8 @@
 #include "InMemoryRepository.h"
 
 InMemoryRepository::InMemoryRepository()
-    : m_word_size(WordSize::UNKNOWN)
+    : m_word_size(WordSize::UNKNOWN),
+      m_endianness(std::endian::little)
 {
 }
 
@@ -91,6 +92,16 @@ WordSize InMemoryRepository::GetWordSize() const
 void InMemoryRepository::SetWordSize(const WordSize wordSize)
 {
     m_word_size = wordSize;
+}
+
+std::endian InMemoryRepository::GetEndianness() const
+{
+    return m_endianness;
+}
+
+void InMemoryRepository::SetEndianness(const std::endian endianness)
+{
+    m_endianness = endianness;
 }
 
 const std::vector<EnumDefinition*>& InMemoryRepository::GetAllEnums() const

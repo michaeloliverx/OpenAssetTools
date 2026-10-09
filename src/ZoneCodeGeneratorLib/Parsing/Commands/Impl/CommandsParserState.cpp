@@ -79,6 +79,11 @@ void CommandsParserState::SetWordSize(const WordSize wordSize) const
     m_repository->SetWordSize(wordSize);
 }
 
+void CommandsParserState::SetEndianness(const std::endian endianness) const
+{
+    m_repository->SetEndianness(endianness);
+}
+
 void CommandsParserState::SetGame(std::string gameName) const
 {
     m_repository->SetGame(std::move(gameName));

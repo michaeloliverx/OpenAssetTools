@@ -8,6 +8,7 @@
 #include "Domain/FastFile/FastFileBlock.h"
 #include "Domain/Information/StructureInformation.h"
 
+#include <bit>
 #include <vector>
 
 class IDataRepository
@@ -32,6 +33,8 @@ public:
     virtual void SetGame(std::string gameName) = 0;
     [[nodiscard]] virtual WordSize GetWordSize() const = 0;
     virtual void SetWordSize(WordSize wordSize) = 0;
+    [[nodiscard]] virtual std::endian GetEndianness() const = 0;
+    virtual void SetEndianness(std::endian endianness) = 0;
 
     [[nodiscard]] virtual const std::vector<EnumDefinition*>& GetAllEnums() const = 0;
     [[nodiscard]] virtual const std::vector<StructDefinition*>& GetAllStructs() const = 0;

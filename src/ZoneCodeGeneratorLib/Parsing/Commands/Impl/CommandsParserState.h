@@ -14,6 +14,7 @@ public:
 
     void AddBlock(std::unique_ptr<FastFileBlock> block) const;
     void SetWordSize(WordSize wordSize) const;
+    void SetEndianness(std::endian endianness) const;
     void SetGame(std::string gameName) const;
 
     [[nodiscard]] StructureInformation* GetInUse() const;

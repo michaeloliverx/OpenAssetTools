@@ -158,6 +158,10 @@ namespace
             AddGeneratedHint();
 
             LINEF("#include \"{0}_{1}_write_db.h\"", Lower(m_env.m_asset->m_definition->m_name), Lower(m_env.m_game))
+            if (m_env.m_endianness == std::endian::big)
+            {
+                LINEF("#include \"Game/{0}/AssetEndianSwap{0}.h\"", m_env.m_game)
+            }
 
             if (!m_env.m_referenced_assets.empty())
             {
@@ -171,6 +175,10 @@ namespace
 
             LINE("")
             LINE("#include <cassert>")
+            if (m_env.m_endianness == std::endian::big)
+            {
+                LINE("#include <type_traits>")
+            }
             LINE("")
             LINEF("using namespace {0};", m_env.m_game)
             LINE("")
@@ -326,6 +334,37 @@ namespace
             std::ostringstream str;
             MakeTypeWrittenPtrVarNameInternal(def, str);
             return str.str();
+        }
+
+        void PrintEndianSwapValue(const StructureInformation* info, const std::string& expression) const
+        {
+            if (m_env.m_endianness != std::endian::big)
+                return;
+
+            if (info && !info->m_definition->IsAnonymous())
+                LINEF("EndianSwap({0}, EndianOperation::Encode);", expression)
+            else
+                LINEF("EndianSwap({0});", expression)
+        }
+
+        void PrintEndianSwapWrittenStruct(const StructureInformation* info,
+                                          const std::string& writtenOffsetExpression,
+                                          const MemberInformation* dynamicMember = nullptr) const
+        {
+            if (m_env.m_endianness != std::endian::big)
+                return;
+
+            if (dynamicMember)
+            {
+                LINEF("EndianSwapPartial(*static_cast<{0}*>({1}.Offset()), offsetof({0}, {2}), EndianOperation::Encode);",
+                      info->m_definition->GetFullName(),
+                      writtenOffsetExpression,
+                      dynamicMember->m_member->m_name)
+            }
+            else
+            {
+                LINEF("EndianSwap(*static_cast<{0}*>({1}.Offset()), EndianOperation::Encode);", info->m_definition->GetFullName(), writtenOffsetExpression)
+            }
         }
 
         std::string
@@ -497,6 +536,12 @@ namespace
                     LINEF("FillStruct_{0}(fill.AtOffset(i * {1}));",
                           MakeSafeTypeName(member->m_type->m_definition),
                           member->m_member->m_type_declaration->m_type->GetSize())
+                    if (m_env.m_endianness == std::endian::big)
+                    {
+                        LINEF("EndianSwap(*static_cast<{0}*>(fill.AtOffset(i * {1}).Offset().Offset()), EndianOperation::Encode);",
+                              member->m_type->m_definition->GetFullName(),
+                              member->m_member->m_type_declaration->m_type->GetSize())
+                    }
                     m_intendation--;
                     LINE("}")
                 }
@@ -507,11 +552,37 @@ namespace
             }
             else
             {
-                LINEF("m_stream->Write<{0}{1}>({2}, {3});",
-                      MakeTypeDecl(member->m_member->m_type_declaration.get()),
-                      MakeFollowingReferences(modifier.GetFollowingDeclarationModifiers()),
-                      MakeMemberAccess(info, member, modifier),
-                      MakeEvaluation(modifier.GetArrayPointerCountEvaluation()))
+                const auto countExpression = MakeEvaluation(modifier.GetArrayPointerCountEvaluation());
+                if (m_env.m_endianness == std::endian::big && !computations.IsInRuntimeBlock())
+                {
+                    LINE("{")
+                    m_intendation++;
+                    LINEF("const auto written = m_stream->Write<{0}{1}>({2}, {3});",
+                          MakeTypeDecl(member->m_member->m_type_declaration.get()),
+                          MakeFollowingReferences(modifier.GetFollowingDeclarationModifiers()),
+                          MakeMemberAccess(info, member, modifier),
+                          countExpression)
+                    LINEF("using ArrayElementType = std::remove_const_t<{0}{1}>;",
+                          MakeTypeDecl(member->m_member->m_type_declaration.get()),
+                          MakeFollowingReferences(modifier.GetFollowingDeclarationModifiers()))
+                    LINE("auto* arrayWritten = static_cast<ArrayElementType*>(written.Offset());")
+                    LINEF("for (size_t index = 0; index < static_cast<size_t>({0}); index++)", countExpression)
+                    LINE("{")
+                    m_intendation++;
+                    PrintEndianSwapValue(member->m_type, "arrayWritten[index]");
+                    m_intendation--;
+                    LINE("}")
+                    m_intendation--;
+                    LINE("}")
+                }
+                else
+                {
+                    LINEF("m_stream->Write<{0}{1}>({2}, {3});",
+                          MakeTypeDecl(member->m_member->m_type_declaration.get()),
+                          MakeFollowingReferences(modifier.GetFollowingDeclarationModifiers()),
+                          MakeMemberAccess(info, member, modifier),
+                          countExpression)
+                }
             }
         }
 
@@ -532,7 +603,7 @@ namespace
             }
         }
 
-        void WriteMember_EmbeddedArray(const StructureInformation* info, const MemberInformation* member, const DeclarationModifierComputations& modifier) const
+        void WriteMember_EmbeddedArray(const StructureInformation* info, const MemberInformation* member, const DeclarationModifierComputations& modifier)
         {
             const MemberComputations computations(member);
             std::string arraySizeStr;
@@ -558,16 +629,42 @@ namespace
             }
             else if (computations.IsAfterPartialLoad())
             {
-                LINEF("m_stream->Write<{0}{1}>({2}, {3});",
-                      MakeTypeDecl(member->m_member->m_type_declaration.get()),
-                      MakeFollowingReferences(modifier.GetFollowingDeclarationModifiers()),
-                      MakeMemberAccess(info, member, modifier),
-                      arraySizeStr)
+                if (m_env.m_endianness == std::endian::big && !computations.IsInRuntimeBlock())
+                {
+                    LINE("{")
+                    m_intendation++;
+                    LINEF("const auto written = m_stream->Write<{0}{1}>({2}, {3});",
+                          MakeTypeDecl(member->m_member->m_type_declaration.get()),
+                          MakeFollowingReferences(modifier.GetFollowingDeclarationModifiers()),
+                          MakeMemberAccess(info, member, modifier),
+                          arraySizeStr)
+                    LINEF("using ArrayElementType = std::remove_const_t<{0}{1}>;",
+                          MakeTypeDecl(member->m_member->m_type_declaration.get()),
+                          MakeFollowingReferences(modifier.GetFollowingDeclarationModifiers()))
+                    LINE("auto* arrayWritten = static_cast<ArrayElementType*>(written.Offset());")
+                    LINEF("for (size_t index = 0; index < static_cast<size_t>({0}); index++)", arraySizeStr)
+                    LINE("{")
+                    m_intendation++;
+                    PrintEndianSwapValue(member->m_type, "arrayWritten[index]");
+                    m_intendation--;
+                    LINE("}")
+                    m_intendation--;
+                    LINE("}")
+                }
+                else
+                {
+                    LINEF("m_stream->Write<{0}{1}>({2}, {3});",
+                          MakeTypeDecl(member->m_member->m_type_declaration.get()),
+                          MakeFollowingReferences(modifier.GetFollowingDeclarationModifiers()),
+                          MakeMemberAccess(info, member, modifier),
+                          arraySizeStr)
+                }
             }
         }
 
-        void WriteMember_DynamicArray(const StructureInformation* info, const MemberInformation* member, const DeclarationModifierComputations& modifier) const
+        void WriteMember_DynamicArray(const StructureInformation* info, const MemberInformation* member, const DeclarationModifierComputations& modifier)
         {
+            const MemberComputations computations(member);
             if (member->m_type && !member->m_type->m_is_leaf)
             {
                 LINEF("{0} = {1};", MakeTypeVarName(member->m_member->m_type_declaration->m_type), MakeMemberAccess(info, member, modifier))
@@ -577,15 +674,41 @@ namespace
             }
             else
             {
-                LINEF("m_stream->Write<{0}{1}>({2}, {3});",
-                      MakeTypeDecl(member->m_member->m_type_declaration.get()),
-                      MakeFollowingReferences(modifier.GetFollowingDeclarationModifiers()),
-                      MakeMemberAccess(info, member, modifier),
-                      MakeEvaluation(modifier.GetDynamicArraySizeEvaluation()))
+                const auto countExpression = MakeEvaluation(modifier.GetDynamicArraySizeEvaluation());
+                if (m_env.m_endianness == std::endian::big && !computations.IsInRuntimeBlock())
+                {
+                    LINE("{")
+                    m_intendation++;
+                    LINEF("const auto written = m_stream->Write<{0}{1}>({2}, {3});",
+                          MakeTypeDecl(member->m_member->m_type_declaration.get()),
+                          MakeFollowingReferences(modifier.GetFollowingDeclarationModifiers()),
+                          MakeMemberAccess(info, member, modifier),
+                          countExpression)
+                    LINEF("using ArrayElementType = std::remove_const_t<{0}{1}>;",
+                          MakeTypeDecl(member->m_member->m_type_declaration.get()),
+                          MakeFollowingReferences(modifier.GetFollowingDeclarationModifiers()))
+                    LINE("auto* arrayWritten = static_cast<ArrayElementType*>(written.Offset());")
+                    LINEF("for (size_t index = 0; index < static_cast<size_t>({0}); index++)", countExpression)
+                    LINE("{")
+                    m_intendation++;
+                    PrintEndianSwapValue(member->m_type, "arrayWritten[index]");
+                    m_intendation--;
+                    LINE("}")
+                    m_intendation--;
+                    LINE("}")
+                }
+                else
+                {
+                    LINEF("m_stream->Write<{0}{1}>({2}, {3});",
+                          MakeTypeDecl(member->m_member->m_type_declaration.get()),
+                          MakeFollowingReferences(modifier.GetFollowingDeclarationModifiers()),
+                          MakeMemberAccess(info, member, modifier),
+                          countExpression)
+                }
             }
         }
 
-        void WriteMember_Embedded(const StructureInformation* info, const MemberInformation* member, const DeclarationModifierComputations& modifier) const
+        void WriteMember_Embedded(const StructureInformation* info, const MemberInformation* member, const DeclarationModifierComputations& modifier)
         {
             const MemberComputations computations(member);
 
@@ -605,14 +728,30 @@ namespace
             }
             else if (computations.IsAfterPartialLoad())
             {
-                LINEF("m_stream->Write<{0}{1}>(&{2});",
-                      MakeTypeDecl(member->m_member->m_type_declaration.get()),
-                      MakeFollowingReferences(modifier.GetFollowingDeclarationModifiers()),
-                      MakeMemberAccess(info, member, modifier))
+                if (m_env.m_endianness == std::endian::big && !computations.IsInRuntimeBlock())
+                {
+                    LINE("{")
+                    m_intendation++;
+                    LINEF("const auto written = m_stream->Write<{0}{1}>(&{2});",
+                          MakeTypeDecl(member->m_member->m_type_declaration.get()),
+                          MakeFollowingReferences(modifier.GetFollowingDeclarationModifiers()),
+                          MakeMemberAccess(info, member, modifier))
+                    LINEF("auto* valueWritten = static_cast<{0}*>(written.Offset());", member->m_member->m_type_declaration->m_type->GetFullName())
+                    PrintEndianSwapValue(member->m_type, "*valueWritten");
+                    m_intendation--;
+                    LINE("}")
+                }
+                else
+                {
+                    LINEF("m_stream->Write<{0}{1}>(&{2});",
+                          MakeTypeDecl(member->m_member->m_type_declaration.get()),
+                          MakeFollowingReferences(modifier.GetFollowingDeclarationModifiers()),
+                          MakeMemberAccess(info, member, modifier))
+                }
             }
         }
 
-        void WriteMember_SinglePointer(const StructureInformation* info, const MemberInformation* member, const DeclarationModifierComputations& modifier) const
+        void WriteMember_SinglePointer(const StructureInformation* info, const MemberInformation* member, const DeclarationModifierComputations& modifier)
         {
             const MemberComputations computations(member);
             LINEF("m_stream->MarkFollowing({0});", MakeWrittenMemberAccess(info, member, modifier))
@@ -624,16 +763,48 @@ namespace
             else if (member->m_type && !member->m_type->m_has_matching_cross_platform_structure)
             {
                 LINEF("{0} = {1};", MakeTypeVarName(member->m_member->m_type_declaration->m_type), MakeMemberAccess(info, member, modifier))
-                LINEF("FillStruct_{0}(m_stream->WriteWithFill({1}));",
-                      MakeSafeTypeName(member->m_member->m_type_declaration->m_type),
-                      member->m_member->m_type_declaration->m_type->GetSize())
+                LINE("{")
+                m_intendation++;
+                LINEF("const auto fill = m_stream->WriteWithFill({0});", member->m_member->m_type_declaration->m_type->GetSize())
+                LINEF("FillStruct_{0}(fill);", MakeSafeTypeName(member->m_member->m_type_declaration->m_type))
+                if (m_env.m_endianness == std::endian::big)
+                {
+                    LINEF("EndianSwap(*static_cast<{0}*>(fill.Offset().Offset()), EndianOperation::Encode);",
+                          member->m_member->m_type_declaration->m_type->GetFullName())
+                }
+                m_intendation--;
+                LINE("}")
             }
             else
             {
-                LINEF("m_stream->Write<{0}{1}>({2});",
-                      MakeTypeDecl(member->m_member->m_type_declaration.get()),
-                      MakeFollowingReferences(modifier.GetFollowingDeclarationModifiers()),
-                      MakeMemberAccess(info, member, modifier))
+                if (m_env.m_endianness == std::endian::big && !computations.IsInRuntimeBlock())
+                {
+                    LINE("{")
+                    m_intendation++;
+                    LINEF("const auto written = m_stream->Write<{0}{1}>({2});",
+                          MakeTypeDecl(member->m_member->m_type_declaration.get()),
+                          MakeFollowingReferences(modifier.GetFollowingDeclarationModifiers()),
+                          MakeMemberAccess(info, member, modifier))
+                    if (!modifier.GetFollowingDeclarationModifiers().empty())
+                    {
+                        LINEF("auto* valueWritten = static_cast<std::remove_const_t<std::remove_reference_t<decltype(*{0})>>*>(written.Offset());",
+                              MakeMemberAccess(info, member, modifier))
+                    }
+                    else
+                    {
+                        LINEF("auto* valueWritten = static_cast<{0}*>(written.Offset());", member->m_member->m_type_declaration->m_type->GetFullName())
+                    }
+                    PrintEndianSwapValue(member->m_type, "*valueWritten");
+                    m_intendation--;
+                    LINE("}")
+                }
+                else
+                {
+                    LINEF("m_stream->Write<{0}{1}>({2});",
+                          MakeTypeDecl(member->m_member->m_type_declaration.get()),
+                          MakeFollowingReferences(modifier.GetFollowingDeclarationModifiers()),
+                          MakeMemberAccess(info, member, modifier))
+                }
             }
         }
 
@@ -1129,10 +1300,11 @@ namespace
             if (!(info->m_definition->GetType() == DataDefinitionType::UNION && dynamicMember))
             {
                 LINE("if (atStreamStart)")
+                LINE("{")
+                m_intendation++;
 
                 if (info->m_has_matching_cross_platform_structure)
                 {
-                    m_intendation++;
                     if (dynamicMember == nullptr)
                     {
                         LINEF("{0} = m_stream->Write<{1}>({2}); // Size: {3}",
@@ -1149,7 +1321,6 @@ namespace
                               info->m_definition->GetFullName(),
                               dynamicMember->m_member->m_name)
                     }
-                    m_intendation--;
                 }
                 else
                 {
@@ -1162,6 +1333,9 @@ namespace
                     m_intendation--;
                     LINE("}")
                 }
+                PrintEndianSwapWrittenStruct(info, MakeTypeWrittenVarName(info->m_definition), dynamicMember);
+                m_intendation--;
+                LINE("}")
 
                 LINE("")
                 LINEF("assert({0}.Offset() != nullptr);", MakeTypeWrittenVarName(info->m_definition))
@@ -1517,7 +1691,16 @@ namespace
             }
             else
             {
-                LINEF("m_stream->Write<{0}>(*{1});", def->GetFullName(), MakeTypePtrVarName(def))
+                if (m_env.m_endianness == std::endian::big)
+                {
+                    LINEF("const auto written = m_stream->Write<{0}>(*{1});", def->GetFullName(), MakeTypePtrVarName(def))
+                    LINEF("auto* valueWritten = static_cast<{0}*>(written.Offset());", def->GetFullName())
+                    PrintEndianSwapValue(info, "*valueWritten");
+                }
+                else
+                {
+                    LINEF("m_stream->Write<{0}>(*{1});", def->GetFullName(), MakeTypePtrVarName(def))
+                }
             }
             LINEF("m_stream->MarkFollowing(varWritten);")
         }
@@ -1602,18 +1785,15 @@ namespace
             LINEF("assert({0} != nullptr);", MakeTypeVarName(def))
             LINE("")
             LINE("if (atStreamStart)")
+            LINE("{")
+            m_intendation++;
 
             if (info->m_has_matching_cross_platform_structure)
             {
-                m_intendation++;
                 LINEF("{0} = m_stream->Write<{1}>({2}, count);", MakeTypeWrittenVarName(def), def->GetFullName(), MakeTypeVarName(def))
-                m_intendation--;
             }
             else
             {
-                LINE("{")
-                m_intendation++;
-
                 LINEF("const auto arrayFill = m_stream->WriteWithFill({0} * count);", def->GetSize())
                 LINEF("{0} = arrayFill.Offset();", MakeTypeWrittenVarName(def))
                 LINEF("auto* arrayStart = {0};", MakeTypeVarName(def))
@@ -1630,10 +1810,19 @@ namespace
                 LINE("}")
 
                 LINEF("{0} = arrayStart;", MakeTypeVarName(def))
-
+            }
+            if (m_env.m_endianness == std::endian::big)
+            {
+                LINEF("auto* arrayWritten = static_cast<{0}*>({1}.Offset());", def->GetFullName(), MakeTypeWrittenVarName(def))
+                LINE("for (size_t index = 0; index < count; index++)")
+                LINE("{")
+                m_intendation++;
+                LINE("EndianSwap(arrayWritten[index], EndianOperation::Encode);")
                 m_intendation--;
                 LINE("}")
             }
+            m_intendation--;
+            LINE("}")
 
             LINE("")
             LINEF("assert({0}.Offset() != nullptr);", MakeTypeWrittenVarName(def))

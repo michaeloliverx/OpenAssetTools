@@ -164,6 +164,10 @@ namespace
 
             LINEF("#include \"{0}_{1}_load_db.h\"", Lower(m_env.m_asset->m_definition->m_name), Lower(m_env.m_game))
             LINE("")
+            if (m_env.m_endianness == std::endian::big)
+            {
+                LINEF("#include \"Game/{0}/AssetEndianSwap{0}.h\"", m_env.m_game)
+            }
             LINEF("#include \"Game/{0}/AssetMarker{0}.h\"", m_env.m_game)
             LINE("")
             LINE("#include \"Loading/AssetInfoCollector.h\"")
@@ -987,6 +991,10 @@ namespace
                 LINE("{")
                 m_intendation++;
                 LINEF("ptrArrayFill.FillPtr({0}[index], {1} * index);", MakeTypePtrVarName(def), m_env.m_pointer_size)
+                if (m_env.m_endianness == std::endian::big)
+                {
+                    LINEF("EndianSwap({0}[index]);", MakeTypePtrVarName(def))
+                }
 
                 if (reusable || (info && StructureComputations(info).IsAsset()))
                 {
@@ -1000,9 +1008,20 @@ namespace
             }
             else
             {
+                LINE("{")
                 m_intendation++;
                 LINEF("m_stream.Load<{0}*>({1}, count);", def->GetFullName(), MakeTypePtrVarName(def))
+                if (m_env.m_endianness == std::endian::big)
+                {
+                    LINE("for (size_t index = 0; index < count; index++)")
+                    LINE("{")
+                    m_intendation++;
+                    LINEF("EndianSwap({0}[index]);", MakeTypePtrVarName(def))
+                    m_intendation--;
+                    LINE("}")
+                }
                 m_intendation--;
+                LINE("}")
             }
 
             LINE("")
@@ -1034,9 +1053,20 @@ namespace
 
             if (info->m_has_matching_cross_platform_structure)
             {
+                LINE("{")
                 m_intendation++;
                 LINEF("m_stream.Load<{0}>({1}, count);", info->m_definition->GetFullName(), MakeTypeVarName(def))
+                if (m_env.m_endianness == std::endian::big)
+                {
+                    LINE("for (size_t index = 0; index < count; index++)")
+                    LINE("{")
+                    m_intendation++;
+                    LINEF("EndianSwap({0}[index], EndianOperation::Decode);", MakeTypeVarName(info->m_definition))
+                    m_intendation--;
+                    LINE("}")
+                }
                 m_intendation--;
+                LINE("}")
             }
             else
             {
@@ -1140,12 +1170,11 @@ namespace
         void LoadMember_ArrayPointer(const StructureInformation* info, const MemberInformation* member, const DeclarationModifierComputations& modifier)
         {
             const MemberComputations computations(member);
+            LINEF("const auto arrayPointerCount = static_cast<size_t>({0});", MakeEvaluation(modifier.GetArrayPointerCountEvaluation()))
             if (member->m_type && !member->m_type->m_is_leaf && !computations.IsInRuntimeBlock())
             {
                 LINEF("{0} = {1};", MakeTypeVarName(member->m_member->m_type_declaration->m_type), MakeMemberAccess(info, member, modifier))
-                LINEF("LoadArray_{0}(true, {1});",
-                      MakeSafeTypeName(member->m_member->m_type_declaration->m_type),
-                      MakeEvaluation(modifier.GetArrayPointerCountEvaluation()))
+                LINEF("LoadArray_{0}(true, arrayPointerCount);", MakeSafeTypeName(member->m_member->m_type_declaration->m_type))
 
                 if (member->m_type->m_post_load_action)
                 {
@@ -1161,9 +1190,8 @@ namespace
             }
             else if (member->m_type && !member->m_type->m_has_matching_cross_platform_structure)
             {
-                LINEF("const auto fillArraySize = static_cast<size_t>({0});", MakeEvaluation(modifier.GetArrayPointerCountEvaluation()))
-                LINEF("const auto fill = m_stream.LoadWithFill({0} * fillArraySize);", member->m_member->m_type_declaration->m_type->GetSize())
-                LINE("for (auto i = 0uz; i < fillArraySize; i++)")
+                LINEF("const auto fill = m_stream.LoadWithFill({0} * arrayPointerCount);", member->m_member->m_type_declaration->m_type->GetSize())
+                LINE("for (auto i = 0uz; i < arrayPointerCount; i++)")
                 LINE("{")
                 m_intendation++;
                 LINEF("{0} = &{1}[i];", MakeTypeVarName(member->m_type->m_definition), MakeMemberAccess(info, member, modifier))
@@ -1179,7 +1207,24 @@ namespace
                       MakeTypeDecl(member->m_member->m_type_declaration.get()),
                       MakeFollowingReferences(modifier.GetFollowingDeclarationModifiers()),
                       MakeMemberAccess(info, member, modifier),
-                      MakeEvaluation(modifier.GetArrayPointerCountEvaluation()))
+                      "arrayPointerCount")
+                if (m_env.m_endianness == std::endian::big && member->m_member->m_type_declaration->m_type->GetSize() > 1)
+                {
+                    const auto defType = member->m_member->m_type_declaration->m_type->GetType();
+                    LINE("for (size_t index = 0; index < arrayPointerCount; index++)")
+                    LINE("{")
+                    m_intendation++;
+                    if (defType == DataDefinitionType::STRUCT || defType == DataDefinitionType::UNION)
+                    {
+                        LINEF("EndianSwap({0}[index], EndianOperation::Decode);", MakeMemberAccess(info, member, modifier))
+                    }
+                    else
+                    {
+                        LINEF("EndianSwap({0}[index]);", MakeMemberAccess(info, member, modifier))
+                    }
+                    m_intendation--;
+                    LINE("}")
+                }
             }
         }
 
@@ -1345,6 +1390,18 @@ namespace
                       MakeTypeDecl(member->m_member->m_type_declaration.get()),
                       MakeFollowingReferences(modifier.GetFollowingDeclarationModifiers()),
                       MakeMemberAccess(info, member, modifier))
+                if (m_env.m_endianness == std::endian::big && member->m_member->m_type_declaration->m_type->GetSize() > 1)
+                {
+                    const auto defType = member->m_member->m_type_declaration->m_type->GetType();
+                    if (defType == DataDefinitionType::STRUCT || defType == DataDefinitionType::UNION)
+                    {
+                        LINEF("EndianSwap(*{0}, EndianOperation::Decode);", MakeMemberAccess(info, member, modifier))
+                    }
+                    else
+                    {
+                        LINEF("EndianSwap(*{0});", MakeMemberAccess(info, member, modifier))
+                    }
+                }
             }
         }
 
@@ -1892,7 +1949,7 @@ namespace
             {
                 LINE("")
                 LINE("if (atStreamStart)")
-
+                LINE("{")
                 m_intendation++;
                 if (info->m_has_matching_cross_platform_structure)
                 {
@@ -1902,6 +1959,10 @@ namespace
                               info->m_definition->GetFullName(),
                               MakeTypeVarName(info->m_definition),
                               info->m_definition->GetSize())
+                        if (m_env.m_endianness == std::endian::big)
+                        {
+                            LINEF("EndianSwap(*{0}, EndianOperation::Decode);", MakeTypeVarName(info->m_definition))
+                        }
                     }
                     else
                     {
@@ -1909,6 +1970,13 @@ namespace
                               info->m_definition->GetFullName(),
                               MakeTypeVarName(info->m_definition),
                               dynamicMember->m_member->m_name)
+                        if (m_env.m_endianness == std::endian::big)
+                        {
+                            LINEF("EndianSwapPartial(*{0}, offsetof({1}, {2}), EndianOperation::Decode);",
+                                  MakeTypeVarName(info->m_definition),
+                                  info->m_definition->GetFullName(),
+                                  dynamicMember->m_member->m_name)
+                        }
                     }
                 }
                 else
@@ -1927,6 +1995,7 @@ namespace
                     }
                 }
                 m_intendation--;
+                LINE("}")
             }
             else if (!m_env.m_word_size_mismatch)
             {
@@ -1972,9 +2041,15 @@ namespace
             if (!m_env.m_word_size_mismatch)
             {
                 LINE("if (atStreamStart)")
+                LINE("{")
                 m_intendation++;
                 LINEF("m_stream.Load<{0}*>({1});", info->m_definition->GetFullName(), MakeTypePtrVarName(info->m_definition))
+                if (m_env.m_endianness == std::endian::big)
+                {
+                    LINEF("EndianSwap(*{0});", MakeTypePtrVarName(info->m_definition))
+                }
                 m_intendation--;
+                LINE("}")
             }
             else
             {
