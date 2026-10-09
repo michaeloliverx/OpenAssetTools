@@ -61,7 +61,7 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | Font_s               | ❌              | ❌              |                                            |
 | MenuList             | ❌              | ❌              |                                            |
 | menuDef_t            | ❌              | ❌              |                                            |
-| LocalizeEntry        | ❌              | ❌              |                                            |
+| LocalizeEntry        | ✅              | ✅              |                                            |
 | WeaponDef            | ❌              | ❌              |                                            |
 | SndDriverGlobals     | ❌              | ❌              |                                            |
 | FxEffectDef          | ❌              | ❌              |                                            |
