@@ -3,6 +3,7 @@
 #include "Asset/GlobalAssetPoolsLoader.h"
 #include "Game/IW3Xenon/AssetMarkerIW3Xenon.h"
 #include "RawFile/AssetLoaderRawFileIW3Xenon.h"
+#include "StringTable/LoaderStringTableIW3Xenon.h"
 
 #include <memory>
 
@@ -17,6 +18,11 @@ void ObjLoader::ConfigureCreatorCollection(AssetCreatorCollection& collection, Z
     auto& memory = zone.Memory();
 
     collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetRawFile>>(memory));
+    collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetStringTable>>(memory));
+
     collection.AddAssetCreator(raw_file::CreateLoaderIW3Xenon(memory, searchPath));
+    collection.AddAssetCreator(string_table::CreateLoaderIW3Xenon(memory, searchPath));
+
     collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetRawFile>>(zone));
+    collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetStringTable>>(zone));
 }

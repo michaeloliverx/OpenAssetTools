@@ -67,7 +67,7 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | FxEffectDef          | ❌              | ❌              |                                            |
 | FxImpactTable        | ❌              | ❌              |                                            |
 | RawFile              | ✅              | ✅              | Plain files, including binary data.        |
-| StringTable          | ❌              | ❌              |                                            |
+| StringTable          | ✅              | ✅              |                                            |
 
 ## IW4 (Call of Duty: Modern Warfare 2)
 
