@@ -11,4 +11,10 @@ void StepWriteZoneContentToFile::PerformStep(ZoneWriter* zoneWriter, IWritingStr
     {
         stream->Write(dataBuffer.m_data.get(), dataBuffer.m_size);
     }
+
+    // Write delayed block data after the main zone content.
+    for (const auto& dataBuffer : m_memory->GetDelayData()->m_buffers)
+    {
+        stream->Write(dataBuffer.m_data.get(), dataBuffer.m_size);
+    }
 }

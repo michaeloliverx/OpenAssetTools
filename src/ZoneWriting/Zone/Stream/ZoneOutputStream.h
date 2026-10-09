@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Game/IGame.h"
 #include "InMemoryZoneData.h"
 #include "Zone/Stream/IZoneStream.h"
 #include "Zone/XBlock.h"
@@ -143,6 +144,11 @@ public:
         return WriteDataInBlock(dst, size);
     }
 
-    static std::unique_ptr<ZoneOutputStream>
-        Create(unsigned pointerBitCount, unsigned blockBitCount, std::vector<XBlock*>& blocks, block_t insertBlock, InMemoryZoneData& zoneData);
+    static std::unique_ptr<ZoneOutputStream> Create(unsigned pointerBitCount,
+                                                    unsigned blockBitCount,
+                                                    std::vector<XBlock*>& blocks,
+                                                    block_t insertBlock,
+                                                    InMemoryZoneData& zoneData,
+                                                    InMemoryZoneData& delayData,
+                                                    GameEndianness endianness = GameEndianness::LE);
 };

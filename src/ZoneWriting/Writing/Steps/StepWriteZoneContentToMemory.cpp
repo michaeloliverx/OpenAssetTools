@@ -6,13 +6,16 @@ StepWriteZoneContentToMemory::StepWriteZoneContentToMemory(std::unique_ptr<ICont
                                                            const Zone& zone,
                                                            const unsigned pointerBitCount,
                                                            const unsigned offsetBlockBitCount,
-                                                           const block_t insertBlock)
+                                                           const block_t insertBlock,
+                                                           const GameEndianness endianness)
     : m_content_loader(std::move(entryPoint)),
       m_zone_data(std::make_unique<InMemoryZoneData>()),
+      m_delay_data(std::make_unique<InMemoryZoneData>()),
       m_zone(zone),
       m_pointer_bit_count(pointerBitCount),
       m_offset_block_bit_count(offsetBlockBitCount),
-      m_insert_block(insertBlock)
+      m_insert_block(insertBlock),
+      m_endianness(endianness)
 {
 }
 
@@ -22,11 +25,17 @@ void StepWriteZoneContentToMemory::PerformStep(ZoneWriter* zoneWriter, IWritingS
     for (const auto& block : zoneWriter->m_blocks)
         m_blocks.emplace_back(block.get());
 
-    const auto zoneOutputStream = ZoneOutputStream::Create(m_pointer_bit_count, m_offset_block_bit_count, m_blocks, m_insert_block, *m_zone_data);
+    const auto zoneOutputStream =
+        ZoneOutputStream::Create(m_pointer_bit_count, m_offset_block_bit_count, m_blocks, m_insert_block, *m_zone_data, *m_delay_data, m_endianness);
     m_content_loader->WriteContent(*zoneOutputStream);
 }
 
 InMemoryZoneData* StepWriteZoneContentToMemory::GetData() const
 {
     return m_zone_data.get();
+}
+
+InMemoryZoneData* StepWriteZoneContentToMemory::GetDelayData() const
+{
+    return m_delay_data.get();
 }

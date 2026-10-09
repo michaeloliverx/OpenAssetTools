@@ -1,5 +1,7 @@
 #include "AssetWriter.h"
 
+#include "Utils/Endianness.h"
+
 #include <cassert>
 
 AssetWriter::AssetWriter(XAssetInfoGeneric* asset, const Zone& zone, ZoneOutputStream& stream)
@@ -27,7 +29,10 @@ void AssetWriter::UseScriptString(const scr_string_t scrString, const ZoneOutput
 
     // The asset comes from a different zone, we need to translate it
     const auto strValue = m_asset->m_zone->m_script_strings.CValue(scrString);
-    *static_cast<scr_string_t*>(written.Offset()) = m_zone.m_script_strings.GetScriptString(strValue);
+    auto* writtenScriptString = static_cast<scr_string_t*>(written.Offset());
+    *writtenScriptString = m_zone.m_script_strings.GetScriptString(strValue);
+    if (m_zone.m_platform == GamePlatform::XBOX)
+        *writtenScriptString = endianness::ToBigEndian(*writtenScriptString);
 }
 
 void AssetWriter::WriteScriptStringArray(const bool atStreamStart, const size_t count)
@@ -43,6 +48,11 @@ void AssetWriter::WriteScriptStringArray(const bool atStreamStart, const size_t 
     for (size_t index = 0; index < count; index++)
     {
         UseScriptString(*varScriptString, varScriptStringWritten);
+        if (m_zone.m_platform == GamePlatform::XBOX && atStreamStart && m_asset->m_zone == &m_zone)
+        {
+            auto* writtenScriptString = static_cast<scr_string_t*>(varScriptStringWritten.Offset());
+            *writtenScriptString = endianness::ToBigEndian(*writtenScriptString);
+        }
 
         varScriptString++;
         varScriptStringWritten.Inc(sizeof(scr_string_t));

@@ -2,6 +2,7 @@
 
 #include "InMemoryZoneData.h"
 #include "Utils/Alignment.h"
+#include "Utils/Endianness.h"
 #include "Zone/XBlock.h"
 
 #include <algorithm>
@@ -38,12 +39,19 @@ namespace
     class InMemoryZoneOutputStream final : public ZoneOutputStream
     {
     public:
-        InMemoryZoneOutputStream(
-            const unsigned pointerBitCount, const unsigned blockBitCount, std::vector<XBlock*>& blocks, const block_t insertBlock, InMemoryZoneData& zoneData)
+        InMemoryZoneOutputStream(const unsigned pointerBitCount,
+                                 const unsigned blockBitCount,
+                                 std::vector<XBlock*>& blocks,
+                                 const block_t insertBlock,
+                                 InMemoryZoneData& zoneData,
+                                 InMemoryZoneData& delayData,
+                                 const GameEndianness endianness)
             : m_zone_data(zoneData),
+              m_delay_data(delayData),
               m_blocks(blocks),
               m_block_bit_count(blockBitCount),
               m_pointer_byte_count(pointerBitCount / 8u),
+              m_endianness(endianness),
 
               // -1
               m_zone_ptr_following(std::numeric_limits<std::uintptr_t>::max() >> ((sizeof(std::uintptr_t) * 8u) - pointerBitCount)),
@@ -148,7 +156,8 @@ namespace
                 break;
 
             case XBlockType::BLOCK_TYPE_DELAY:
-                assert(false);
+                result = m_delay_data.GetBufferOfSize(size);
+                memcpy(result, src, size);
                 break;
             }
 
@@ -197,8 +206,11 @@ namespace
                     break;
 
                 case XBlockType::BLOCK_TYPE_RUNTIME:
-                case XBlockType::BLOCK_TYPE_DELAY:
                     assert(false);
+                    break;
+
+                case XBlockType::BLOCK_TYPE_DELAY:
+                    result = m_delay_data.GetBufferOfSize(size);
                     break;
                 }
 
@@ -217,16 +229,34 @@ namespace
             auto* ptr = static_cast<char*>(outputOffset.Offset());
             assert(ptr != nullptr);
 
-            if (m_block_stack.top()->m_type == XBlockType::BLOCK_TYPE_TEMP)
+            const auto zonePtr = m_block_stack.top()->m_type == XBlockType::BLOCK_TYPE_TEMP ? m_zone_ptr_insert : m_zone_ptr_following;
+            WriteZonePointer(ptr, zonePtr);
+        }
+
+        void WriteZonePointer(void* outputOffset, const uintptr_t zonePtr) const
+        {
+            auto* ptr = static_cast<char*>(outputOffset);
+            assert(ptr != nullptr);
+
+            if (m_endianness == GameEndianness::BE)
             {
-                for (auto i = 0u; i < m_pointer_byte_count; i++)
-                    ptr[i] = reinterpret_cast<const char*>(&m_zone_ptr_insert)[i];
+                if (m_pointer_byte_count == sizeof(uint32_t))
+                {
+                    const auto swapped = endianness::ToBigEndian(static_cast<uint32_t>(zonePtr));
+                    std::memcpy(ptr, &swapped, sizeof(swapped));
+                    return;
+                }
+
+                if (m_pointer_byte_count == sizeof(uint64_t))
+                {
+                    const auto swapped = endianness::ToBigEndian(static_cast<uint64_t>(zonePtr));
+                    std::memcpy(ptr, &swapped, sizeof(swapped));
+                    return;
+                }
             }
-            else
-            {
-                for (auto i = 0u; i < m_pointer_byte_count; i++)
-                    ptr[i] = reinterpret_cast<const char*>(&m_zone_ptr_following)[i];
-            }
+
+            for (auto i = 0u; i < m_pointer_byte_count; i++)
+                ptr[i] = reinterpret_cast<const char*>(&zonePtr)[i];
         }
 
         bool ReusableShouldWrite(void* ptr, const ZoneOutputOffset outputOffset, const size_t entrySize, const std::type_index type) override
@@ -252,8 +282,7 @@ namespace
                     const auto finalZonePointer = entry.m_start_zone_ptr + entryIndex * entry.m_block_size;
                     auto* writtenPtrOffset = outputOffset.Offset();
 
-                    for (auto i = 0u; i < m_pointer_byte_count; i++)
-                        static_cast<char*>(writtenPtrOffset)[i] = reinterpret_cast<const char*>(&finalZonePointer)[i];
+                    WriteZonePointer(writtenPtrOffset, finalZonePointer);
 
                     return false;
                 }
@@ -309,6 +338,7 @@ namespace
         }
 
         InMemoryZoneData& m_zone_data;
+        InMemoryZoneData& m_delay_data;
         std::vector<XBlock*>& m_blocks;
 
         std::stack<XBlock*> m_block_stack;
@@ -316,6 +346,7 @@ namespace
 
         unsigned m_block_bit_count;
         unsigned m_pointer_byte_count;
+        GameEndianness m_endianness;
         XBlock* m_insert_block;
 
         uintptr_t m_zone_ptr_following;
@@ -350,10 +381,15 @@ void* ZoneOutputOffset::Offset() const
     return m_offset;
 }
 
-std::unique_ptr<ZoneOutputStream>
-    ZoneOutputStream::Create(unsigned pointerBitCount, unsigned blockBitCount, std::vector<XBlock*>& blocks, block_t insertBlock, InMemoryZoneData& zoneData)
+std::unique_ptr<ZoneOutputStream> ZoneOutputStream::Create(const unsigned pointerBitCount,
+                                                           const unsigned blockBitCount,
+                                                           std::vector<XBlock*>& blocks,
+                                                           const block_t insertBlock,
+                                                           InMemoryZoneData& zoneData,
+                                                           InMemoryZoneData& delayData,
+                                                           const GameEndianness endianness)
 {
-    return std::make_unique<InMemoryZoneOutputStream>(pointerBitCount, blockBitCount, blocks, insertBlock, zoneData);
+    return std::make_unique<InMemoryZoneOutputStream>(pointerBitCount, blockBitCount, blocks, insertBlock, zoneData, delayData, endianness);
 }
 
 ZoneStreamFillWriteAccessor::ZoneStreamFillWriteAccessor(void* blockBuffer, const size_t bufferSize)
