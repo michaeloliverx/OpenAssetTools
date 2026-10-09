@@ -197,14 +197,21 @@ void BaseTemplate::MakeOperandDynamic(const OperandDynamic* op, std::ostringstre
 {
     MakeTypeVarNameInternal(op->m_structure->m_definition, str);
 
-    if (!op->m_referenced_member_chain.empty())
+    if (!op->m_member_chain.empty())
     {
         str << "->";
-        const auto lastEntry = op->m_referenced_member_chain.end() - 1;
-        for (auto i = op->m_referenced_member_chain.begin(); i != lastEntry; ++i)
+        const auto lastEntry = op->m_member_chain.end() - 1;
+        for (auto i = op->m_member_chain.begin(); i != lastEntry; ++i)
         {
-            MemberComputations computations(*i);
-            str << (*i)->m_member->m_name;
+            MemberComputations computations(i->m_member);
+            str << i->m_member->m_member->m_name;
+
+            for (const auto& arrayIndex : i->m_array_indices)
+            {
+                str << "[";
+                MakeEvaluationInternal(arrayIndex.get(), str);
+                str << "]";
+            }
 
             if (computations.ContainsNonEmbeddedReference())
                 str << "->";
@@ -212,14 +219,13 @@ void BaseTemplate::MakeOperandDynamic(const OperandDynamic* op, std::ostringstre
                 str << ".";
         }
 
-        str << (*lastEntry)->m_member->m_name;
-    }
-
-    for (const auto& arrayIndex : op->m_array_indices)
-    {
-        str << "[";
-        MakeEvaluationInternal(arrayIndex.get(), str);
-        str << "]";
+        str << lastEntry->m_member->m_member->m_name;
+        for (const auto& arrayIndex : lastEntry->m_array_indices)
+        {
+            str << "[";
+            MakeEvaluationInternal(arrayIndex.get(), str);
+            str << "]";
+        }
     }
 }
 

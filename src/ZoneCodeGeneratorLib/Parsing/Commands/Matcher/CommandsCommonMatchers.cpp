@@ -112,11 +112,13 @@ static constexpr int TAG_EVALUATION_PARENTHESIS = std::numeric_limits<int>::max(
 static constexpr int TAG_EVALUATION_PARENTHESIS_END = std::numeric_limits<int>::max() - 8;
 static constexpr int TAG_EVALUATION = std::numeric_limits<int>::max() - 9;
 static constexpr int TAG_EVALUATION_OPERATION = std::numeric_limits<int>::max() - 10;
+static constexpr int TAG_OPERAND_EXTENDED_MEMBER = std::numeric_limits<int>::max() - 11;
 
 static constexpr int CAPTURE_OPERAND_TYPENAME = std::numeric_limits<int>::max() - 1;
 static constexpr int CAPTURE_OPERAND_ARRAY = std::numeric_limits<int>::max() - 2;
 static constexpr int CAPTURE_OPERAND_INTEGER = std::numeric_limits<int>::max() - 3;
 static constexpr int CAPTURE_BINARY_OPERATION_TYPE = std::numeric_limits<int>::max() - 4;
+static constexpr int CAPTURE_OPERAND_EXTENDED_MEMBER_NAME = std::numeric_limits<int>::max() - 5;
 
 std::unique_ptr<CommandsCommonMatchers::matcher_t> CommandsCommonMatchers::ParseOperandArray(const supplier_t* labelSupplier)
 {
@@ -131,6 +133,23 @@ std::unique_ptr<CommandsCommonMatchers::matcher_t> CommandsCommonMatchers::Parse
         .Tag(TAG_OPERAND_ARRAY);
 }
 
+namespace
+{
+    std::unique_ptr<CommandsCommonMatchers::matcher_t> ParseExtendedMemberAccess(const CommandsCommonMatchers::supplier_t* labelSupplier)
+    {
+        const CommandsMatcherFactory create(labelSupplier);
+        return create
+            .And({
+                create.OptionalLoop(
+                    MatcherFactoryWrapper<CommandsParserValue>(CommandsCommonMatchers::ParseOperandArray(labelSupplier)).Capture(CAPTURE_OPERAND_ARRAY)),
+                create.Char(':'),
+                create.Char(':'),
+                create.Identifier().Capture(CAPTURE_OPERAND_EXTENDED_MEMBER_NAME),
+            })
+            .Tag(TAG_OPERAND_EXTENDED_MEMBER);
+    }
+} // namespace
+
 std::unique_ptr<CommandsCommonMatchers::matcher_t> CommandsCommonMatchers::ParseOperand(const supplier_t* labelSupplier)
 {
     const CommandsMatcherFactory create(labelSupplier);
@@ -140,6 +159,7 @@ std::unique_ptr<CommandsCommonMatchers::matcher_t> CommandsCommonMatchers::Parse
             create
                 .And({
                     create.Label(LABEL_TYPENAME).Capture(CAPTURE_OPERAND_TYPENAME),
+                    create.OptionalLoop(MatcherFactoryWrapper<CommandsParserValue>(ParseExtendedMemberAccess(labelSupplier))),
                     create.OptionalLoop(MatcherFactoryWrapper<CommandsParserValue>(ParseOperandArray(labelSupplier)).Capture(CAPTURE_OPERAND_ARRAY)),
                 })
                 .Tag(TAG_OPERAND_TYPENAME),
@@ -298,6 +318,19 @@ std::unique_ptr<IEvaluation> CommandsCommonMatchers::ProcessEvaluationInParenthe
     return processedEvaluation;
 }
 
+namespace
+{
+    MemberInformation* GetMemberWithNameFromType(const std::string& memberName, const StructureInformation* type)
+    {
+        for (const auto& member : type->m_ordered_members)
+        {
+            if (member->m_member->m_name == memberName)
+                return member.get();
+        }
+        return nullptr;
+    }
+} // namespace
+
 std::unique_ptr<IEvaluation>
     CommandsCommonMatchers::ProcessOperand(CommandsParserState* state, SequenceResult<CommandsParserValue>& result, StructureInformation* currentType)
 {
@@ -311,29 +344,60 @@ std::unique_ptr<IEvaluation>
     if (nextTag == TAG_OPERAND_TYPENAME)
     {
         const auto& typeNameToken = result.NextCapture(CAPTURE_OPERAND_TYPENAME);
-        std::vector<std::unique_ptr<IEvaluation>> arrayIndexEvaluations;
-
-        while (result.PeekAndRemoveIfTag(TAG_OPERAND_ARRAY) == TAG_OPERAND_ARRAY)
-        {
-            arrayIndexEvaluations.emplace_back(ProcessEvaluation(state, result, currentType));
-
-            if (result.PeekAndRemoveIfTag(TAG_OPERAND_ARRAY_END) != TAG_OPERAND_ARRAY_END)
-                throw ParsingException(TokenPos(), "Expected operand array end tag @ Operand");
-        }
 
         auto* foundEnumMember = state->GetRepository()->GetEnumMemberByName(typeNameToken.TypeNameValue());
         if (foundEnumMember != nullptr)
             return std::make_unique<OperandStatic>(foundEnumMember);
 
-        StructureInformation* structure;
-        std::vector<MemberInformation*> memberChain;
-        if (state->GetTypenameAndMembersFromTypename(typeNameToken.TypeNameValue(), structure, memberChain))
-            return std::make_unique<OperandDynamic>(structure, std::move(memberChain), std::move(arrayIndexEvaluations));
+        StructureInformation* structure = nullptr;
+        std::vector<MemberInformation*> initialMemberChain;
+        if (!state->GetTypenameAndMembersFromTypename(typeNameToken.TypeNameValue(), structure, initialMemberChain))
+        {
+            if (currentType != nullptr && state->GetMembersFromTypename(typeNameToken.TypeNameValue(), currentType, initialMemberChain))
+                structure = currentType;
+            else
+                throw ParsingException(typeNameToken.GetPos(), "Unknown type");
+        }
 
-        if (currentType != nullptr && state->GetMembersFromTypename(typeNameToken.TypeNameValue(), currentType, memberChain))
-            return std::make_unique<OperandDynamic>(currentType, std::move(memberChain), std::move(arrayIndexEvaluations));
+        std::vector<MemberAccessor> memberChain;
+        for (auto* member : initialMemberChain)
+            memberChain.emplace_back(member);
 
-        throw ParsingException(typeNameToken.GetPos(), "Unknown type");
+        while (result.PeekAndRemoveIfTag(TAG_OPERAND_EXTENDED_MEMBER) == TAG_OPERAND_EXTENDED_MEMBER)
+        {
+            std::vector<std::unique_ptr<IEvaluation>> arrayIndices;
+            while (result.PeekAndRemoveIfTag(TAG_OPERAND_ARRAY) == TAG_OPERAND_ARRAY)
+            {
+                arrayIndices.emplace_back(ProcessEvaluation(state, result, currentType));
+                if (result.PeekAndRemoveIfTag(TAG_OPERAND_ARRAY_END) != TAG_OPERAND_ARRAY_END)
+                    throw ParsingException(TokenPos(), "Expected operand array end tag @ Operand");
+            }
+
+            if (!memberChain.empty() && !arrayIndices.empty())
+                memberChain.back().m_array_indices = std::move(arrayIndices);
+
+            const auto& memberNameToken = result.NextCapture(CAPTURE_OPERAND_EXTENDED_MEMBER_NAME);
+            const auto* memberType = memberChain.empty() ? structure : memberChain.back().m_member->m_type;
+            if (memberType == nullptr)
+                throw ParsingException(memberNameToken.GetPos(), "Cannot access member of non-structure type");
+
+            auto* nextMember = GetMemberWithNameFromType(memberNameToken.IdentifierValue(), memberType);
+            if (nextMember == nullptr)
+                throw ParsingException(memberNameToken.GetPos(), "Unknown member: " + memberNameToken.IdentifierValue());
+            memberChain.emplace_back(nextMember);
+        }
+
+        std::vector<std::unique_ptr<IEvaluation>> trailingArrayIndices;
+        while (result.PeekAndRemoveIfTag(TAG_OPERAND_ARRAY) == TAG_OPERAND_ARRAY)
+        {
+            trailingArrayIndices.emplace_back(ProcessEvaluation(state, result, currentType));
+            if (result.PeekAndRemoveIfTag(TAG_OPERAND_ARRAY_END) != TAG_OPERAND_ARRAY_END)
+                throw ParsingException(TokenPos(), "Expected operand array end tag @ Operand");
+        }
+        if (!memberChain.empty() && !trailingArrayIndices.empty())
+            memberChain.back().m_array_indices = std::move(trailingArrayIndices);
+
+        return std::make_unique<OperandDynamic>(structure, std::move(memberChain));
     }
 
     throw ParsingException(TokenPos(), "Unknown operand type @ Operand");
