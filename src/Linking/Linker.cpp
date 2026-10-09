@@ -1,5 +1,6 @@
 #include "Linker.h"
 
+#include "Game/GameTarget.h"
 #include "LinkerArgs.h"
 #include "LinkerPaths.h"
 #include "ObjContainer/SoundBank/SoundBankWriter.h"
@@ -15,6 +16,7 @@
 #include "ZoneLoading.h"
 #include "ZoneWriting.h"
 
+#include <cassert>
 #include <deque>
 #include <filesystem>
 #include <format>
@@ -27,9 +29,7 @@ namespace
 {
     void LogLoadedZone(const Zone& zone)
     {
-        const auto* game = IGame::GetGameById(zone.m_game_id);
-
-        con::info("Loaded zone \"{}\" ({})", zone.m_name, game->GetShortName());
+        con::info("Loaded zone \"{}\" ({})", zone.m_name, game_target::GetDisplayName(zone.m_game_id, zone.m_platform));
     }
 
     class LinkerSearchPathContext
@@ -263,12 +263,15 @@ namespace
             if (context.m_definition->m_ignores.empty())
                 return true;
 
+            const auto gameId = context.m_definition->GetResolvedGameId();
+            assert(gameId);
+
             for (const auto& ignore : context.m_definition->m_ignores)
             {
                 if (ignore == targetName)
                     continue;
 
-                if (!ReadIgnoreEntries(paths, ignore, context.m_definition->m_game, context.m_ignored_assets))
+                if (!ReadIgnoreEntries(paths, ignore, *gameId, context.m_ignored_assets))
                 {
                     con::error("Failed to read asset listing for ignoring assets of project \"{}\".", ignore);
                     return false;
@@ -311,7 +314,7 @@ namespace
             if (!LoadGdtFilesFromZoneDefinition(context.m_gdt_files, zoneDefinition, &paths.m_gdt_paths.GetSearchPaths()))
                 return nullptr;
 
-            return zone_creator::CreateZoneForDefinition(zoneDefinition.m_game, context);
+            return zone_creator::CreateZoneForDefinition(context);
         }
 
         static bool WriteZoneToFile(IOutputPath& outPath, const Zone& zone)
@@ -338,11 +341,14 @@ namespace
 
         bool BuildFastFile(LinkerPathManager& paths, const std::string& projectName, const std::string& targetName, ZoneDefinition& zoneDefinition) const
         {
-            const fs::path outDir(paths.m_linker_paths->BuildOutputFolderPath(projectName, zoneDefinition.m_game));
+            const auto gameId = zoneDefinition.GetResolvedGameId();
+            assert(gameId);
+
+            const fs::path outDir(paths.m_linker_paths->BuildOutputFolderPath(projectName, *gameId));
 
             OutputPathFilesystem outputPath(outDir);
 
-            const fs::path cacheDir(paths.m_linker_paths->BuildCacheFolderPath(projectName, zoneDefinition.m_game));
+            const fs::path cacheDir(paths.m_linker_paths->BuildCacheFolderPath(projectName, *gameId));
             SoundBankWriter::OutputPath = outDir;
 
             const auto zone = CreateZoneForDefinition(paths, outDir, cacheDir, targetName, zoneDefinition);
@@ -372,7 +378,9 @@ namespace
                 if (!zoneDefinition)
                     return false;
 
-                PathGameContext gameContext(paths, projectName, zoneDefinition->m_game);
+                const auto gameId = zoneDefinition->GetResolvedGameId();
+                assert(gameId);
+                PathGameContext gameContext(paths, projectName, *gameId);
 
                 if (!zoneDefinition->m_assets.empty())
                 {

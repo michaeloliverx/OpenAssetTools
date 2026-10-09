@@ -5,6 +5,7 @@
 #include "Zone/ZoneTypes.h"
 
 #include <cstdint>
+#include <optional>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -61,8 +62,11 @@ class ZoneDefinition
 public:
     ZoneDefinition();
 
+    [[nodiscard]] std::optional<GameId> GetResolvedGameId() const;
+
     std::string m_name;
     GameId m_game;
+    GamePlatform m_platform;
     ZoneDefinitionProperties m_properties;
     std::vector<std::string> m_ignores;
     std::vector<std::string> m_targets_to_build;

@@ -1,6 +1,7 @@
 #include "IGame.h"
 
 #include "IW3/GameIW3.h"
+#include "IW3Xenon/GameIW3Xenon.h"
 #include "IW4/GameIW4.h"
 #include "IW5/GameIW5.h"
 #include "QOS/GameQOS.h"
@@ -15,6 +16,7 @@ IGame* IGame::GetGameById(GameId gameId)
 {
     static IGame* games[]{
         new IW3::Game(),
+        new IW3Xenon::Game(),
         new IW4::Game(),
         new IW5::Game(),
         new QOS::Game(),

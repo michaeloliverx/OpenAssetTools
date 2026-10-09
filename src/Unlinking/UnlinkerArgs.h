@@ -13,11 +13,12 @@
 class UnlinkerArgs
 {
 public:
-    static constexpr const char* DEFAULT_OUTPUT_FOLDER = "zone_dump/?game?/?zone?";
+    static constexpr const char* DEFAULT_OUTPUT_FOLDER = "zone_dump/?game?/?platform?/?zone?";
 
 private:
     ArgumentParser m_argument_parser;
     std::regex m_game_pattern;
+    std::regex m_platform_pattern;
     std::regex m_zone_pattern;
 
     /**

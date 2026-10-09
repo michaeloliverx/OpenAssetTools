@@ -14,7 +14,10 @@ class ZoneDefinitionParserState
 public:
     ZoneDefinitionParserState(std::string targetName, ISearchPath& searchPath, IParserLineStream& underlyingStream);
 
-    void SetGame(GameId gameId);
+    [[nodiscard]] bool SetGame(GameId gameId);
+    [[nodiscard]] bool SetPlatform(GamePlatform platform);
+
+    [[nodiscard]] std::optional<GameId> GetResolvedGameId() const;
 
     void StartIPak(std::string ipakName);
     void StartIwd(std::string iwdName);
@@ -26,6 +29,7 @@ public:
     std::unordered_set<std::string> m_inclusions;
 
     std::optional<IGame*> m_game;
+    std::optional<GamePlatform> m_explicit_platform;
 
     std::optional<ZoneDefinitionObjContainer> m_current_ipak;
     std::optional<ZoneDefinitionObjContainer> m_current_iwd;

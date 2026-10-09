@@ -12,10 +12,42 @@ ZoneDefinitionParserState::ZoneDefinitionParserState(std::string targetName, ISe
     m_definition->m_name = std::move(targetName);
 }
 
-void ZoneDefinitionParserState::SetGame(const GameId gameId)
+namespace
+{
+    bool UpdateResolvedGame(ZoneDefinition& definition, std::optional<IGame*>& game)
+    {
+        const auto resolvedGame = definition.GetResolvedGameId();
+        if (!resolvedGame)
+        {
+            game = std::nullopt;
+            return false;
+        }
+
+        game = IGame::GetGameById(*resolvedGame);
+        return true;
+    }
+} // namespace
+
+bool ZoneDefinitionParserState::SetGame(const GameId gameId)
 {
     m_definition->m_game = gameId;
-    m_game = IGame::GetGameById(gameId);
+    return UpdateResolvedGame(*m_definition, m_game);
+}
+
+bool ZoneDefinitionParserState::SetPlatform(const GamePlatform platform)
+{
+    m_definition->m_platform = platform;
+    m_explicit_platform = platform;
+
+    if (m_definition->m_game == GameId::COUNT)
+        return true;
+
+    return UpdateResolvedGame(*m_definition, m_game);
+}
+
+std::optional<GameId> ZoneDefinitionParserState::GetResolvedGameId() const
+{
+    return m_definition->GetResolvedGameId();
 }
 
 namespace

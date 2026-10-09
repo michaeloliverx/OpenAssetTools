@@ -11,7 +11,7 @@ namespace
 {
     std::unique_ptr<Zone> CreateZone(const ZoneCreationContext& context, const GameId gameId)
     {
-        return std::make_unique<Zone>(context.m_definition->m_name, 0, gameId, GamePlatform::PC);
+        return std::make_unique<Zone>(context.m_definition->m_name, 0, gameId, context.m_definition->m_platform);
     }
 
     std::vector<Gdt*> CreateGdtList(const ZoneCreationContext& context)
@@ -51,9 +51,12 @@ namespace zone_creator
         lookup.Initialize(gdtFiles);
     }
 
-    std::unique_ptr<Zone> CreateZoneForDefinition(GameId gameId, ZoneCreationContext& context)
+    std::unique_ptr<Zone> CreateZoneForDefinition(ZoneCreationContext& context)
     {
-        auto zone = CreateZone(context, gameId);
+        const auto gameId = context.m_definition->GetResolvedGameId();
+        assert(gameId);
+
+        auto zone = CreateZone(context, *gameId);
 
         IgnoreReferencesFromAssets(context);
         IgnoredAssetLookup ignoredAssetLookup(context.m_ignored_assets);
@@ -61,8 +64,8 @@ namespace zone_creator
         GdtLookup lookup;
         InitLookup(context, lookup);
 
-        const auto* objCompiler = IObjCompiler::GetObjCompilerForGame(gameId);
-        const auto* objLoader = IObjLoader::GetObjLoaderForGame(gameId);
+        const auto* objCompiler = IObjCompiler::GetObjCompilerForGame(*gameId);
+        const auto* objLoader = IObjLoader::GetObjLoaderForGame(*gameId);
 
         AssetCreatorCollection creatorCollection(*zone);
         ZoneDefinitionContext zoneDefinitionContext(*context.m_definition);

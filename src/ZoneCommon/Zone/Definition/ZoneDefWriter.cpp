@@ -1,6 +1,9 @@
 #include "ZoneDefWriter.h"
 
+#include "Game/GamePlatform.h"
+#include "Game/GameTarget.h"
 #include "Game/IW3/Zone/Definition/ZoneDefWriterIW3.h"
+#include "Game/IW3Xenon/Zone/Definition/ZoneDefWriterIW3Xenon.h"
 #include "Game/IW4/Zone/Definition/ZoneDefWriterIW4.h"
 #include "Game/IW5/Zone/Definition/ZoneDefWriterIW5.h"
 #include "Game/QOS/Zone/Definition/ZoneDefWriterQOS.h"
@@ -15,6 +18,7 @@ namespace
 {
     constexpr auto META_DATA_KEY_GAME = "game";
     constexpr auto META_DATA_KEY_GDT = "gdt";
+    constexpr auto META_DATA_KEY_PLATFORM = "platform";
 } // namespace
 
 ZoneDefFilter ZoneDefFilter::AllEntries()
@@ -47,6 +51,7 @@ const IZoneDefWriter* IZoneDefWriter::GetZoneDefWriterForGame(GameId game)
 {
     static const IZoneDefWriter* zoneDefWriters[]{
         new IW3::ZoneDefWriter(),
+        new IW3Xenon::ZoneDefWriter(),
         new IW4::ZoneDefWriter(),
         new IW5::ZoneDefWriter(),
         new QOS::ZoneDefWriter(),
@@ -66,10 +71,12 @@ const IZoneDefWriter* IZoneDefWriter::GetZoneDefWriterForGame(GameId game)
 void AbstractZoneDefWriter::WriteZoneDef(std::ostream& stream, const Zone& zone, const bool useGdt, const bool minimalZone) const
 {
     ZoneDefinitionOutputStream out(stream);
-    const auto* game = IGame::GetGameById(zone.m_game_id);
+    const auto* game = IGame::GetGameById(game_target::GetPublicGameId(zone.m_game_id));
 
     out.WriteComment(game->GetFullName());
     out.WriteMetaData(META_DATA_KEY_GAME, game->GetShortName());
+    if (zone.m_platform != GamePlatform::PC)
+        out.WriteMetaData(META_DATA_KEY_PLATFORM, game_platform::ToName(zone.m_platform));
     out.EmptyLine();
 
     if (useGdt)

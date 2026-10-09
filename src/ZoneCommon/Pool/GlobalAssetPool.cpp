@@ -198,6 +198,7 @@ GameGlobalAssetPools* GameGlobalAssetPools::GetGlobalPoolsForGame(GameId gameId)
 {
     static GameGlobalAssetPools* globalAssetPools[]{
         new GameGlobalAssetPools(GameId::IW3),
+        new GameGlobalAssetPools(GameId::IW3Xenon),
         new GameGlobalAssetPools(GameId::IW4),
         new GameGlobalAssetPools(GameId::IW5),
         new GameGlobalAssetPools(GameId::QOS),

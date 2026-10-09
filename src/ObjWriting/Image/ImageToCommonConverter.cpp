@@ -1,6 +1,7 @@
 #include "ImageToCommonConverter.h"
 
 #include "Game/IW3/Image/ImageToCommonConverterIW3.h"
+#include "Game/IW3Xenon/Image/ImageToCommonConverterIW3Xenon.h"
 #include "Game/IW4/Image/ImageToCommonConverterIW4.h"
 #include "Game/IW5/Image/ImageToCommonConverterIW5.h"
 #include "Game/QOS/Image/ImageToCommonConverterQOS.h"
@@ -16,6 +17,7 @@ namespace image
     {
         static ToCommonConverter* toCommonConverters[]{
             new ToCommonConverterIW3(),
+            new ToCommonConverterIW3Xenon(),
             new ToCommonConverterIW4(),
             new ToCommonConverterIW5(),
             new ToCommonConverterQOS(),

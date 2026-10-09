@@ -1,5 +1,7 @@
 #include "ZoneDefinition.h"
 
+#include "Game/GameTarget.h"
+
 ZoneDefinitionObjContainer::ZoneDefinitionObjContainer(std::string name, const ZoneDefinitionObjContainerType type, const unsigned start)
     : ZoneDefinitionObjContainer(std::move(name), type, start, 0u)
 {
@@ -34,6 +36,12 @@ void ZoneDefinitionProperties::Include(const ZoneDefinitionProperties& otherProp
 }
 
 ZoneDefinition::ZoneDefinition()
-    : m_game(GameId::COUNT)
+    : m_game(GameId::COUNT),
+      m_platform(GamePlatform::PC)
 {
+}
+
+std::optional<GameId> ZoneDefinition::GetResolvedGameId() const
+{
+    return game_target::Resolve(m_game, m_platform);
 }

@@ -2,6 +2,7 @@
 
 #include "ContentLister/ContentPrinter.h"
 #include "Game/AutoSearchPaths.h"
+#include "Game/GameTarget.h"
 #include "IObjLoader.h"
 #include "ObjWriter.h"
 #include "ObjWriting.h"
@@ -83,9 +84,7 @@ namespace
 
     void LogLoadedZone(const Zone& zone)
     {
-        const auto* game = IGame::GetGameById(zone.m_game_id);
-
-        con::info("Loaded zone \"{}\" ({})", zone.m_name, game->GetShortName());
+        con::info("Loaded zone \"{}\" ({})", zone.m_name, game_target::GetDisplayName(zone.m_game_id, zone.m_platform));
     }
 
     class UnlinkerImpl : public Unlinker

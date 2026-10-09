@@ -14,6 +14,7 @@
 enum class GameId : std::uint8_t
 {
     IW3,
+    IW3Xenon,
     IW4,
     IW5,
     QOS,
@@ -42,6 +43,7 @@ enum class GameWordSize : std::uint8_t
 
 static constexpr const char* GameId_Names[]{
     "IW3",
+    "IW3XENON",
     "IW4",
     "IW5",
     "QOS",

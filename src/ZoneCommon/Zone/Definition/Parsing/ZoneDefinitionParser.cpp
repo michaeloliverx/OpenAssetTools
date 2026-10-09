@@ -1,5 +1,6 @@
 #include "ZoneDefinitionParser.h"
 
+#include "Game/GameTarget.h"
 #include "Sequence/SequenceZoneDefinitionAssetList.h"
 #include "Sequence/SequenceZoneDefinitionBuild.h"
 #include "Sequence/SequenceZoneDefinitionEntry.h"
@@ -12,7 +13,11 @@ ZoneDefinitionParser::ZoneDefinitionParser(
     : AbstractParser(lexer, std::make_unique<ZoneDefinitionParserState>(std::move(targetName), searchPath, underlyingStream))
 {
     if (maybeGame)
-        m_state->SetGame(*maybeGame);
+    {
+        const auto publicGame = game_target::GetPublicGameId(*maybeGame);
+        (void)m_state->SetPlatform(*maybeGame == GameId::IW3Xenon ? GamePlatform::XBOX : GamePlatform::PC);
+        (void)m_state->SetGame(publicGame);
+    }
 }
 
 const std::vector<AbstractParser<ZoneDefinitionParserValue, ZoneDefinitionParserState>::sequence_t*>& ZoneDefinitionParser::GetTestsForState()

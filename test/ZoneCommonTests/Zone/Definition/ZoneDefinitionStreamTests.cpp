@@ -1,6 +1,9 @@
-﻿#include "Game/T6/T6.h"
+﻿#include "Game/IW3Xenon/IW3Xenon.h"
+#include "Game/T6/T6.h"
 #include "SearchPath/MockSearchPath.h"
+#include "Zone/Definition/ZoneDefWriter.h"
 #include "Zone/Definition/ZoneDefinitionStream.h"
+#include "Zone/Zone.h"
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>
@@ -8,6 +11,121 @@
 
 namespace test::zone::definition::zone_definition_stream
 {
+    TEST_CASE("ZoneDefinitionInputStream: Ensure game names are case insensitive", "[zonedefinition]")
+    {
+        std::istringstream inputData(R"sampledata(
+>game,iW3
+>platform,XbOx360
+)sampledata");
+
+        MockSearchPath mockSearchPath;
+        ZoneDefinitionInputStream inputStream(inputData, "test", "test.zone", mockSearchPath);
+
+        const auto result = inputStream.ReadDefinition();
+        REQUIRE(result);
+        REQUIRE(result->m_game == GameId::IW3);
+        REQUIRE(result->m_platform == GamePlatform::XBOX);
+        REQUIRE(result->GetResolvedGameId() == GameId::IW3Xenon);
+    }
+
+    TEST_CASE("ZoneDefinitionInputStream: Platform defaults to PC", "[zonedefinition]")
+    {
+        const auto inputText = GENERATE(">game,IW3\n", ">game,IW3\n>platform,pc\n");
+        std::istringstream inputData(inputText);
+
+        MockSearchPath mockSearchPath;
+        ZoneDefinitionInputStream inputStream(inputData, "test", "test.zone", mockSearchPath);
+
+        const auto result = inputStream.ReadDefinition();
+        REQUIRE(result);
+        REQUIRE(result->m_game == GameId::IW3);
+        REQUIRE(result->m_platform == GamePlatform::PC);
+        REQUIRE(result->GetResolvedGameId() == GameId::IW3);
+    }
+
+    TEST_CASE("ZoneDefinitionInputStream: Platform can be defined before game", "[zonedefinition]")
+    {
+        std::istringstream inputData(R"sampledata(
+>platform,xbox360
+>game,IW3
+)sampledata");
+
+        MockSearchPath mockSearchPath;
+        ZoneDefinitionInputStream inputStream(inputData, "test", "test.zone", mockSearchPath);
+
+        const auto result = inputStream.ReadDefinition();
+        REQUIRE(result);
+        REQUIRE(result->GetResolvedGameId() == GameId::IW3Xenon);
+    }
+
+    TEST_CASE("ZoneDefinitionInputStream: Internal game variants are not accepted", "[zonedefinition]")
+    {
+        std::istringstream inputData(">game,IW3Xenon\n");
+
+        MockSearchPath mockSearchPath;
+        ZoneDefinitionInputStream inputStream(inputData, "test", "test.zone", mockSearchPath);
+
+        REQUIRE_FALSE(inputStream.ReadDefinition());
+    }
+
+    TEST_CASE("ZoneDefinitionInputStream: Xenon assets use their own asset type indices", "[zonedefinition]")
+    {
+        std::istringstream inputData(">game,IW3\n>platform,xbox360\npixelshader,test_shader\nrawfile,test.txt\n");
+        MockSearchPath mockSearchPath;
+        ZoneDefinitionInputStream inputStream(inputData, "test", "test.zone", mockSearchPath);
+
+        const auto result = inputStream.ReadDefinition();
+        REQUIRE(result);
+        REQUIRE(result->m_assets.size() == 2);
+        REQUIRE(result->m_assets[0].m_asset_type == IW3Xenon::ASSET_TYPE_PIXELSHADER);
+        REQUIRE(result->m_assets[1].m_asset_type == IW3Xenon::ASSET_TYPE_RAWFILE);
+    }
+
+    TEST_CASE("ZoneDefinitionInputStream: Invalid platform declarations are rejected", "[zonedefinition]")
+    {
+        const auto inputText =
+            GENERATE(">game,IW3\n>platform,unknown\n", ">game,IW3\n>platform,pc\n>platform,xbox360\n", ">game,IW3\nrawfile,test.txt\n>platform,xbox360\n");
+        std::istringstream inputData(inputText);
+        MockSearchPath mockSearchPath;
+        ZoneDefinitionInputStream inputStream(inputData, "test", "test.zone", mockSearchPath);
+
+        REQUIRE_FALSE(inputStream.ReadDefinition());
+    }
+
+    TEST_CASE("ZoneDefinitionInputStream: Unsupported game and platform combinations are rejected", "[zonedefinition]")
+    {
+        std::istringstream inputData(R"sampledata(
+>game,IW4
+>platform,xbox360
+)sampledata");
+
+        MockSearchPath mockSearchPath;
+        ZoneDefinitionInputStream inputStream(inputData, "test", "test.zone", mockSearchPath);
+
+        REQUIRE_FALSE(inputStream.ReadDefinition());
+    }
+
+    TEST_CASE("ZoneDefWriter: Writes public game and non-default platform", "[zonedefinition]")
+    {
+        const Zone zone("test", 0, GameId::IW3Xenon, GamePlatform::XBOX);
+        std::ostringstream output;
+
+        IZoneDefWriter::GetZoneDefWriterForGame(zone.m_game_id)->WriteZoneDef(output, zone, false, false);
+
+        REQUIRE(output.str().starts_with("// Call Of Duty 4: Modern Warfare\n>game,IW3\n>platform,xbox360\n"));
+    }
+
+    TEST_CASE("ZoneDefWriter: Omits the default PC platform", "[zonedefinition]")
+    {
+        const Zone zone("test", 0, GameId::IW3, GamePlatform::PC);
+        std::ostringstream output;
+
+        IZoneDefWriter::GetZoneDefWriterForGame(zone.m_game_id)->WriteZoneDef(output, zone, false, false);
+
+        REQUIRE(output.str().starts_with("// Call Of Duty 4: Modern Warfare\n>game,IW3\n\n"));
+        REQUIRE(output.str().find(">platform,") == std::string::npos);
+    }
+
     TEST_CASE("ZoneDefinitionInputStream: Ensure can read simple ZoneDefinition", "[zonedefinition]")
     {
         std::istringstream inputData(R"sampledata(

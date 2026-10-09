@@ -29,25 +29,11 @@ CommandsParser::CommandsParser(CommandsLexer* lexer, IDataRepository* targetRepo
 const std::vector<CommandsParser::sequence_t*>& CommandsParser::GetTestsForState()
 {
     static std::vector<sequence_t*> tests({
-        new SequenceAction(),
-        new SequenceAllocAlign(),
-        new SequenceArrayCount(),
-        new SequenceArraySize(),
-        new SequenceAsset(),
-        new SequenceAssetRef(),
-        new SequenceBlock(),
-        new SequenceCondition(),
-        new SequenceCount(),
-        new SequenceEndianness(),
-        new SequenceGame(),
-        new SequenceReorder(),
-        new SequenceReusable(),
-        new SequenceScriptString(),
-        new SequenceSetBlock(),
-        new SequenceSetConditionalBlock(),
-        new SequenceString(),
-        new SequenceUse(),
-        new SequenceWordSize(),
+        new SequenceAction(),   new SequenceAllocAlign(),   new SequenceArrayCount(), new SequenceArraySize(),
+        new SequenceAsset(),    new SequenceAssetRef(),     new SequenceBlock(),      new SequenceCondition(),
+        new SequenceCount(),    new SequenceEndianness(),   new SequenceGame(),       new SequenceReorder(),
+        new SequenceReusable(), new SequenceScriptString(), new SequenceSetBlock(),   new SequenceSetConditionalBlock(),
+        new SequenceString(),   new SequenceUse(),          new SequenceWordSize(),
     });
 
     return tests;

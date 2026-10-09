@@ -142,34 +142,6 @@ std::optional<ZoneLoaderInspectionResult> ZoneLoaderFactory::InspectZoneHeader(Z
             };
         }
     }
-    else if (endianness::FromBigEndian(header.m_version) == ZoneConstants::ZONE_VERSION_XENON)
-    {
-        if (!memcmp(header.m_magic, ZoneConstants::MAGIC_UNSIGNED, std::char_traits<char>::length(ZoneConstants::MAGIC_UNSIGNED)))
-        {
-            return ZoneLoaderInspectionResult{
-                .m_game_id = GameId::IW3,
-                .m_endianness = GameEndianness::BE,
-                .m_word_size = GameWordSize::ARCH_32,
-                .m_platform = GamePlatform::XBOX,
-                .m_is_official = true,
-                .m_is_signed = false,
-                .m_is_encrypted = false,
-            };
-        }
-        if (!memcmp(header.m_magic, ZoneConstants::MAGIC_SIGNED, std::char_traits<char>::length(ZoneConstants::MAGIC_SIGNED)))
-        {
-            return ZoneLoaderInspectionResult{
-                .m_game_id = GameId::IW3,
-                .m_endianness = GameEndianness::BE,
-                .m_word_size = GameWordSize::ARCH_32,
-                .m_platform = GamePlatform::XBOX,
-                .m_is_official = true,
-                .m_is_signed = true,
-                .m_is_encrypted = false,
-            };
-        }
-    }
-
     return std::nullopt;
 }
 
@@ -199,32 +171,21 @@ std::unique_ptr<ZoneLoader> ZoneLoaderFactory::CreateLoaderForHeader(ZoneDataPee
 
     zoneLoader->AddLoadingStep(step::CreateStepAddProcessor(processor::CreateProcessorInflate(ZoneConstants::AUTHED_CHUNK_SIZE)));
 
-    if (inspectResult->m_endianness == GameEndianness::LE)
-    {
-        // Start of the XFile struct
-        zoneLoader->AddLoadingStep(step::CreateStepLoadZoneSizes());
-        zoneLoader->AddLoadingStep(step::CreateStepAllocXBlocks());
+    // Start of the XFile struct
+    zoneLoader->AddLoadingStep(step::CreateStepLoadZoneSizes());
+    zoneLoader->AddLoadingStep(step::CreateStepAllocXBlocks());
 
-        // Start of the zone content
-        zoneLoader->AddLoadingStep(step::CreateStepLoadZoneContent(
-            [zonePtr](ZoneInputStream& stream)
-            {
-                return std::make_unique<ContentLoader>(*zonePtr, stream);
-            },
-            32u,
-            ZoneConstants::OFFSET_BLOCK_BIT_COUNT,
-            ZoneConstants::INSERT_BLOCK,
-            zonePtr->Memory(),
-            std::move(progressCallback)));
-    }
-    else
-    {
-        fs::path dumpFileNamePath = fs::path(fileName).filename();
-        dumpFileNamePath.replace_extension(".dat");
-        std::string dumpFileName = dumpFileNamePath.string();
-        con::warn("Dumping xbox assets is not supported, making a full fastfile data dump to {}", dumpFileName);
-        zoneLoader->AddLoadingStep(step::CreateStepDumpData(dumpFileName, 0xFFFFFFFF));
-    }
+    // Start of the zone content
+    zoneLoader->AddLoadingStep(step::CreateStepLoadZoneContent(
+        [zonePtr](ZoneInputStream& stream)
+        {
+            return std::make_unique<ContentLoader>(*zonePtr, stream);
+        },
+        32u,
+        ZoneConstants::OFFSET_BLOCK_BIT_COUNT,
+        ZoneConstants::INSERT_BLOCK,
+        zonePtr->Memory(),
+        std::move(progressCallback)));
 
     return zoneLoader;
 }

@@ -1,0 +1,26 @@
+// =========================================
+// GfxImage
+// =========================================
+use GfxImage;
+set block XFILE_BLOCK_TEMP;
+set string name;
+reorder:
+    name
+    pixels
+    texture;
+
+set allocalign pixels 4096;
+set count pixels cardMemory::platform[0];
+set conditional block pixels delayLoadPixels XFILE_BLOCK_LARGE_RUNTIME XFILE_BLOCK_LARGE;
+
+// GfxTexture
+use GfxTextureLoad;
+set reusable loadDef;
+set block loadDef XFILE_BLOCK_TEMP;
+set action LoadImageData(GfxImageLoadDef, GfxImage);
+
+set block GfxImageLoadDef XFILE_BLOCK_VIRTUAL;
+
+use GfxTexture;
+set condition cubemap never;
+set condition volmap never;

@@ -1,5 +1,7 @@
 #include "SequenceZoneDefinitionMetaData.h"
 
+#include "Game/GamePlatform.h"
+#include "Game/GameTarget.h"
 #include "Utils/Logging/Log.h"
 #include "Utils/StringUtils.h"
 #include "Zone/Definition/Parsing/Matcher/ZoneDefinitionMatcherFactory.h"
@@ -11,6 +13,7 @@
 namespace
 {
     constexpr auto METADATA_GAME = "game";
+    constexpr auto METADATA_PLATFORM = "platform";
     constexpr auto METADATA_GDT = "gdt";
     constexpr auto METADATA_NAME = "name";
     constexpr auto METADATA_TYPE = "type";
@@ -25,8 +28,9 @@ namespace
 
         for (auto i = 0u; i < static_cast<unsigned>(GameId::COUNT); i++)
         {
-            if (upperGameName == GameId_Names[i])
-                return static_cast<GameId>(i);
+            const auto game = static_cast<GameId>(i);
+            if (game_target::GetPublicGameId(game) == game && upperGameName == GameId_Names[i])
+                return game;
         }
 
         return std::nullopt;
@@ -86,7 +90,25 @@ namespace
         if (previousGame != GameId::COUNT && previousGame != *game)
             throw ParsingException(valueToken.GetPos(), std::format("Game was previously defined as: {}", GameId_Names[static_cast<unsigned>(previousGame)]));
 
-        state->SetGame(*game);
+        if (!state->SetGame(*game))
+            throw ParsingException(valueToken.GetPos(), "Game is not supported on the selected platform");
+    }
+
+    void ProcessMetaDataPlatform(ZoneDefinitionParserState* state, const ZoneDefinitionParserValue& valueToken, const std::string& value)
+    {
+        if (!state->m_definition->m_assets.empty())
+            throw ParsingException(valueToken.GetPos(), "Platform must be defined before assets");
+
+        const auto platform = game_platform::FromName(value);
+        if (!platform)
+            throw ParsingException(valueToken.GetPos(), "Unknown platform name");
+
+        if (state->m_explicit_platform && *state->m_explicit_platform != *platform)
+            throw ParsingException(valueToken.GetPos(),
+                                   std::format("Platform was previously defined as: {}", game_platform::ToName(*state->m_explicit_platform)));
+
+        if (!state->SetPlatform(*platform))
+            throw ParsingException(valueToken.GetPos(), "Game is not supported on the selected platform");
     }
 
     void ProcessMetaDataType(ZoneDefinitionParserState* state, const ZoneDefinitionParserValue& keyToken, const ZoneDefinitionParserValue& valueToken)
@@ -141,6 +163,10 @@ void SequenceZoneDefinitionMetaData::ProcessMatch(ZoneDefinitionParserState* sta
     else if (key == METADATA_NAME)
     {
         state->m_definition->m_name = value;
+    }
+    else if (key == METADATA_PLATFORM)
+    {
+        ProcessMetaDataPlatform(state, valueToken, value);
     }
     else if (key == METADATA_TYPE)
     {
