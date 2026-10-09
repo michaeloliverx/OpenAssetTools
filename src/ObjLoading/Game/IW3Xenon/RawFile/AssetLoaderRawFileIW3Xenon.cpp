@@ -1,9 +1,8 @@
 #include "AssetLoaderRawFileIW3Xenon.h"
 
 #include "Game/IW3Xenon/IW3Xenon.h"
-#include "Utils/Logging/Log.h"
 
-#include <limits>
+#include <cstring>
 
 using namespace IW3Xenon;
 
@@ -24,17 +23,11 @@ namespace
             if (!file.IsOpen())
                 return AssetCreationResult::NoAction();
 
-            if (file.m_length < 0 || file.m_length > std::numeric_limits<int>::max())
-            {
-                con::error(R"(IW3 Xenon rawfile "{}" has an invalid size)", assetName);
-                return AssetCreationResult::Failure();
-            }
-
             auto* rawFile = m_memory.Alloc<RawFile>();
             rawFile->name = m_memory.Dup(assetName.c_str());
             rawFile->len = static_cast<int>(file.m_length);
 
-            auto* fileBuffer = m_memory.Alloc<char>(static_cast<size_t>(file.m_length) + 1);
+            auto* fileBuffer = m_memory.Alloc<char>(static_cast<size_t>(file.m_length + 1));
             file.m_stream->read(fileBuffer, file.m_length);
             if (file.m_stream->gcount() != file.m_length)
                 return AssetCreationResult::Failure();

@@ -32,6 +32,9 @@ namespace localize
 
             for (const auto* localizeEntry : localizeAssets)
             {
+                if (localizeEntry->IsReference())
+                    continue;
+
                 stringFileDumper.WriteLocalizeEntry(localizeEntry->m_name, localizeEntry->Asset()->value);
             }
 
