@@ -23,8 +23,10 @@ public:
     [[nodiscard]] std::vector<int> GetPointerToArraySizes() const;
     [[nodiscard]] int GetPointerDepth() const;
     [[nodiscard]] bool IsNotInDefaultNormalBlock() const;
+    [[nodiscard]] bool HasConditionalBlock() const;
     [[nodiscard]] bool IsInTempBlock() const;
     [[nodiscard]] bool IsInRuntimeBlock() const;
+    [[nodiscard]] bool CanBeInRuntimeOrDelayBlock() const;
     [[nodiscard]] bool IsFirstUsedMember(bool includeLeafs) const;
     [[nodiscard]] bool IsLastUsedMember(bool includeLeafs) const;
     [[nodiscard]] bool HasDynamicArraySize() const;

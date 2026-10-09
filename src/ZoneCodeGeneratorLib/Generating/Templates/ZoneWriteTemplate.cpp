@@ -702,6 +702,13 @@ namespace
                 return false;
             }
 
+            // Runtime and delayed blocks do not have a stable on-disk zone offset.
+            // Reuse bookkeeping therefore cannot refer to their contents.
+            if (MemberComputations(member).CanBeInRuntimeOrDelayBlock())
+            {
+                return false;
+            }
+
             if (member->m_is_string)
             {
                 return false;
@@ -918,15 +925,32 @@ namespace
         {
             const MemberComputations computations(member);
 
+            const auto hasConditionalBlock = computations.HasConditionalBlock();
             const auto notInDefaultNormalBlock = computations.IsNotInDefaultNormalBlock();
-            if (notInDefaultNormalBlock)
+            if (hasConditionalBlock)
+            {
+                LINEF("if ({0})", MakeEvaluation(member->m_conditional_block_condition.get()))
+                LINE("{")
+                m_intendation++;
+                LINEF("m_stream->PushBlock({0});", member->m_conditional_block_true->m_name)
+                m_intendation--;
+                LINE("}")
+                LINE("else")
+                LINE("{")
+                m_intendation++;
+                LINEF("m_stream->PushBlock({0});", member->m_conditional_block_false->m_name)
+                m_intendation--;
+                LINE("}")
+                LINE("")
+            }
+            else if (notInDefaultNormalBlock)
             {
                 LINEF("m_stream->PushBlock({0});", member->m_fast_file_block->m_name)
             }
 
             WriteMember_PointerCheck(info, member, modifier, writeType);
 
-            if (notInDefaultNormalBlock)
+            if (hasConditionalBlock || notInDefaultNormalBlock)
             {
                 LINE("m_stream->PopBlock();")
             }

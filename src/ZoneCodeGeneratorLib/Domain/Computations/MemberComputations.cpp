@@ -179,6 +179,11 @@ bool MemberComputations::IsNotInDefaultNormalBlock() const
     return m_info->m_fast_file_block != nullptr && !(m_info->m_fast_file_block->m_type == FastFileBlockType::NORMAL && m_info->m_fast_file_block->m_is_default);
 }
 
+bool MemberComputations::HasConditionalBlock() const
+{
+    return m_info->m_conditional_block_condition != nullptr && m_info->m_conditional_block_true != nullptr && m_info->m_conditional_block_false != nullptr;
+}
+
 bool MemberComputations::IsInTempBlock() const
 {
     return m_info->m_fast_file_block != nullptr && m_info->m_fast_file_block->m_type == FastFileBlockType::TEMP;
@@ -187,6 +192,17 @@ bool MemberComputations::IsInTempBlock() const
 bool MemberComputations::IsInRuntimeBlock() const
 {
     return m_info->m_fast_file_block != nullptr && m_info->m_fast_file_block->m_type == FastFileBlockType::RUNTIME;
+}
+
+bool MemberComputations::CanBeInRuntimeOrDelayBlock() const
+{
+    const auto isRuntimeOrDelayBlock = [](const FastFileBlock* block)
+    {
+        return block->m_type == FastFileBlockType::RUNTIME || block->m_type == FastFileBlockType::DELAY;
+    };
+
+    return (m_info->m_fast_file_block != nullptr && isRuntimeOrDelayBlock(m_info->m_fast_file_block))
+           || (HasConditionalBlock() && (isRuntimeOrDelayBlock(m_info->m_conditional_block_true) || isRuntimeOrDelayBlock(m_info->m_conditional_block_false)));
 }
 
 bool MemberComputations::IsFirstUsedMember(const bool includeLeafs) const
