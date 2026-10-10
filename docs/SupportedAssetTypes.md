@@ -47,7 +47,7 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | Material             | ❌              | ❌              |                                            |
 | MaterialPixelShader  | ❌              | ❌              |                                            |
 | MaterialTechniqueSet | ❌              | ❌              |                                            |
-| GfxImage             | ❌              | ❌              |                                            |
+| GfxImage             | ✅              | ✅              | DDS/IWI, 2D and cube textures.             |
 | snd_alias_list_t     | ❌              | ❌              |                                            |
 | SndCurve             | ❌              | ❌              |                                            |
 | LoadedSound          | ❌              | ❌              |                                            |
@@ -68,6 +68,9 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | FxImpactTable        | ❌              | ❌              |                                            |
 | RawFile              | ✅              | ✅              | Plain files, including binary data.        |
 | StringTable          | ✅              | ✅              |                                            |
+
+IW3 Xbox 360 image dumping looks for `highmip/<image name>.hi` beside the fastfile or under a supplied search path.
+For streamed images, a valid file adds the highest mip level; otherwise, the resident image is dumped.
 
 ## IW4 (Call of Duty: Modern Warfare 2)
 

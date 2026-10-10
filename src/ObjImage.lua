@@ -2,6 +2,7 @@ ObjImage = {}
 
 function ObjImage:include(includes)
 	if includes:handle(self:name()) then
+		Common:include(includes)
 		includedirs {
 			path.join(ProjectFolder(), "ObjImage")
 		}
