@@ -22,6 +22,13 @@ namespace IW3Xenon
             return R_HashString(string, 0u);
         }
 
+        static constexpr unsigned GetPcMaterialTechniqueIndex(const unsigned techniqueIndex)
+        {
+            // Xenon omits the PC instanced-lit techniques before LIGHT_SPOT.
+            constexpr auto instancedTechniqueCount = static_cast<unsigned>(IW3::TECHNIQUE_LIGHT_SPOT) - static_cast<unsigned>(TECHNIQUE_LIGHT_SPOT);
+            return techniqueIndex < TECHNIQUE_LIGHT_SPOT ? techniqueIndex : techniqueIndex + instancedTechniqueCount;
+        }
+
         static PackedTexCoords Vec2PackTexCoords(const float (&in)[2]);
         static PackedUnitVec Vec3PackUnitVec(const float (&in)[3]);
         static GfxColor Vec4PackGfxColor(const float (&in)[4]);

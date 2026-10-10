@@ -421,7 +421,7 @@ static inline void EndianSwap(IW3Xenon::MaterialConstantDef& v, [[maybe_unused]]
 
 static inline void EndianSwap(IW3Xenon::GfxStateBits& v, [[maybe_unused]] const EndianOperation operation)
 {
-    EndianSwap(v.loadBits);
+    EndianSwap(v.loadBits.raw);
 }
 
 static inline void EndianSwap(IW3Xenon::MaterialTextureDef& v, [[maybe_unused]] const EndianOperation operation)

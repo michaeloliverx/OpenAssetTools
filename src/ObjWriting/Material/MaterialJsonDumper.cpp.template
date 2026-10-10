@@ -1,9 +1,14 @@
-#options GAME (IW3, IW4, IW5, T4, T5, T6)
+#options GAME (IW3, IW3Xenon, IW4, IW5, T4, T5, T6)
 
 #filename "Game/" + GAME + "/Material/MaterialJsonDumper" + GAME + ".cpp"
 
 #if GAME == "IW3"
 #define FEATURE_IW3
+#define HAS_WATER
+#define GAME_LOWER "iw3"
+#elif GAME == "IW3Xenon"
+#define FEATURE_IW3
+#define FEATURE_IW3_XENON
 #define HAS_WATER
 #define GAME_LOWER "iw3"
 #elif GAME == "IW4"
@@ -49,6 +54,9 @@
 #include <cassert>
 #include <iomanip>
 #include <nlohmann/json.hpp>
+#ifdef FEATURE_IW3_XENON
+#include <vector>
+#endif
 
 using namespace nlohmann;
 using namespace GAME;
@@ -128,11 +136,22 @@ namespace
             jWater.codeConstant[2] = water.codeConstant[2];
             jWater.codeConstant[3] = water.codeConstant[3];
 
+#ifdef FEATURE_IW3_XENON
+            if (water.H0X && water.H0Y)
+            {
+                const auto count = water.M * water.N;
+                std::vector<complex_s> h0(count);
+                for (auto i = 0; i < count; ++i)
+                    h0[i] = {water.H0X[i], water.H0Y[i]};
+                jWater.h0 = base64::EncodeBase64(h0.data(), sizeof(complex_s) * count);
+            }
+#else
             if (water.H0)
             {
                 const auto count = water.M * water.N;
                 jWater.h0 = base64::EncodeBase64(water.H0, sizeof(complex_s) * count);
             }
+#endif
 
             if (water.wTerm)
             {
@@ -330,9 +349,15 @@ namespace
             jMaterial.contents = material.info.contents;
 #endif
 
+#ifdef FEATURE_IW3_XENON
+            jMaterial.stateBitsEntry.assign(std::extent_v<decltype(IW3::Material::stateBitsEntry)>, -1);
+            for (auto i = 0u; i < std::extent_v<decltype(Material::stateBitsEntry)>; i++)
+                jMaterial.stateBitsEntry[Common::GetPcMaterialTechniqueIndex(i)] = material.stateBitsEntry[i];
+#else
             jMaterial.stateBitsEntry.resize(std::extent_v<decltype(Material::stateBitsEntry)>);
             for (auto i = 0u; i < std::extent_v<decltype(Material::stateBitsEntry)>; i++)
                 jMaterial.stateBitsEntry[i] = material.stateBitsEntry[i];
+#endif
 
             jMaterial.stateFlags = material.stateFlags;
             jMaterial.cameraRegion = static_cast<GfxCameraRegionType>(material.cameraRegion);

@@ -44,7 +44,7 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | PhysPreset           | ❌              | ❌              |                                                                              |
 | XAnimParts           | ✅              | ✅              | IW3 PC-compatible version-17 files in `xanim/`.                               |
 | XModel               | ✅              | ✅              | Model data can be exported to `XMODEL_EXPORT/XMODEL_BIN`, `OBJ`, `GLB/GLTF`. |
-| Material             | ❌              | ❌              |                                                                              |
+| Material             | ✅              | ✅              | IW3 material JSON, including water. Requires native technique sets.          |
 | MaterialPixelShader  | ❌              | ❌              |                                                                              |
 | MaterialTechniqueSet | ❌              | ❌              |                                                                              |
 | GfxImage             | ✅              | ✅              | DDS/IWI, 2D and cube textures.                                               |

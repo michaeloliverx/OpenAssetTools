@@ -1,9 +1,14 @@
-#options GAME (IW3, IW4, IW5, T4, T5, T6)
+#options GAME (IW3, IW3Xenon, IW4, IW5, T4, T5, T6)
 
 #filename "Game/" + GAME + "/Material/JsonMaterialLoader" + GAME + ".cpp"
 
 #if GAME == "IW3"
 #define FEATURE_IW3
+#define HAS_WATER
+#define GAME_LOWER "iw3"
+#elif GAME == "IW3Xenon"
+#define FEATURE_IW3
+#define FEATURE_IW3_XENON
 #define HAS_WATER
 #define GAME_LOWER "iw3"
 #elif GAME == "IW4"
@@ -47,6 +52,10 @@
 #include <format>
 #include <iostream>
 #include <nlohmann/json.hpp>
+#ifdef FEATURE_IW3_XENON
+#include <limits>
+#include <vector>
+#endif
 
 using namespace nlohmann;
 using namespace GAME;
@@ -147,16 +156,38 @@ namespace
             water.codeConstant[2] = jWater.codeConstant[2];
             water.codeConstant[3] = jWater.codeConstant[3];
 
+#ifdef FEATURE_IW3_XENON
+            if (water.M < 0 || water.N < 0
+                || static_cast<uint64_t>(water.M) * water.N > std::numeric_limits<int>::max() / sizeof(complex_s))
+            {
+                PrintError(material, "Invalid water dimensions");
+                return false;
+            }
+#endif
             const auto expectedH0Size = water.M * water.N * sizeof(complex_s);
             if (expectedH0Size > 0)
             {
+#ifdef FEATURE_IW3_XENON
+                std::vector<complex_s> h0(water.M * water.N);
+                const auto h0Size = base64::DecodeBase64(jWater.h0.data(), jWater.h0.size(), h0.data(), expectedH0Size);
+#else
                 water.H0 = m_memory.Alloc<complex_s>(water.M * water.N);
                 const auto h0Size = base64::DecodeBase64(jWater.h0.data(), jWater.h0.size(), water.H0, expectedH0Size);
+#endif
                 if (h0Size != expectedH0Size)
                 {
                     PrintError(material, std::format("Water h0 size {} does not match expected {}", h0Size, expectedH0Size));
                     return false;
                 }
+#ifdef FEATURE_IW3_XENON
+                water.H0X = m_memory.Alloc<float>(h0.size());
+                water.H0Y = m_memory.Alloc<float>(h0.size());
+                for (auto i = 0uz; i < h0.size(); ++i)
+                {
+                    water.H0X[i] = h0[i].real;
+                    water.H0Y[i] = h0[i].imag;
+                }
+#endif
             }
 
             const auto expectedWTermSize = water.M * water.N * sizeof(float);
@@ -431,13 +462,25 @@ namespace
             material.info.contents = jMaterial.contents;
 #endif
 
+#ifdef FEATURE_IW3_XENON
+            if (jMaterial.stateBitsEntry.size() != std::extent_v<decltype(IW3::Material::stateBitsEntry)>)
+            {
+                PrintError(material, std::format("StateBitsEntry size is not {}", std::extent_v<decltype(IW3::Material::stateBitsEntry)>));
+                return false;
+            }
+#else
             if (jMaterial.stateBitsEntry.size() != std::extent_v<decltype(Material::stateBitsEntry)>)
             {
                 PrintError(material, std::format("StateBitsEntry size is not {}", std::extent_v<decltype(Material::stateBitsEntry)>));
                 return false;
             }
+#endif
             for (auto i = 0u; i < std::extent_v<decltype(Material::stateBitsEntry)>; i++)
+#ifdef FEATURE_IW3_XENON
+                material.stateBitsEntry[i] = jMaterial.stateBitsEntry[Common::GetPcMaterialTechniqueIndex(i)];
+#else
                 material.stateBitsEntry[i] = jMaterial.stateBitsEntry[i];
+#endif
 
             material.stateFlags = static_cast<unsigned char>(jMaterial.stateFlags);
             material.cameraRegion = jMaterial.cameraRegion;
