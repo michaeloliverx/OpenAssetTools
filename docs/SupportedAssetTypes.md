@@ -62,7 +62,7 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | MenuList             | ❌              | ❌              |                                                                              |
 | menuDef_t            | ❌              | ❌              |                                                                              |
 | LocalizeEntry        | ✅              | ✅              |                                                                              |
-| WeaponDef            | ❌              | ❌              |                                                                              |
+| WeaponDef            | ✅              | ✅              | Raw weapon files and GDT entries, including accuracy graphs.                  |
 | SndDriverGlobals     | ❌              | ❌              |                                                                              |
 | FxEffectDef          | ❌              | ❌              |                                                                              |
 | FxImpactTable        | ❌              | ❌              |                                                                              |
