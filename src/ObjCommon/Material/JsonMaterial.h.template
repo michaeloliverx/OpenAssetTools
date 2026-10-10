@@ -1,8 +1,8 @@
-#options GAME (IW3, IW4, IW5, T4, T5, T6)
+#options GAME (IW3, IW3Xenon, IW4, IW5, T4, T5, T6)
 
 #filename "Game/" + GAME + "/Material/JsonMaterial" + GAME + ".h"
 
-#if GAME == "IW3"
+#if GAME == "IW3" || GAME == "IW3Xenon"
 #define FEATURE_IW3
 #define HAS_WATER
 #elif GAME == "IW4"

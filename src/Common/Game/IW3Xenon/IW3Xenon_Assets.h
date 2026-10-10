@@ -610,6 +610,224 @@ namespace IW3Xenon
         PhysGeomList* physGeoms;
     };
 
+    enum GfxBlend
+    {
+        GFXS_BLEND_DISABLED = 0x0,
+        GFXS_BLEND_ZERO = 0x1,
+        GFXS_BLEND_ONE = 0x2,
+        GFXS_BLEND_SRCCOLOR = 0x3,
+        GFXS_BLEND_INVSRCCOLOR = 0x4,
+        GFXS_BLEND_SRCALPHA = 0x5,
+        GFXS_BLEND_INVSRCALPHA = 0x6,
+        GFXS_BLEND_DESTALPHA = 0x7,
+        GFXS_BLEND_INVDESTALPHA = 0x8,
+        GFXS_BLEND_DESTCOLOR = 0x9,
+        GFXS_BLEND_INVDESTCOLOR = 0xA,
+
+        GFXS_BLEND_COUNT
+    };
+
+    enum GfxBlendOp
+    {
+        GFXS_BLENDOP_DISABLED = 0x0,
+        GFXS_BLENDOP_ADD = 0x1,
+        GFXS_BLENDOP_SUBTRACT = 0x2,
+        GFXS_BLENDOP_REVSUBTRACT = 0x3,
+        GFXS_BLENDOP_MIN = 0x4,
+        GFXS_BLENDOP_MAX = 0x5,
+
+        GFXS_BLENDOP_COUNT
+    };
+
+    enum GfxAlphaTest_e
+    {
+        GFXS_ALPHA_TEST_GT_0 = 1,
+        GFXS_ALPHA_TEST_LT_128 = 2,
+        GFXS_ALPHA_TEST_GE_128 = 3,
+
+        GFXS_ALPHA_TEST_COUNT
+    };
+
+    enum GfxCullFace_e
+    {
+        GFXS_CULL_NONE = 1,
+        GFXS_CULL_BACK = 2,
+        GFXS_CULL_FRONT = 3,
+    };
+
+    enum GfxDepthTest_e
+    {
+        GFXS_DEPTHTEST_ALWAYS = 0,
+        GFXS_DEPTHTEST_LESS = 1,
+        GFXS_DEPTHTEST_EQUAL = 2,
+        GFXS_DEPTHTEST_LESSEQUAL = 3
+    };
+
+    enum GfxPolygonOffset_e
+    {
+        GFXS_POLYGON_OFFSET_0 = 0,
+        GFXS_POLYGON_OFFSET_1 = 1,
+        GFXS_POLYGON_OFFSET_2 = 2,
+        GFXS_POLYGON_OFFSET_SHADOWMAP = 3
+    };
+
+    enum GfxStencilOp
+    {
+        GFXS_STENCILOP_KEEP = 0x0,
+        GFXS_STENCILOP_ZERO = 0x1,
+        GFXS_STENCILOP_REPLACE = 0x2,
+        GFXS_STENCILOP_INCRSAT = 0x3,
+        GFXS_STENCILOP_DECRSAT = 0x4,
+        GFXS_STENCILOP_INVERT = 0x5,
+        GFXS_STENCILOP_INCR = 0x6,
+        GFXS_STENCILOP_DECR = 0x7
+    };
+
+    enum GfxStencilFunc
+    {
+        GFXS_STENCILFUNC_NEVER = 0x0,
+        GFXS_STENCILFUNC_LESS = 0x1,
+        GFXS_STENCILFUNC_EQUAL = 0x2,
+        GFXS_STENCILFUNC_LESSEQUAL = 0x3,
+        GFXS_STENCILFUNC_GREATER = 0x4,
+        GFXS_STENCILFUNC_NOTEQUAL = 0x5,
+        GFXS_STENCILFUNC_GREATEREQUAL = 0x6,
+        GFXS_STENCILFUNC_ALWAYS = 0x7
+    };
+
+    enum GfxStateBitsEnum : unsigned int
+    {
+        GFXS0_SRCBLEND_RGB_SHIFT = 0x0,
+        GFXS0_SRCBLEND_RGB_MASK = 0xF,
+
+        GFXS0_DSTBLEND_RGB_SHIFT = 0x4,
+        GFXS0_DSTBLEND_RGB_MASK = 0xF0,
+
+        GFXS0_BLENDOP_RGB_SHIFT = 0x8,
+        GFXS0_BLENDOP_RGB_MASK = 0x700,
+        GFXS0_BLEND_RGB_MASK = 0x7FF,
+
+        GFXS0_ATEST_DISABLE = 0x800,
+        GFXS0_ATEST_GT_0 = 0x1000,
+        GFXS0_ATEST_LT_128 = 0x2000,
+        GFXS0_ATEST_GE_128 = 0x3000,
+        GFXS0_ATEST_MASK = 0x3000,
+
+        GFXS0_CULL_NONE = 0x4000,
+        GFXS0_CULL_BACK = 0x8000,
+        GFXS0_CULL_FRONT = 0xC000,
+        GFXS0_CULL_SHIFT = 0xE,
+        GFXS0_CULL_MASK = 0xC000,
+
+        GFXS0_SRCBLEND_ALPHA_SHIFT = 0x10,
+        GFXS0_SRCBLEND_ALPHA_MASK = 0xF0000,
+
+        GFXS0_DSTBLEND_ALPHA_SHIFT = 0x14,
+        GFXS0_DSTBLEND_ALPHA_MASK = 0xF00000,
+
+        GFXS0_BLENDOP_ALPHA_SHIFT = 0x18,
+        GFXS0_BLENDOP_ALPHA_MASK = 0x7000000,
+        GFXS0_BLEND_ALPHA_MASK = 0x7FF0000,
+
+        GFXS0_COLORWRITE_RGB = 0x8000000,
+        GFXS0_COLORWRITE_ALPHA = 0x10000000,
+        GFXS0_COLORWRITE_MASK = 0x18000000,
+
+        GFXS0_POLYMODE_LINE = 0x80000000,
+
+        GFXS1_DEPTHWRITE = 0x1,
+
+        GFXS1_DEPTHTEST_DISABLE = 0x2,
+        GFXS1_DEPTHTEST_ALWAYS = 0x0,
+        GFXS1_DEPTHTEST_LESS = 0x4,
+        GFXS1_DEPTHTEST_EQUAL = 0x8,
+        GFXS1_DEPTHTEST_LESSEQUAL = 0xC,
+        GFXS1_DEPTHTEST_SHIFT = 0x2,
+        GFXS1_DEPTHTEST_MASK = 0xC,
+
+        GFXS1_POLYGON_OFFSET_0 = 0x0,
+        GFXS1_POLYGON_OFFSET_1 = 0x10,
+        GFXS1_POLYGON_OFFSET_2 = 0x20,
+        GFXS1_POLYGON_OFFSET_SHADOWMAP = 0x30,
+        GFXS1_POLYGON_OFFSET_SHIFT = 0x4,
+        GFXS1_POLYGON_OFFSET_MASK = 0x30,
+
+        GFXS1_STENCIL_FRONT_ENABLE = 0x40,
+        GFXS1_STENCIL_BACK_ENABLE = 0x80,
+        GFXS1_STENCIL_MASK = 0xC0,
+
+        GFXS1_STENCIL_FRONT_PASS_SHIFT = 0x8,
+        GFXS1_STENCIL_FRONT_FAIL_SHIFT = 0xB,
+        GFXS1_STENCIL_FRONT_ZFAIL_SHIFT = 0xE,
+        GFXS1_STENCIL_FRONT_FUNC_SHIFT = 0x11,
+        GFXS1_STENCIL_FRONT_MASK = 0xFFF00,
+
+        GFXS1_STENCIL_BACK_PASS_SHIFT = 0x14,
+        GFXS1_STENCIL_BACK_FAIL_SHIFT = 0x17,
+        GFXS1_STENCIL_BACK_ZFAIL_SHIFT = 0x1A,
+        GFXS1_STENCIL_BACK_FUNC_SHIFT = 0x1D,
+        GFXS1_STENCIL_BACK_MASK = 0xFFF00000,
+
+        GFXS1_STENCILFUNC_FRONTBACK_MASK = 0xE00E0000,
+        GFXS1_STENCILOP_FRONTBACK_MASK = 0x1FF1FF00,
+    };
+
+    struct GfxStateBitsLoadBitsStructured
+    {
+        // Byte 0
+        unsigned int srcBlendRgb : 4;       // 0-3
+        unsigned int dstBlendRgb : 4;       // 4-7
+        unsigned int blendOpRgb : 3;        // 8-10
+        unsigned int alphaTestDisabled : 1; // 11
+        unsigned int alphaTest : 2;         // 12-13
+        unsigned int cullFace : 2;          // 14-15
+        unsigned int srcBlendAlpha : 4;     // 16-19
+        unsigned int dstBlendAlpha : 4;     // 20-23
+        unsigned int blendOpAlpha : 3;      // 24-26
+        unsigned int colorWriteRgb : 1;     // 27
+        unsigned int colorWriteAlpha : 1;   // 28
+        unsigned int unused1 : 2;           // 29-30
+        unsigned int polymodeLine : 1;      // 31
+
+        // Byte 1
+        unsigned int depthWrite : 1;          // 0
+        unsigned int depthTestDisabled : 1;   // 1
+        unsigned int depthTest : 2;           // 2-3
+        unsigned int polygonOffset : 2;       // 4-5
+        unsigned int stencilFrontEnabled : 1; // 6
+        unsigned int stencilBackEnabled : 1;  // 7
+        unsigned int stencilFrontPass : 3;    // 8-10
+        unsigned int stencilFrontFail : 3;    // 11-13
+        unsigned int stencilFrontZFail : 3;   // 14-16
+        unsigned int stencilFrontFunc : 3;    // 17-19
+        unsigned int stencilBackPass : 3;     // 20-22
+        unsigned int stencilBackFail : 3;     // 23-25
+        unsigned int stencilBackZFail : 3;    // 26-28
+        unsigned int stencilBackFunc : 3;     // 29-31
+    };
+
+    union GfxStateBitsLoadBits
+    {
+        unsigned int raw[2];
+        GfxStateBitsLoadBitsStructured structured;
+    };
+
+#ifndef __zonecodegenerator
+    static_assert(sizeof(GfxStateBitsLoadBits) == 8);
+    static_assert(sizeof(GfxStateBitsLoadBitsStructured) == 8);
+#endif
+
+    struct GfxStateBits
+    {
+        GfxStateBitsLoadBits loadBits;
+    };
+
+    struct complex_s
+    {
+        float real;
+        float imag;
+    };
+
     struct WaterWritable
     {
         float floatTime;
@@ -639,26 +857,79 @@ namespace IW3Xenon
         water_t* water;
     };
 
+    enum TextureFilter
+    {
+        TEXTURE_FILTER_DISABLED = 0x0,
+        TEXTURE_FILTER_NEAREST = 0x1,
+        TEXTURE_FILTER_LINEAR = 0x2,
+        TEXTURE_FILTER_ANISO2X = 0x3,
+        TEXTURE_FILTER_ANISO4X = 0x4,
+
+        TEXTURE_FILTER_COUNT
+    };
+
+    enum SamplerStateBitsMipMap_e
+    {
+        SAMPLER_MIPMAP_ENUM_DISABLED,
+        SAMPLER_MIPMAP_ENUM_NEAREST,
+        SAMPLER_MIPMAP_ENUM_LINEAR,
+
+        SAMPLER_MIPMAP_ENUM_COUNT
+    };
+
+    enum SamplerStateBits_e
+    {
+        SAMPLER_FILTER_SHIFT = 0x0,
+        SAMPLER_FILTER_NEAREST = 0x1,
+        SAMPLER_FILTER_LINEAR = 0x2,
+        SAMPLER_FILTER_ANISO2X = 0x3,
+        SAMPLER_FILTER_ANISO4X = 0x4,
+        SAMPLER_FILTER_MASK = 0x7,
+
+        SAMPLER_MIPMAP_SHIFT = 0x3,
+        SAMPLER_MIPMAP_DISABLED = 0x0,
+        SAMPLER_MIPMAP_NEAREST = 0x8,
+        SAMPLER_MIPMAP_LINEAR = 0x10,
+        SAMPLER_MIPMAP_COUNT = 0x3,
+        SAMPLER_MIPMAP_MASK = 0x18,
+
+        SAMPLER_CLAMP_U_SHIFT = 0x5,
+        SAMPLER_CLAMP_V_SHIFT = 0x6,
+        SAMPLER_CLAMP_W_SHIFT = 0x7,
+        SAMPLER_CLAMP_U = 0x20,
+        SAMPLER_CLAMP_V = 0x40,
+        SAMPLER_CLAMP_W = 0x80,
+        SAMPLER_CLAMP_MASK = 0xE0,
+    };
+
+    struct MaterialTextureDefSamplerState
+    {
+        unsigned char filter : 3;
+        unsigned char mipMap : 2;
+        unsigned char clampU : 1;
+        unsigned char clampV : 1;
+        unsigned char clampW : 1;
+    };
+
+#ifndef __zonecodegenerator
+    static_assert(sizeof(MaterialTextureDefSamplerState) == 1u);
+#endif
+
     struct MaterialTextureDef
     {
         unsigned int nameHash;
         char nameStart;
         char nameEnd;
-        uint8_t samplerState;
-        uint8_t semantic; // TextureSemantic
+        MaterialTextureDefSamplerState samplerState; // SamplerStateBits_e
+        unsigned char semantic;                      // TextureSemantic
         MaterialTextureDefInfo u;
     };
 
-    struct MaterialConstantDef
+    struct type_align(16) MaterialConstantDef
     {
         unsigned int nameHash;
         char name[12];
-        float literal[4];
-    };
-
-    struct GfxStateBits
-    {
-        unsigned int loadBits[2];
+        vec4_t literal;
     };
 
     struct GfxDrawSurfFields
@@ -680,6 +951,23 @@ namespace IW3Xenon
         uint64_t packed;
     };
 
+    enum MaterialGameFlags
+    {
+        MTL_GAMEFLAG_1 = 0x1,
+        MTL_GAMEFLAG_2 = 0x2,
+        MTL_GAMEFLAG_4 = 0x4,
+        MTL_GAMEFLAG_8 = 0x8,
+        MTL_GAMEFLAG_10 = 0x10,
+        MTL_GAMEFLAG_20 = 0x20,
+        MTL_GAMEFLAG_CASTS_SHADOW = 0x40,
+        MTL_GAMEFLAG_80 = 0x80,
+        MTL_GAMEFLAG_100 = 0x100,
+        MTL_GAMEFLAG_200 = 0x200,
+        MTL_GAMEFLAG_400 = 0x400,
+        MTL_GAMEFLAG_800 = 0x800,
+        MTL_GAMEFLAG_1000 = 0x1000,
+    };
+
     struct type_align32(8) MaterialInfo
     {
         const char* name;
@@ -691,10 +979,32 @@ namespace IW3Xenon
         unsigned int surfaceTypeBits;
     };
 
+    enum GfxCameraRegionType
+    {
+        CAMERA_REGION_LIT = 0x0,
+        CAMERA_REGION_DECAL = 0x1,
+        CAMERA_REGION_EMISSIVE = 0x2,
+
+        CAMERA_REGION_COUNT,
+        CAMERA_REGION_NONE = CAMERA_REGION_COUNT,
+    };
+
+    enum MaterialStateFlags
+    {
+        STATE_FLAG_CULL_BACK = 0x1,
+        STATE_FLAG_CULL_FRONT = 0x2,
+        STATE_FLAG_DECAL = 0x4,
+        STATE_FLAG_WRITES_DEPTH = 0x8,
+        STATE_FLAG_USES_DEPTH_BUFFER = 0x10,
+        STATE_FLAG_USES_STENCIL_BUFFER = 0x20,
+        STATE_FLAG_CULL_BACK_SHADOW = 0x40,
+        STATE_FLAG_CULL_FRONT_SHADOW = 0x80,
+    };
+
     struct Material
     {
         MaterialInfo info;
-        uint8_t stateBitsEntry[26];
+        char stateBitsEntry[26];
         uint8_t textureCount;
         uint8_t constantCount;
         uint8_t stateBitsCount;
