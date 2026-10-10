@@ -3,6 +3,7 @@
 // clang-format off: Order of includes matters here
 
 #include "Game/IAsset.h"
+#include "Game/IW3/IW3.h"
 
 #include "IW3Xenon_Assets.h"
 
@@ -10,9 +11,16 @@
 
 namespace IW3Xenon
 {
+    using IW3::csParseFieldType_t;
+    using IW3::cspField_t;
+    using IW3::weapFieldType_t;
+    using enum IW3::csParseFieldType_t;
+    using enum IW3::weapFieldType_t;
+
     enum SubAssetType
     {
         SUB_ASSET_TYPE_VERTEX_SHADER,
+        SUB_ASSET_TYPE_ACCURACY_GRAPH,
 
         SUB_ASSET_TYPE_COUNT
     };
@@ -62,6 +70,12 @@ namespace IW3Xenon
         XAsset* assets;
     };
 
+    struct AccuracyGraph
+    {
+        vec2_t* graphKnots;
+        int graphKnotCount;
+    };
+
     using AssetPhysPreset = Asset<ASSET_TYPE_PHYSPRESET, PhysPreset>;
     using AssetXAnim = Asset<ASSET_TYPE_XANIMPARTS, XAnimParts>;
     using AssetXModel = Asset<ASSET_TYPE_XMODEL, XModel>;
@@ -92,6 +106,7 @@ namespace IW3Xenon
     using AssetStringTable = Asset<ASSET_TYPE_STRINGTABLE, StringTable>;
 
     using SubAssetVertexShader = SubAsset<SUB_ASSET_TYPE_VERTEX_SHADER, MaterialVertexShader>;
+    using SubAssetAccuracyGraph = SubAsset<SUB_ASSET_TYPE_ACCURACY_GRAPH, AccuracyGraph>;
 } // namespace IW3Xenon
 
 DEFINE_ASSET_NAME_ACCESSOR(IW3Xenon::AssetPhysPreset, name);
