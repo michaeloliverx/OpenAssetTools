@@ -39,35 +39,35 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 
 ## IW3 Xbox 360 (Call of Duty 4: Modern Warfare)
 
-| Asset Type           | Dumping Support | Loading Support | Notes                                      |
-|----------------------|-----------------|-----------------|--------------------------------------------|
-| PhysPreset           | ❌              | ❌              |                                            |
-| XAnimParts           | ❌              | ❌              |                                            |
-| XModel               | ❌              | ❌              |                                            |
-| Material             | ❌              | ❌              |                                            |
-| MaterialPixelShader  | ❌              | ❌              |                                            |
-| MaterialTechniqueSet | ❌              | ❌              |                                            |
-| GfxImage             | ✅              | ✅              | DDS/IWI, 2D and cube textures.             |
-| snd_alias_list_t     | ❌              | ❌              |                                            |
-| SndCurve             | ❌              | ❌              |                                            |
-| LoadedSound          | ❌              | ❌              |                                            |
-| clipMap_t            | ❌              | ❌              |                                            |
-| ComWorld             | ❌              | ❌              |                                            |
-| GameWorldSp          | ❌              | ❌              |                                            |
-| GameWorldMp          | ❌              | ❌              |                                            |
-| MapEnts              | ❌              | ❌              |                                            |
-| GfxWorld             | ❌              | ❌              |                                            |
-| GfxLightDef          | ❌              | ❌              |                                            |
-| Font_s               | ❌              | ❌              |                                            |
-| MenuList             | ❌              | ❌              |                                            |
-| menuDef_t            | ❌              | ❌              |                                            |
-| LocalizeEntry        | ✅              | ✅              |                                            |
-| WeaponDef            | ❌              | ❌              |                                            |
-| SndDriverGlobals     | ❌              | ❌              |                                            |
-| FxEffectDef          | ❌              | ❌              |                                            |
-| FxImpactTable        | ❌              | ❌              |                                            |
-| RawFile              | ✅              | ✅              | Plain files, including binary data.        |
-| StringTable          | ✅              | ✅              |                                            |
+| Asset Type           | Dumping Support | Loading Support | Notes                                                                        |
+|----------------------|-----------------|-----------------|------------------------------------------------------------------------------|
+| PhysPreset           | ❌              | ❌              |                                                                              |
+| XAnimParts           | ❌              | ❌              |                                                                              |
+| XModel               | ✅              | ✅              | Model data can be exported to `XMODEL_EXPORT/XMODEL_BIN`, `OBJ`, `GLB/GLTF`. |
+| Material             | ❌              | ❌              |                                                                              |
+| MaterialPixelShader  | ❌              | ❌              |                                                                              |
+| MaterialTechniqueSet | ❌              | ❌              |                                                                              |
+| GfxImage             | ✅              | ✅              | DDS/IWI, 2D and cube textures.                                               |
+| snd_alias_list_t     | ❌              | ❌              |                                                                              |
+| SndCurve             | ❌              | ❌              |                                                                              |
+| LoadedSound          | ❌              | ❌              |                                                                              |
+| clipMap_t            | ❌              | ❌              |                                                                              |
+| ComWorld             | ❌              | ❌              |                                                                              |
+| GameWorldSp          | ❌              | ❌              |                                                                              |
+| GameWorldMp          | ❌              | ❌              |                                                                              |
+| MapEnts              | ❌              | ❌              |                                                                              |
+| GfxWorld             | ❌              | ❌              |                                                                              |
+| GfxLightDef          | ❌              | ❌              |                                                                              |
+| Font_s               | ❌              | ❌              |                                                                              |
+| MenuList             | ❌              | ❌              |                                                                              |
+| menuDef_t            | ❌              | ❌              |                                                                              |
+| LocalizeEntry        | ✅              | ✅              |                                                                              |
+| WeaponDef            | ❌              | ❌              |                                                                              |
+| SndDriverGlobals     | ❌              | ❌              |                                                                              |
+| FxEffectDef          | ❌              | ❌              |                                                                              |
+| FxImpactTable        | ❌              | ❌              |                                                                              |
+| RawFile              | ✅              | ✅              | Plain files, including binary data.                                          |
+| StringTable          | ✅              | ✅              |                                                                              |
 
 IW3 Xbox 360 image dumping looks for `highmip/<image name>.hi` beside the fastfile or under a supplied search path.
 For streamed images, a valid file adds the highest mip level; otherwise, the resident image is dumped.

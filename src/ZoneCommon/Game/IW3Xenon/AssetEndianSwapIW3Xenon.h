@@ -66,6 +66,27 @@ static inline void EndianSwap(T& v)
     EndianSwap(reinterpret_cast<std::underlying_type_t<T>&>(v));
 }
 
+static inline void EndianSwap(IW3Xenon::vec2_t& v, [[maybe_unused]] const EndianOperation operation = EndianOperation::Decode)
+{
+    EndianSwap(v.x);
+    EndianSwap(v.y);
+}
+
+static inline void EndianSwap(IW3Xenon::vec3_t& v, [[maybe_unused]] const EndianOperation operation = EndianOperation::Decode)
+{
+    EndianSwap(v.x);
+    EndianSwap(v.y);
+    EndianSwap(v.z);
+}
+
+static inline void EndianSwap(IW3Xenon::vec4_t& v, [[maybe_unused]] const EndianOperation operation = EndianOperation::Decode)
+{
+    EndianSwap(v.x);
+    EndianSwap(v.y);
+    EndianSwap(v.z);
+    EndianSwap(v.w);
+}
+
 template<typename T, size_t N> static inline void EndianSwap(T (&v)[N])
 {
     for (size_t i = 0; i < N; i++)
@@ -83,6 +104,16 @@ template<typename T> static inline T EndianSwapDiscriminator(T& value, const End
     const auto hostValue = value;
     EndianSwap(value);
     return hostValue;
+}
+
+static inline void EndianSwap(IW3Xenon::XModelQuat& v, [[maybe_unused]] const EndianOperation operation = EndianOperation::Decode)
+{
+    EndianSwap(v.v);
+}
+
+static inline void EndianSwap(IW3Xenon::XSurfaceTri& v, [[maybe_unused]] const EndianOperation operation = EndianOperation::Decode)
+{
+    EndianSwap(v.i);
 }
 
 // ---- PhysPreset
