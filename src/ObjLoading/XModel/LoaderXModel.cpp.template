@@ -1,4 +1,4 @@
-#options GAME(IW3, IW4, IW5, T4, T5, T6)
+#options GAME(IW3, IW3Xenon, IW4, IW5, T4, T5, T6)
 
 #filename "Game/" + GAME + "/XModel/LoaderXModel" + GAME + ".cpp"
 
@@ -7,7 +7,7 @@
 #set CONSTANTS_HEADER "\"Game/" + GAME + "/XModel/XModelConstants" + GAME + ".h\""
 #set JSON_HEADER "\"Game/" + GAME + "/XModel/JsonXModel" + GAME + ".h\""
 
-#if GAME == "IW3"
+#if GAME == "IW3" || GAME == "IW3Xenon"
 #define FEATURE_IW3
 #define EVEN_TRI_COUNT
 #elif GAME == "IW4"
@@ -24,6 +24,10 @@
 #define EVEN_TRI_COUNT
 #elif GAME == "T6"
 #define FEATURE_T6
+#endif
+
+#if GAME == "IW3Xenon"
+#define FEATURE_IW3XENON
 #endif
 
 #include LOADER_HEADER
@@ -55,6 +59,10 @@
 #ifdef FEATURE_T5
 #set HIGH_MIPS_HEADER "\"Game/" + GAME + "/XModel/XModelHighMipVolume" + GAME + ".h\""
 #include HIGH_MIPS_HEADER
+#endif
+
+#ifdef FEATURE_IW3XENON
+#include "Game/IW3Xenon/XModel/XModelHighMipBoundsIW3Xenon.h"
 #endif
 
 #include <algorithm>
@@ -891,7 +899,9 @@ namespace
                 }
             }
 
+#ifndef FEATURE_IW3XENON
             surface.baseVertIndex = static_cast<uint16_t>(vertexOffset);
+#endif
             surface.vertCount = static_cast<uint16_t>(xmodelToCommonVertexIndexLookup.size());
             surface.verts0 = m_memory.Alloc<GfxPackedVertex>(surface.vertCount);
             vertexOffset += surface.vertCount;
@@ -1254,6 +1264,10 @@ namespace
 
 #ifdef FEATURE_T5
             xmodel.streamInfo.highMipBounds = xmodel::GenerateHighMipVolumeT5(xmodel, m_memory);
+#endif
+
+#ifdef FEATURE_IW3XENON
+            xmodel.streamInfo.highMipBounds = xmodel::GenerateHighMipBoundsIW3Xenon(xmodel, m_memory);
 #endif
 
             return true;

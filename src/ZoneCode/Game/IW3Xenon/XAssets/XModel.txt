@@ -10,7 +10,7 @@ set count boneNames numBones;
 set reusable parentList;
 set count parentList numBones - numRootBones;
 set reusable quats;
-set count quats (numBones - numRootBones) * 4;
+set count quats numBones - numRootBones;
 set reusable trans;
 set count trans (numBones - numRootBones) * 4;
 set reusable partClassification;
@@ -49,7 +49,7 @@ set count verts0 vertCount;
 set reusable vertList;
 set count vertList vertListCount;
 set reusable triIndices;
-set count triIndices triCount * 3;
+set count triIndices triCount;
 reorder:
     vertInfo
     verts0
