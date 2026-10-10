@@ -1,0 +1,203 @@
+#pragma once
+
+#ifndef __zonecodegenerator
+namespace oat::xenon
+{
+#endif
+
+    // GPU values shared by Xenon games, matching d3d9gpu.h in the Xbox 360 SDK.
+    enum GPUTEXTUREFORMAT : unsigned int
+    {
+        GPUTEXTUREFORMAT_1_REVERSE = 0,
+        GPUTEXTUREFORMAT_1 = 1,
+        GPUTEXTUREFORMAT_8 = 2,
+        GPUTEXTUREFORMAT_1_5_5_5 = 3,
+        GPUTEXTUREFORMAT_5_6_5 = 4,
+        GPUTEXTUREFORMAT_6_5_5 = 5,
+        GPUTEXTUREFORMAT_8_8_8_8 = 6,
+        GPUTEXTUREFORMAT_2_10_10_10 = 7,
+        GPUTEXTUREFORMAT_8_A = 8,
+        GPUTEXTUREFORMAT_8_B = 9,
+        GPUTEXTUREFORMAT_8_8 = 10,
+        GPUTEXTUREFORMAT_Cr_Y1_Cb_Y0_REP = 11,
+        GPUTEXTUREFORMAT_Y1_Cr_Y0_Cb_REP = 12,
+        GPUTEXTUREFORMAT_16_16_EDRAM = 13,
+        GPUTEXTUREFORMAT_8_8_8_8_A = 14,
+        GPUTEXTUREFORMAT_4_4_4_4 = 15,
+        GPUTEXTUREFORMAT_10_11_11 = 16,
+        GPUTEXTUREFORMAT_11_11_10 = 17,
+        GPUTEXTUREFORMAT_DXT1 = 18,
+        GPUTEXTUREFORMAT_DXT2_3 = 19,
+        GPUTEXTUREFORMAT_DXT4_5 = 20,
+        GPUTEXTUREFORMAT_16_16_16_16_EDRAM = 21,
+        GPUTEXTUREFORMAT_24_8 = 22,
+        GPUTEXTUREFORMAT_24_8_FLOAT = 23,
+        GPUTEXTUREFORMAT_16 = 24,
+        GPUTEXTUREFORMAT_16_16 = 25,
+        GPUTEXTUREFORMAT_16_16_16_16 = 26,
+        GPUTEXTUREFORMAT_16_EXPAND = 27,
+        GPUTEXTUREFORMAT_16_16_EXPAND = 28,
+        GPUTEXTUREFORMAT_16_16_16_16_EXPAND = 29,
+        GPUTEXTUREFORMAT_16_FLOAT = 30,
+        GPUTEXTUREFORMAT_16_16_FLOAT = 31,
+        GPUTEXTUREFORMAT_16_16_16_16_FLOAT = 32,
+        GPUTEXTUREFORMAT_32 = 33,
+        GPUTEXTUREFORMAT_32_32 = 34,
+        GPUTEXTUREFORMAT_32_32_32_32 = 35,
+        GPUTEXTUREFORMAT_32_FLOAT = 36,
+        GPUTEXTUREFORMAT_32_32_FLOAT = 37,
+        GPUTEXTUREFORMAT_32_32_32_32_FLOAT = 38,
+        GPUTEXTUREFORMAT_32_AS_8 = 39,
+        GPUTEXTUREFORMAT_32_AS_8_8 = 40,
+        GPUTEXTUREFORMAT_16_MPEG = 41,
+        GPUTEXTUREFORMAT_16_16_MPEG = 42,
+        GPUTEXTUREFORMAT_8_INTERLACED = 43,
+        GPUTEXTUREFORMAT_32_AS_8_INTERLACED = 44,
+        GPUTEXTUREFORMAT_32_AS_8_8_INTERLACED = 45,
+        GPUTEXTUREFORMAT_16_INTERLACED = 46,
+        GPUTEXTUREFORMAT_16_MPEG_INTERLACED = 47,
+        GPUTEXTUREFORMAT_16_16_MPEG_INTERLACED = 48,
+        GPUTEXTUREFORMAT_DXN = 49,
+        GPUTEXTUREFORMAT_8_8_8_8_AS_16_16_16_16 = 50,
+        GPUTEXTUREFORMAT_DXT1_AS_16_16_16_16 = 51,
+        GPUTEXTUREFORMAT_DXT2_3_AS_16_16_16_16 = 52,
+        GPUTEXTUREFORMAT_DXT4_5_AS_16_16_16_16 = 53,
+        GPUTEXTUREFORMAT_2_10_10_10_AS_16_16_16_16 = 54,
+        GPUTEXTUREFORMAT_10_11_11_AS_16_16_16_16 = 55,
+        GPUTEXTUREFORMAT_11_11_10_AS_16_16_16_16 = 56,
+        GPUTEXTUREFORMAT_32_32_32_FLOAT = 57,
+        GPUTEXTUREFORMAT_DXT3A = 58,
+        GPUTEXTUREFORMAT_DXT5A = 59,
+        GPUTEXTUREFORMAT_CTX1 = 60,
+        GPUTEXTUREFORMAT_DXT3A_AS_1_1_1_1 = 61,
+        GPUTEXTUREFORMAT_8_8_8_8_GAMMA_EDRAM = 62,
+        GPUTEXTUREFORMAT_2_10_10_10_FLOAT_EDRAM = 63,
+    };
+
+    enum GPUENDIAN : unsigned int
+    {
+        GPUENDIAN_NONE = 0,
+        GPUENDIAN_8IN16 = 1,
+        GPUENDIAN_8IN32 = 2,
+        GPUENDIAN_16IN32 = 3,
+    };
+
+    enum GPUCONSTANTTYPE : unsigned int
+    {
+        GPUCONSTANTTYPE_INVALID_TEXTURE = 0,
+        GPUCONSTANTTYPE_INVALID_VERTEX = 1,
+        GPUCONSTANTTYPE_TEXTURE = 2,
+        GPUCONSTANTTYPE_VERTEX = 3,
+    };
+
+    enum GPUSIGN : unsigned int
+    {
+        GPUSIGN_UNSIGNED = 0,
+        GPUSIGN_SIGNED = 1,
+        GPUSIGN_BIAS = 2,
+        GPUSIGN_GAMMA = 3,
+    };
+
+    enum GPUSWIZZLE : unsigned int
+    {
+        GPUSWIZZLE_X = 0,
+        GPUSWIZZLE_Y = 1,
+        GPUSWIZZLE_Z = 2,
+        GPUSWIZZLE_W = 3,
+        GPUSWIZZLE_0 = 4,
+        GPUSWIZZLE_1 = 5,
+        GPUSWIZZLE_KEEP = 7,
+    };
+
+    enum GPUNUMFORMAT : unsigned int
+    {
+        GPUNUMFORMAT_FRACTION = 0,
+        GPUNUMFORMAT_INTEGER = 1,
+    };
+
+    enum GPUCLAMP : unsigned int
+    {
+        GPUCLAMP_WRAP = 0,
+        GPUCLAMP_MIRROR = 1,
+        GPUCLAMP_CLAMP_TO_LAST = 2,
+        GPUCLAMP_MIRROR_ONCE_TO_LAST = 3,
+        GPUCLAMP_CLAMP_HALFWAY = 4,
+        GPUCLAMP_MIRROR_ONCE_HALFWAY = 5,
+        GPUCLAMP_CLAMP_TO_BORDER = 6,
+        GPUCLAMP_MIRROR_TO_BORDER = 7,
+    };
+
+    enum GPUDIMENSION : unsigned int
+    {
+        GPUDIMENSION_1D = 0,
+        GPUDIMENSION_2D = 1,
+        GPUDIMENSION_3D = 2,
+        GPUDIMENSION_CUBEMAP = 3,
+    };
+
+    enum GPUREQUESTSIZE : unsigned int
+    {
+        GPUREQUESTSIZE_256BIT = 0,
+        GPUREQUESTSIZE_512BIT = 1,
+    };
+
+    enum GPUCLAMPPOLICY : unsigned int
+    {
+        GPUCLAMPPOLICY_D3D = 0,
+        GPUCLAMPPOLICY_OGL = 1,
+    };
+
+    enum GPUMINMAGFILTER : unsigned int
+    {
+        GPUMINMAGFILTER_POINT = 0,
+        GPUMINMAGFILTER_LINEAR = 1,
+        GPUMINMAGFILTER_KEEP = 3,
+    };
+
+    enum GPUMIPFILTER : unsigned int
+    {
+        GPUMIPFILTER_POINT = 0,
+        GPUMIPFILTER_LINEAR = 1,
+        GPUMIPFILTER_BASEMAP = 2,
+        GPUMIPFILTER_KEEP = 3,
+    };
+
+    enum GPUANISOFILTER : unsigned int
+    {
+        GPUANISOFILTER_DISABLED = 0,
+        GPUANISOFILTER_MAX1TO1 = 1,
+        GPUANISOFILTER_MAX2TO1 = 2,
+        GPUANISOFILTER_MAX4TO1 = 3,
+        GPUANISOFILTER_MAX8TO1 = 4,
+        GPUANISOFILTER_MAX16TO1 = 5,
+        GPUANISOFILTER_KEEP = 7,
+    };
+
+    enum GPUBORDERCOLOR : unsigned int
+    {
+        GPUBORDERCOLOR_ABGR_BLACK = 0,
+        GPUBORDERCOLOR_ABGR_WHITE = 1,
+        GPUBORDERCOLOR_ACBYCR_BLACK = 2,
+        GPUBORDERCOLOR_ACBCRY_BLACK = 3,
+    };
+
+    enum GPUTRICLAMP : unsigned int
+    {
+        GPUTRICLAMP_NORMAL = 0,
+        GPUTRICLAMP_ONE_SIXTH = 1,
+        GPUTRICLAMP_ONE_FOURTH = 2,
+        GPUTRICLAMP_THREE_EIGHTHS = 3,
+    };
+
+#ifndef __zonecodegenerator
+    inline constexpr unsigned int GPU_MAX_TEXTURE_DIMENSION = 8192u;
+    inline constexpr unsigned int GPU_TEXTURE_ALIGNMENT = 4096u;
+    inline constexpr unsigned int GPU_TEXTURE_TEXEL_PITCH_ALIGNMENT = 32u;
+    inline constexpr unsigned int GPU_TEXTURE_TILE_DIMENSION = 32u;
+    inline constexpr unsigned int GPU_TEXTURE_ADDRESS_SHIFT = 12u;
+
+    // Resource header values from d3d9.h.
+    inline constexpr unsigned int D3DCOMMON_TYPE_TEXTURE = 3u;
+    inline constexpr unsigned int D3DFLUSH_INITIAL_VALUE = 0xffff0000u;
+} // namespace oat::xenon
+#endif
