@@ -9,6 +9,12 @@
 
 namespace xanim
 {
+    enum class QuatEncoding
+    {
+        SIGNED_16,
+        XENON,
+    };
+
     enum class QuatType : uint8_t
     {
         NO_QUAT = 0,

@@ -1,4 +1,4 @@
-#options GAME(IW3, IW4, IW5, T4, T5, T6)
+#options GAME(IW3, IW3Xenon, IW4, IW5, T4, T5, T6)
 
 #filename "Game/" + GAME + "/XAnim/XAnimLoader" + GAME + ".cpp"
 
@@ -6,6 +6,9 @@
 
 #if GAME == "IW3"
 #define FEATURE_IW3
+#elif GAME == "IW3Xenon"
+#define FEATURE_IW3
+#define HAS_XENON_QUATS
 #elif GAME == "IW4"
 #define FEATURE_IW4
 #define HAS_DELTA_QUAT_3D
@@ -125,17 +128,29 @@ namespace
             parts.boneCount[PART_TYPE_NO_QUAT]++;
             break;
         case xanim::QuatType::HALF_QUAT:
+#ifdef HAS_XENON_QUATS
+        case xanim::QuatType::FULL_QUAT:
+            parts.boneCount[PART_TYPE_PRECISION_QUAT]++;
+            break;
+#else
             parts.boneCount[PART_TYPE_HALF_QUAT]++;
             break;
         case xanim::QuatType::FULL_QUAT:
             parts.boneCount[PART_TYPE_FULL_QUAT]++;
             break;
+#endif
         case xanim::QuatType::HALF_QUAT_NO_SIZE:
+#ifdef HAS_XENON_QUATS
+        case xanim::QuatType::FULL_QUAT_NO_SIZE:
+            parts.boneCount[PART_TYPE_PRECISION_QUAT_NO_SIZE]++;
+            break;
+#else
             parts.boneCount[PART_TYPE_HALF_QUAT_NO_SIZE]++;
             break;
         case xanim::QuatType::FULL_QUAT_NO_SIZE:
             parts.boneCount[PART_TYPE_FULL_QUAT_NO_SIZE]++;
             break;
+#endif
         }
 
         switch (boneTrack.m_trans.m_type)
@@ -433,7 +448,11 @@ namespace
 
         ConvertNoteTracks(parts, commonParts, registration, memory, scriptStrings);
 
-        const auto flatData = xanim::CreateFlatDataFromCommonXAnim(commonParts);
+        const auto flatData = xanim::CreateFlatDataFromCommonXAnim(commonParts
+#ifdef HAS_XENON_QUATS
+                                                                , xanim::QuatEncoding::XENON
+#endif
+        );
         ConvertFlatData(parts, flatData, memory);
         
         return {};

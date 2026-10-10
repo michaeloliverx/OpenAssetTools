@@ -18,5 +18,5 @@ namespace xanim
         std::vector<uint16_t> m_indices;
     };
 
-    FlatData CreateFlatDataFromCommonXAnim(const CommonXAnimParts& parts);
+    FlatData CreateFlatDataFromCommonXAnim(const CommonXAnimParts& parts, QuatEncoding quatEncoding = QuatEncoding::SIGNED_16);
 } // namespace xanim

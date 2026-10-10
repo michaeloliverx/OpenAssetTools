@@ -216,16 +216,24 @@ namespace IW3Xenon
         float time;
     };
 
+    typedef unsigned char ByteVec[3];
+    typedef unsigned short UShortVec[3];
+
     union XAnimDynamicFrames
     {
-        uint8_t (*_1)[3];
-        uint16_t (*_2)[3];
+        ByteVec* _1;
+        UShortVec* _2;
     };
 
     union XAnimDynamicIndicesTrans
     {
         uint8_t _1[1];
         uint16_t _2[1];
+    };
+
+    struct type_align(4) XQuat2
+    {
+        int16_t value[2];
     };
 
     union XAnimDynamicIndicesQuat
@@ -236,8 +244,8 @@ namespace IW3Xenon
 
     struct type_align32(4) XAnimPartTransFrames
     {
-        float mins[3];
-        float size[3];
+        vec3_t mins;
+        vec3_t size;
         XAnimDynamicFrames frames;
         XAnimDynamicIndicesTrans indices;
     };
@@ -245,7 +253,7 @@ namespace IW3Xenon
     union XAnimPartTransData
     {
         XAnimPartTransFrames frames;
-        float frame0[3];
+        vec3_t frame0;
     };
 
     struct XAnimPartTrans
@@ -257,14 +265,14 @@ namespace IW3Xenon
 
     struct type_align32(4) XAnimDeltaPartQuatDataFrames
     {
-        int16_t (*frames)[2];
+        XQuat2* frames;
         XAnimDynamicIndicesQuat indices;
     };
 
     union XAnimDeltaPartQuatData
     {
         XAnimDeltaPartQuatDataFrames frames;
-        int16_t frame0[2];
+        XQuat2 frame0;
     };
 
     struct XAnimDeltaPartQuat
@@ -318,7 +326,7 @@ namespace IW3Xenon
         uint8_t boneCount[PART_TYPE_COUNT];
         uint8_t notifyCount;
         uint8_t assetType;
-        bool pad;
+        bool isDefault;
         unsigned int randomDataShortCount;
         unsigned int indexCount;
         float framerate;

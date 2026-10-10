@@ -1,5 +1,7 @@
 #include "FlatXAnimDataWriter.h"
 
+#include "XAnim/XenonQuaternion.h"
+
 #include <cassert>
 #include <iterator>
 
@@ -58,8 +60,34 @@ namespace
         }
     }
 
-    void ProcessQuatTrack(FlatData& writeCursor, const QuatTrack& quatTrack, const bool useByteIndices)
+    void ProcessQuatTrack(FlatData& writeCursor, const QuatTrack& quatTrack, const bool useByteIndices, const QuatEncoding quatEncoding)
     {
+        if (quatEncoding == QuatEncoding::XENON && quatTrack.m_type != QuatType::NO_QUAT)
+        {
+            const auto keyed = quatTrack.m_type == QuatType::HALF_QUAT || quatTrack.m_type == QuatType::FULL_QUAT;
+            if (keyed)
+                WritePackedIndices(writeCursor, quatTrack.m_indices, useByteIndices);
+            auto& target = keyed ? writeCursor.m_random_data_short : writeCursor.m_data_short;
+            // Match the IW3 PC-to-Xenon porter: retain all tracks using 48-bit precision quaternions.
+            if (quatTrack.m_type == QuatType::HALF_QUAT || quatTrack.m_type == QuatType::HALF_QUAT_NO_SIZE)
+            {
+                for (const auto& frame : quatTrack.m_frames2)
+                {
+                    const auto packed = xenon::PackQuat48(CommonXQuat(0, 0, frame.value[0], frame.value[1]));
+                    target.insert(target.end(), packed.begin(), packed.end());
+                }
+            }
+            else
+            {
+                for (const auto& frame : quatTrack.m_frames)
+                {
+                    const auto packed = xenon::PackQuat48(frame);
+                    target.insert(target.end(), packed.begin(), packed.end());
+                }
+            }
+            return;
+        }
+
         switch (quatTrack.m_type)
         {
         case QuatType::NO_QUAT:
@@ -166,14 +194,14 @@ namespace
 
 namespace xanim
 {
-    FlatData CreateFlatDataFromCommonXAnim(const CommonXAnimParts& parts)
+    FlatData CreateFlatDataFromCommonXAnim(const CommonXAnimParts& parts, const QuatEncoding quatEncoding)
     {
         FlatData writeCursor;
 
         const auto useByteIndices = parts.m_num_frames < 256;
 
         for (const auto& boneTrack : parts.m_bone_tracks)
-            ProcessQuatTrack(writeCursor, boneTrack.m_quat, useByteIndices);
+            ProcessQuatTrack(writeCursor, boneTrack.m_quat, useByteIndices, quatEncoding);
 
         const auto transBoneOrder = parts.GetBoneTrackOrderForTrans();
         const auto boneCount = transBoneOrder.size();

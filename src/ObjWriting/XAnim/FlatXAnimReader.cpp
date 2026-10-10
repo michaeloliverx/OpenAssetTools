@@ -1,5 +1,7 @@
 #include "FlatXAnimReader.h"
 
+#include "XAnim/XenonQuaternion.h"
+
 #include <cassert>
 #include <cstring>
 #include <format>
@@ -71,7 +73,9 @@ namespace xanim
                                      const size_t smallTransCount,
                                      const size_t fullTransCount,
                                      const size_t transNoSizeCount,
-                                     const size_t noTransCount)
+                                     const size_t noTransCount,
+                                     const size_t precisionQuatCount,
+                                     const size_t precisionQuatNoSizeCount)
         : m_counts({
               noQuatCount,
               halfQuatCount,
@@ -82,7 +86,9 @@ namespace xanim
               fullTransCount,
               transNoSizeCount,
               noTransCount,
-          })
+          }),
+          m_precision_quat_count(precisionQuatCount),
+          m_precision_quat_no_size_count(precisionQuatNoSizeCount)
     {
         assert(m_counts[std::to_underlying(QuatType::NO_QUAT)] == noQuatCount);
         assert(m_counts[std::to_underlying(QuatType::HALF_QUAT)] == halfQuatCount);
@@ -95,7 +101,7 @@ namespace xanim
         assert(m_counts[std::to_underlying(TransType::TRANS_NO_SIZE)] == transNoSizeCount);
         assert(m_counts[std::to_underlying(TransType::NO_TRANS)] == noTransCount);
 
-        assert(noQuatCount + halfQuatCount + fullQuatCount + halfQuatNoSizeCount + fullQuatNoSizeCount
+        assert(noQuatCount + halfQuatCount + fullQuatCount + halfQuatNoSizeCount + fullQuatNoSizeCount + precisionQuatCount + precisionQuatNoSizeCount
                == smallTransCount + fullTransCount + transNoSizeCount + noTransCount);
     }
 
@@ -107,6 +113,16 @@ namespace xanim
     size_t XAnimBoneCounts::GetCountForTransType(const TransType transType) const
     {
         return m_counts[std::to_underlying(transType)];
+    }
+
+    size_t XAnimBoneCounts::GetPrecisionQuatCount() const
+    {
+        return m_precision_quat_count;
+    }
+
+    size_t XAnimBoneCounts::GetPrecisionQuatNoSizeCount() const
+    {
+        return m_precision_quat_no_size_count;
     }
 
     FlatDataReadException::FlatDataReadException(std::string message)
@@ -135,7 +151,9 @@ namespace xanim
                                              int16_t* randomDataShort,
                                              const size_t randomDataShortCount,
                                              uint16_t* indices,
-                                             const size_t indicesCount)
+                                             const size_t indicesCount,
+                                             int32_t* randomDataInt,
+                                             const size_t randomDataIntCount)
         : m_data_byte(dataByte),
           m_data_byte_count(dataByteCount),
           m_data_short(dataShort),
@@ -146,6 +164,8 @@ namespace xanim
           m_random_data_byte_count(randomDataByteCount),
           m_random_data_short(randomDataShort),
           m_random_data_short_count(randomDataShortCount),
+          m_random_data_int(randomDataInt),
+          m_random_data_int_count(randomDataIntCount),
           m_indices(indices),
           m_indices_count(indicesCount)
     {
@@ -175,6 +195,16 @@ namespace xanim
         m_data_short++;
         m_data_short_count--;
 
+        return result;
+    }
+
+    int32_t FlatXAnimReadCursor::PopRandomDataInt()
+    {
+        if (m_random_data_int_count < 1)
+            throw DATA_EXHAUSTED_ERROR("randomDataInt", 1, m_random_data_int_count);
+
+        const auto result = *m_random_data_int++;
+        --m_random_data_int_count;
         return result;
     }
 
@@ -255,6 +285,7 @@ namespace xanim
         CHECK_END_OF_DATA_ERROR("dataInt", m_data_int_count)
         CHECK_END_OF_DATA_ERROR("randomDataByte", m_random_data_byte_count)
         CHECK_END_OF_DATA_ERROR("randomDataShort", m_random_data_short_count)
+        CHECK_END_OF_DATA_ERROR("randomDataInt", m_random_data_int_count)
         CHECK_END_OF_DATA_ERROR("indices", m_indices_count)
 
         return {};
@@ -266,7 +297,8 @@ namespace xanim
     std::expected<std::vector<BoneTrack>, std::string> CreateBoneTracksFromFlatData(std::vector<std::string> boneNames,
                                                                                     const XAnimBoneCounts& boneCounts,
                                                                                     FlatXAnimReadCursor& cursor,
-                                                                                    const bool useByteIndices)
+                                                                                    const bool useByteIndices,
+                                                                                    const QuatEncoding quatEncoding)
     {
         const auto boneCount = boneNames.size();
         std::vector<BoneTrack> boneTracks(boneCount);
@@ -290,7 +322,15 @@ namespace xanim
 
                 static_assert(sizeof(decltype(quat.m_frames2)::value_type) == sizeof(int16_t) * 2);
                 quat.m_frames2.resize(frameCount);
-                cursor.ReadRandomDataShort(quat.m_frames2.data(), frameCount * 2);
+                if (quatEncoding == QuatEncoding::XENON)
+                    for (auto& frame : quat.m_frames2)
+                    {
+                        int16_t packed;
+                        cursor.ReadRandomDataShort(&packed, 1);
+                        frame = xenon::UnpackQuat16(static_cast<uint16_t>(packed));
+                    }
+                else
+                    cursor.ReadRandomDataShort(quat.m_frames2.data(), frameCount * 2);
             }
 
             for (auto i = 0u; i < boneCounts.GetCountForQuatType(QuatType::FULL_QUAT); i++, boneIndex++)
@@ -303,7 +343,26 @@ namespace xanim
 
                 static_assert(sizeof(decltype(quat.m_frames)::value_type) == sizeof(int16_t) * 4);
                 quat.m_frames.resize(frameCount);
-                cursor.ReadRandomDataShort(quat.m_frames.data(), frameCount * 4);
+                if (quatEncoding == QuatEncoding::XENON)
+                    for (auto& frame : quat.m_frames)
+                        frame = xenon::UnpackQuat32(static_cast<uint32_t>(cursor.PopRandomDataInt()));
+                else
+                    cursor.ReadRandomDataShort(quat.m_frames.data(), frameCount * 4);
+            }
+
+            for (auto i = 0uz; i < boneCounts.GetPrecisionQuatCount(); ++i, ++boneIndex)
+            {
+                auto& quat = boneTracks[boneIndex].m_quat;
+                quat.m_type = QuatType::FULL_QUAT;
+                const auto storedSize = static_cast<uint16_t>(cursor.PopDataShort());
+                quat.m_indices = ReadPackedIndices(cursor, storedSize, useByteIndices);
+                quat.m_frames.resize(static_cast<size_t>(storedSize) + 1uz);
+                for (auto& frame : quat.m_frames)
+                {
+                    int16_t packed[3];
+                    cursor.ReadRandomDataShort(packed, 3);
+                    frame = xenon::UnpackQuat48(packed);
+                }
             }
 
             for (auto i = 0u; i < boneCounts.GetCountForQuatType(QuatType::HALF_QUAT_NO_SIZE); i++, boneIndex++)
@@ -313,7 +372,10 @@ namespace xanim
 
                 static_assert(sizeof(decltype(quat.m_frames2)::value_type) == sizeof(int16_t) * 2);
                 quat.m_frames2.resize(1);
-                cursor.ReadDataShort(quat.m_frames2.data(), 2);
+                if (quatEncoding == QuatEncoding::XENON)
+                    quat.m_frames2[0] = xenon::UnpackQuat16(static_cast<uint16_t>(cursor.PopDataShort()));
+                else
+                    cursor.ReadDataShort(quat.m_frames2.data(), 2);
             }
 
             for (auto i = 0u; i < boneCounts.GetCountForQuatType(QuatType::FULL_QUAT_NO_SIZE); i++, boneIndex++)
@@ -323,7 +385,19 @@ namespace xanim
 
                 static_assert(sizeof(decltype(quat.m_frames)::value_type) == sizeof(int16_t) * 4);
                 quat.m_frames.resize(1);
-                cursor.ReadDataShort(quat.m_frames.data(), 4);
+                if (quatEncoding == QuatEncoding::XENON)
+                    quat.m_frames[0] = xenon::UnpackQuat32(static_cast<uint32_t>(cursor.PopDataInt()));
+                else
+                    cursor.ReadDataShort(quat.m_frames.data(), 4);
+            }
+
+            for (auto i = 0uz; i < boneCounts.GetPrecisionQuatNoSizeCount(); ++i, ++boneIndex)
+            {
+                auto& quat = boneTracks[boneIndex].m_quat;
+                quat.m_type = QuatType::FULL_QUAT_NO_SIZE;
+                int16_t packed[3];
+                cursor.ReadDataShort(packed, 3);
+                quat.m_frames.push_back(xenon::UnpackQuat48(packed));
             }
 
             std::vector<bool> transAssigned(boneCount, false);

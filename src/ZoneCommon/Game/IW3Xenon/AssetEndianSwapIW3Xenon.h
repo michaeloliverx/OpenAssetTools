@@ -135,6 +135,11 @@ static inline void EndianSwap(IW3Xenon::PhysPreset& v, [[maybe_unused]] const En
 
 // ---- XAnimParts
 
+static inline void EndianSwap(IW3Xenon::XQuat2& v, [[maybe_unused]] const EndianOperation operation)
+{
+    EndianSwap(v.value);
+}
+
 static inline void EndianSwap(IW3Xenon::XAnimNotifyInfo& v, [[maybe_unused]] const EndianOperation operation)
 {
     EndianSwap(v.name);
@@ -159,12 +164,8 @@ static inline void
 {
     assert(loadedSize == offsetof(IW3Xenon::XAnimPartTransFrames, indices));
 
-    EndianSwap(v.mins[0]);
-    EndianSwap(v.mins[1]);
-    EndianSwap(v.mins[2]);
-    EndianSwap(v.size[0]);
-    EndianSwap(v.size[1]);
-    EndianSwap(v.size[2]);
+    EndianSwap(v.mins, operation);
+    EndianSwap(v.size, operation);
     EndianSwap(v.frames._1);
 }
 
