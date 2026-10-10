@@ -1,4 +1,4 @@
-#options GAME(IW3, IW4, IW5, T4, T5, T6)
+#options GAME(IW3, IW3Xenon, IW4, IW5, T4, T5, T6)
 
 #filename "Game/" + GAME + "/XAnim/XAnimDumper" + GAME + ".cpp"
 
@@ -6,6 +6,13 @@
 
 #if GAME == "IW3"
 #define FEATURE_IW3
+#elif GAME == "IW3Xenon"
+#define FEATURE_IW3
+#define HAS_XENON_QUATS
+#define PART_TYPE_HALF_QUAT PART_TYPE_SIMPLE_QUAT
+#define PART_TYPE_FULL_QUAT PART_TYPE_NORMAL_QUAT
+#define PART_TYPE_HALF_QUAT_NO_SIZE PART_TYPE_SIMPLE_QUAT_NO_SIZE
+#define PART_TYPE_FULL_QUAT_NO_SIZE PART_TYPE_NORMAL_QUAT_NO_SIZE
 #elif GAME == "IW4"
 #define FEATURE_IW4
 #define HAS_DELTA_QUAT_3D
@@ -299,7 +306,12 @@ namespace xanim
                                          parts.boneCount[PART_TYPE_SMALL_TRANS],
                                          parts.boneCount[PART_TYPE_TRANS],
                                          parts.boneCount[PART_TYPE_TRANS_NO_SIZE],
-                                         parts.boneCount[PART_TYPE_NO_TRANS]);
+                                         parts.boneCount[PART_TYPE_NO_TRANS]
+#ifdef HAS_XENON_QUATS
+                                         , parts.boneCount[PART_TYPE_PRECISION_QUAT],
+                                         parts.boneCount[PART_TYPE_PRECISION_QUAT_NO_SIZE]
+#endif
+        );
 
         // Root indices should only ever be used when it is !useByteIndices, therefore we should be safe to always use the short version
         assert(!useByteIndices || parts.indices._1 == nullptr);
@@ -314,9 +326,17 @@ namespace xanim
                                      parts.randomDataShort,
                                      parts.randomDataShortCount,
                                      parts.indices._2,
-                                     parts.indexCount);
+                                     parts.indexCount
+#ifdef HAS_XENON_QUATS
+                                     , parts.randomDataInt, parts.randomDataIntCount
+#endif
+        );
 
-        auto maybeBoneTracks = CreateBoneTracksFromFlatData(std::move(boneNames), boneCounts, flatData, useByteIndices);
+        auto maybeBoneTracks = CreateBoneTracksFromFlatData(std::move(boneNames), boneCounts, flatData, useByteIndices
+#ifdef HAS_XENON_QUATS
+                                                          , QuatEncoding::XENON
+#endif
+        );
         if (!maybeBoneTracks.has_value())
         {
             con::error("Failed to reconstruct bone tracks from XAnim {}: {}", parts.name, maybeBoneTracks.error());

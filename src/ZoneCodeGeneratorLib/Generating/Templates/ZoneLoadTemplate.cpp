@@ -1243,7 +1243,34 @@ namespace
             }
         }
 
-        void LoadMember_EmbeddedArray(const StructureInformation* info, const MemberInformation* member, const DeclarationModifierComputations& modifier) const
+        void PrintEndianSwapLoadedValue(const MemberInformation* member, const std::string& expression) const
+        {
+            const auto* definition = member->m_member->m_type_declaration->m_type;
+            if (definition->GetType() == DataDefinitionType::STRUCT || definition->GetType() == DataDefinitionType::UNION)
+            {
+                LINEF("EndianSwap({0}, EndianOperation::Decode);", expression)
+            }
+            else
+            {
+                LINEF("EndianSwap({0});", expression)
+            }
+        }
+
+        void PrintEndianSwapLoadedArray(const MemberInformation* member, const std::string& arrayExpression, const std::string& countExpression)
+        {
+            if (m_env.m_endianness != std::endian::big || MemberComputations(member).IsInRuntimeBlock()
+                || member->m_member->m_type_declaration->m_type->GetSize() <= 1)
+                return;
+
+            LINEF("for (size_t index = 0; index < static_cast<size_t>({0}); index++)", countExpression)
+            LINE("{")
+            m_intendation++;
+            PrintEndianSwapLoadedValue(member, arrayExpression + "[index]");
+            m_intendation--;
+            LINE("}")
+        }
+
+        void LoadMember_EmbeddedArray(const StructureInformation* info, const MemberInformation* member, const DeclarationModifierComputations& modifier)
         {
             const MemberComputations computations(member);
             std::string arraySizeStr;
@@ -1285,6 +1312,7 @@ namespace
                       MakeFollowingReferences(modifier.GetFollowingDeclarationModifiers()),
                       MakeMemberAccess(info, member, modifier),
                       arraySizeStr)
+                PrintEndianSwapLoadedArray(member, MakeMemberAccess(info, member, modifier), arraySizeStr);
             }
         }
 
@@ -1303,6 +1331,7 @@ namespace
                 if (m_env.m_word_size_mismatch)
                 {
                     LINE("if (atStreamStart)")
+                    LINE("{")
                     m_intendation++;
                 }
 
@@ -1311,10 +1340,12 @@ namespace
                       MakeFollowingReferences(modifier.GetFollowingDeclarationModifiers()),
                       MakeMemberAccess(info, member, modifier),
                       MakeEvaluation(modifier.GetDynamicArraySizeEvaluation()))
+                PrintEndianSwapLoadedArray(member, MakeMemberAccess(info, member, modifier), MakeEvaluation(modifier.GetDynamicArraySizeEvaluation()));
 
                 if (m_env.m_word_size_mismatch)
                 {
                     m_intendation--;
+                    LINE("}")
                 }
             }
         }
@@ -1353,6 +1384,10 @@ namespace
                       MakeTypeDecl(member->m_member->m_type_declaration.get()),
                       MakeFollowingReferences(modifier.GetFollowingDeclarationModifiers()),
                       MakeMemberAccess(info, member, modifier))
+                if (m_env.m_endianness == std::endian::big && !computations.IsInRuntimeBlock() && member->m_member->m_type_declaration->m_type->GetSize() > 1)
+                {
+                    PrintEndianSwapLoadedValue(member, MakeMemberAccess(info, member, modifier));
+                }
             }
         }
 

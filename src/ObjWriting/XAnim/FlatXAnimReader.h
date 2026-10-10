@@ -21,13 +21,19 @@ namespace xanim
                         size_t smallTransCount,
                         size_t fullTransCount,
                         size_t transNoSizeCount,
-                        size_t noTransCount);
+                        size_t noTransCount,
+                        size_t precisionQuatCount = 0,
+                        size_t precisionQuatNoSizeCount = 0);
 
         [[nodiscard]] size_t GetCountForQuatType(QuatType quatType) const;
         [[nodiscard]] size_t GetCountForTransType(TransType transType) const;
+        [[nodiscard]] size_t GetPrecisionQuatCount() const;
+        [[nodiscard]] size_t GetPrecisionQuatNoSizeCount() const;
 
     private:
         std::array<size_t, 9> m_counts;
+        size_t m_precision_quat_count;
+        size_t m_precision_quat_no_size_count;
     };
 
     class FlatDataReadException : public std::exception
@@ -56,13 +62,16 @@ namespace xanim
                             int16_t* randomDataShort,
                             size_t randomDataShortCount,
                             uint16_t* indices,
-                            size_t indicesCount);
+                            size_t indicesCount,
+                            int32_t* randomDataInt = nullptr,
+                            size_t randomDataIntCount = 0);
 
         uint8_t PopDataByte();
         int16_t PopDataShort();
         void ReadDataShort(void* dst, size_t count);
         void SkipDataShort(size_t count);
         int32_t PopDataInt();
+        int32_t PopRandomDataInt();
         void ReadRandomDataByte(void* dst, size_t count);
         void ReadRandomDataShort(void* dst, size_t count);
         void ReadIndices(void* dst, size_t count);
@@ -85,10 +94,16 @@ namespace xanim
         int16_t* m_random_data_short;
         size_t m_random_data_short_count;
 
+        int32_t* m_random_data_int;
+        size_t m_random_data_int_count;
+
         uint16_t* m_indices;
         size_t m_indices_count;
     };
 
-    std::expected<std::vector<BoneTrack>, std::string>
-        CreateBoneTracksFromFlatData(std::vector<std::string> boneNames, const XAnimBoneCounts& boneCounts, FlatXAnimReadCursor& cursor, bool useByteIndices);
+    std::expected<std::vector<BoneTrack>, std::string> CreateBoneTracksFromFlatData(std::vector<std::string> boneNames,
+                                                                                    const XAnimBoneCounts& boneCounts,
+                                                                                    FlatXAnimReadCursor& cursor,
+                                                                                    bool useByteIndices,
+                                                                                    QuatEncoding quatEncoding = QuatEncoding::SIGNED_16);
 } // namespace xanim
