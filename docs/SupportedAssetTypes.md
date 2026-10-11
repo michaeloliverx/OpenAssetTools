@@ -48,9 +48,9 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | MaterialPixelShader  | ✅              | ✅              | Native `.xpu` microcode.                                                     |
 | MaterialTechniqueSet | ✅              | ✅              | Text techniques with Xbox extensions and all `.xvu` shader variants.        |
 | GfxImage             | ✅              | ✅              | DDS/IWI, 2D and cube textures.                                               |
-| snd_alias_list_t     | ❌              | ❌              |                                                                              |
+| snd_alias_list_t     | ⁉️              | ❌              | Extracts streamed `.xma` audio; alias definitions are not dumped.             |
 | SndCurve             | ✅              | ✅              | IW3 PC-compatible `.vfcurve` files in `soundaliases/`.                         |
-| LoadedSound          | ❌              | ❌              |                                                                              |
+| LoadedSound          | ✅              | ❌              | Embedded XMA1 audio as RIFF `.xma` files.                                     |
 | clipMap_t            | ❌              | ❌              |                                                                              |
 | ComWorld             | ❌              | ❌              |                                                                              |
 | GameWorldSp          | ❌              | ❌              |                                                                              |
@@ -71,6 +71,15 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 
 IW3 Xbox 360 image dumping looks for `highmip/<image name>.hi` beside the fastfile or under a supplied search path.
 For streamed images, a valid file adds the highest mip level; otherwise, the resident image is dumped.
+
+IW3 Xbox 360 sound dumping preserves native XMA audio in `sound/`. Embedded sounds use their asset name with an `.xma`
+extension and retain stream formats, loops, duration and seek data in a reconstructed RIFF file.
+Streamed sounds use `<alias>.<index>.xma`; packed audio is copied from the recorded offset and length in `packfileN.pak`.
+The packfiles are found beside stock fastfiles or through `--search-path`. Loose XMA streams use the same search paths.
+No Xbox 360 SDK is required for dumping. These files contain compressed XMA audio, rather than decoded PCM WAV.
+For PCM playback, [vgmstream](https://github.com/vgmstream/vgmstream) supports the legacy XMA1 format:
+`vgmstream-cli -i -o output.wav input.xma` decodes a single pass without repeating loops.
+The SDK's `xma2encode /DecodeToPCM` can produce empty or corrupt audio from these legacy files.
 
 IW3 Xbox 360 technique sets use `techsets/<name>.techset` and reference `techniques/<name>.tech`,
 following the PC text syntax for technique slots, named shader bindings and vertex routing.
