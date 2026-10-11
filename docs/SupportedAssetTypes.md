@@ -55,7 +55,7 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | ComWorld             | ❌              | ❌              |                                                                              |
 | GameWorldSp          | ❌              | ❌              |                                                                              |
 | GameWorldMp          | ❌              | ❌              |                                                                              |
-| MapEnts              | ❌              | ❌              |                                                                              |
+| MapEnts              | ✅              | ✅              | IW3 PC-compatible `.d3dbsp.ents` entity strings.                               |
 | GfxWorld             | ❌              | ❌              |                                                                              |
 | GfxLightDef          | ❌              | ❌              |                                                                              |
 | Font_s               | ❌              | ❌              |                                                                              |
