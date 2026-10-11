@@ -11,6 +11,8 @@
 #include "Game/IW3Xenon/XModel/LoaderXModelIW3Xenon.h"
 #include "Image/LoaderImageIW3Xenon.h"
 #include "Localize/AssetLoaderLocalizeIW3Xenon.h"
+#include "PhysPreset/GdtLoaderPhysPresetIW3Xenon.h"
+#include "PhysPreset/RawLoaderPhysPresetIW3Xenon.h"
 #include "RawFile/AssetLoaderRawFileIW3Xenon.h"
 #include "StringTable/LoaderStringTableIW3Xenon.h"
 
@@ -42,6 +44,8 @@ void ObjLoader::ConfigureCreatorCollection(AssetCreatorCollection& collection, Z
     collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetRawFile>>(memory));
     collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetStringTable>>(memory));
 
+    collection.AddAssetCreator(phys_preset::CreateRawLoaderIW3Xenon(memory, searchPath, zone));
+    collection.AddAssetCreator(phys_preset::CreateGdtLoaderIW3Xenon(memory, gdt, zone));
     collection.AddAssetCreator(xanim::CreateLoaderIW3Xenon(memory, searchPath, zone));
     collection.AddAssetCreator(xmodel::CreateLoaderIW3Xenon(memory, searchPath, zone));
     collection.AddAssetCreator(material::CreateLoaderIW3Xenon(memory, searchPath));
