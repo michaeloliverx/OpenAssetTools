@@ -48,9 +48,9 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | MaterialPixelShader  | ✅              | ✅              | Native `.xpu` microcode.                                                     |
 | MaterialTechniqueSet | ❌              | ❌              |                                                                              |
 | GfxImage             | ✅              | ✅              | DDS/IWI, 2D and cube textures.                                               |
-| snd_alias_list_t     | ❌              | ❌              |                                                                              |
+| snd_alias_list_t     | ⁉️              | ❌              | Extracts streamed `.xma` audio; alias definitions are not dumped.             |
 | SndCurve             | ✅              | ✅              | IW3 PC-compatible `.vfcurve` files in `soundaliases/`.                         |
-| LoadedSound          | ❌              | ❌              |                                                                              |
+| LoadedSound          | ✅              | ❌              | Embedded XMA1 audio as RIFF `.xma` files.                                     |
 | clipMap_t            | ❌              | ❌              |                                                                              |
 | ComWorld             | ❌              | ❌              |                                                                              |
 | GameWorldSp          | ❌              | ❌              |                                                                              |
