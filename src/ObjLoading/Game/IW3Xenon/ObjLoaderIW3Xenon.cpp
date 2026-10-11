@@ -3,6 +3,7 @@
 #include "Asset/GlobalAssetPoolsLoader.h"
 #include "Game/IW3Xenon/AssetMarkerIW3Xenon.h"
 #include "Game/IW3Xenon/Material/LoaderMaterialIW3Xenon.h"
+#include "Game/IW3Xenon/Techset/PixelShaderLoaderIW3Xenon.h"
 #include "Game/IW3Xenon/Weapon/AccuracyGraphLoaderIW3Xenon.h"
 #include "Game/IW3Xenon/Weapon/WeaponGdtLoaderIW3Xenon.h"
 #include "Game/IW3Xenon/Weapon/WeaponRawLoaderIW3Xenon.h"
@@ -44,6 +45,7 @@ void ObjLoader::ConfigureCreatorCollection(AssetCreatorCollection& collection, Z
     collection.AddAssetCreator(xanim::CreateLoaderIW3Xenon(memory, searchPath, zone));
     collection.AddAssetCreator(xmodel::CreateLoaderIW3Xenon(memory, searchPath, zone));
     collection.AddAssetCreator(material::CreateLoaderIW3Xenon(memory, searchPath));
+    collection.AddAssetCreator(techset::CreatePixelShaderLoaderIW3Xenon(memory, searchPath));
     collection.AddAssetCreator(image::CreateLoaderIW3Xenon(memory, searchPath));
     collection.AddAssetCreator(localize::CreateLoaderIW3Xenon(memory, searchPath, zone));
     collection.AddAssetCreator(weapon::CreateRawLoaderIW3Xenon(memory, searchPath, zone));
