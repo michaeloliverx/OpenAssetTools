@@ -7,6 +7,7 @@
 #include "Game/IW3Xenon/XAnim/XAnimDumperIW3Xenon.h"
 #include "Game/IW3Xenon/XModel/XModelDumperIW3Xenon.h"
 #include "Localize/LocalizeDumperIW3Xenon.h"
+#include "PhysPreset/PhysPresetInfoStringDumperIW3Xenon.h"
 #include "RawFile/RawFileDumperIW3Xenon.h"
 #include "StringTable/StringTableDumperIW3Xenon.h"
 
@@ -14,6 +15,7 @@ using namespace IW3Xenon;
 
 void ObjWriter::RegisterAssetDumpers(AssetDumpingContext& context)
 {
+    RegisterAssetDumper(std::make_unique<phys_preset::InfoStringDumperIW3Xenon>());
     RegisterAssetDumper(std::make_unique<xanim::DumperIW3Xenon>());
     RegisterAssetDumper(std::make_unique<xmodel::DumperIW3Xenon>());
     RegisterAssetDumper(std::make_unique<material::JsonDumperIW3Xenon>());
