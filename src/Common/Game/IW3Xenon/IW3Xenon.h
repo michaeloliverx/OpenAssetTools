@@ -19,6 +19,7 @@ namespace IW3Xenon
 
     enum SubAssetType
     {
+        SUB_ASSET_TYPE_TECHNIQUE,
         SUB_ASSET_TYPE_VERTEX_SHADER,
         SUB_ASSET_TYPE_ACCURACY_GRAPH,
 
@@ -105,6 +106,7 @@ namespace IW3Xenon
     using AssetRawFile = Asset<ASSET_TYPE_RAWFILE, RawFile>;
     using AssetStringTable = Asset<ASSET_TYPE_STRINGTABLE, StringTable>;
 
+    using SubAssetTechnique = SubAsset<SUB_ASSET_TYPE_TECHNIQUE, MaterialTechnique>;
     using SubAssetVertexShader = SubAsset<SUB_ASSET_TYPE_VERTEX_SHADER, MaterialVertexShader>;
     using SubAssetAccuracyGraph = SubAsset<SUB_ASSET_TYPE_ACCURACY_GRAPH, AccuracyGraph>;
 } // namespace IW3Xenon

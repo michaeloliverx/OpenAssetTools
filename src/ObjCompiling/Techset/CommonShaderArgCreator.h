@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Asset/AssetCreationContext.h"
+#include "Shader/D3D9ShaderAnalyser.h"
 #include "Techset/CommonTechnique.h"
 
 #include <array>
@@ -19,6 +20,8 @@ namespace techset
 
         virtual std::optional<CommonTechniqueShaderBin> LoadVertexShader(const std::string& name) = 0;
         virtual std::optional<CommonTechniqueShaderBin> LoadPixelShader(const std::string& name) = 0;
+        // Platforms can supply the same constant-table information from a different shader binary format.
+        virtual std::unique_ptr<d3d9::ShaderInfo> GetShaderInfoDx9(const CommonTechniqueShaderBin& shader) const;
     };
 
     class CommonShaderArgCreatorDestination

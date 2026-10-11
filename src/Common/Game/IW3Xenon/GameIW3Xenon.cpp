@@ -17,6 +17,7 @@ namespace
     static_assert(std::extent_v<decltype(ASSET_TYPE_NAMES)> == ASSET_TYPE_COUNT);
 
     constexpr const char* SUB_ASSET_TYPE_NAMES[]{
+        "technique",
         "vertexshader",
         "accuracygraph",
     };

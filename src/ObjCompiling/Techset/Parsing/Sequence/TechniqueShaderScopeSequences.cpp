@@ -229,7 +229,8 @@ namespace techset
 
                 sourceIndex = static_cast<unsigned>(indexIntValue);
 
-                size_t codeArraySize = state->m_code_source_infos.GetInfoForCodeConstSource(constSource)->arrayCount;
+                const auto info = state->m_code_source_infos.GetInfoForCodeConstSource(constSource);
+                const size_t codeArraySize = info->transposedMatrix ? 4u : info->arrayCount;
 
                 if (codeArraySize == 0)
                     throw ParsingException(result.NextCapture(CAPTURE_FIRST_TOKEN).GetPos(), "Code constant is not an array");

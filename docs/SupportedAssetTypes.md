@@ -44,9 +44,9 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | PhysPreset           | ❌              | ❌              |                                                                              |
 | XAnimParts           | ✅              | ✅              | IW3 PC-compatible version-17 files in `xanim/`.                               |
 | XModel               | ✅              | ✅              | Model data can be exported to `XMODEL_EXPORT/XMODEL_BIN`, `OBJ`, `GLB/GLTF`. |
-| Material             | ✅              | ✅              | IW3 material JSON, including water. Requires native technique sets.          |
-| MaterialPixelShader  | ❌              | ❌              |                                                                              |
-| MaterialTechniqueSet | ❌              | ❌              |                                                                              |
+| Material             | ✅              | ✅              | IW3 material JSON, including water.                                          |
+| MaterialPixelShader  | ✅              | ✅              | Native `.xpu` microcode.                                                     |
+| MaterialTechniqueSet | ✅              | ✅              | Text techniques with Xbox extensions and all `.xvu` shader variants.        |
 | GfxImage             | ✅              | ✅              | DDS/IWI, 2D and cube textures.                                               |
 | snd_alias_list_t     | ❌              | ❌              |                                                                              |
 | SndCurve             | ❌              | ❌              |                                                                              |
@@ -71,6 +71,15 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 
 IW3 Xbox 360 image dumping looks for `highmip/<image name>.hi` beside the fastfile or under a supplied search path.
 For streamed images, a valid file adds the highest mip level; otherwise, the resident image is dumped.
+
+IW3 Xbox 360 technique sets use `techsets/<name>.techset` and reference `techniques/<name>.tech`,
+following the PC text syntax for technique slots, named shader bindings and vertex routing.
+Xbox extensions preserve flags, all 15 vertex-shader variants, the precompiled index and the exact shader-argument layout.
+See [IW3 Xbox 360 technique files](IW3XenonTechsets.md) for the format and its source-recovery limitations.
+Shaders use `shader_bin/ps_<name>.xpu` and `shader_bin/vs_<name>.xvu`, the SDK microcode file formats.
+The loader recreates the zero-filled runtime headers used by stock fastfiles; no shader sidecars or Xbox 360 SDK are required.
+Use `--load` for base fastfiles when a map references shaders stored in those fastfiles.
+Characters that cannot appear in Windows filenames are escaped as `~XX`; asset names inside text files retain their original spelling.
 
 ## IW4 (Call of Duty: Modern Warfare 2)
 

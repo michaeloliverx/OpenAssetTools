@@ -2,7 +2,6 @@
 
 #include "Shader/D3D11ShaderAnalyser.h"
 #include "Shader/D3D9ShaderAnalyser.h"
-#include "Utils/Alignment.h"
 #include "Utils/Djb2.h"
 #include "Utils/Logging/Log.h"
 
@@ -280,8 +279,8 @@ namespace
 
             if (isMatrix)
             {
-                if (sourceIndex >= 4)
-                    return std::unexpected(std::format("Index for matrix code const is out of bounds: {} (must be < 4)", sourceIndex));
+                if (sourceIndex >= 4 || !rowCount || rowCount > 4 - sourceIndex)
+                    return std::unexpected(std::format("Row range for matrix code const is out of bounds: {} + {} (must be <= 4)", sourceIndex, rowCount));
 
                 value.m_index = isTransposed ? *maybeInfo->transposedMatrix : codeConstSource;
                 value.m_first_row = sourceIndex;
@@ -400,11 +399,13 @@ namespace
             if (!result)
                 return std::move(result);
 
-            m_shader_info = d3d9::ShaderAnalyser::GetShaderInfo(m_bin.m_shader_bin, m_bin.m_shader_bin_size);
+            m_shader_info = m_shader_loader.GetShaderInfoDx9(m_bin);
             if (!m_shader_info)
                 return std::unexpected(std::format("Failed to analyse dx9 shader {}", name));
 
-            m_arg_added = std::vector(m_shader_info->m_constants.size(), false);
+            m_arg_added.clear();
+            for (const auto& constant : m_shader_info->m_constants)
+                m_arg_added.emplace_back(std::max(constant.m_type_elements, 1u), false);
 
             return {};
         }
@@ -441,12 +442,20 @@ namespace
             if (foundConstant == m_shader_info->m_constants.end())
                 return false;
 
-            commonDestination.dx9.m_destination_register = foundConstant->m_register_index;
+            unsigned element;
+            if (!FindElement(*foundConstant, input, element, rowCount, errorMessage))
+                return false;
+
+            commonDestination.dx9.m_destination_register = foundConstant->m_register_index + element * rowCount;
             isTransposed = foundConstant->m_class == d3d9::ParameterClass::MATRIX_COLUMNS;
-            rowCount = foundConstant->m_register_count;
 
             const auto argIndex = static_cast<size_t>(foundConstant - m_shader_info->m_constants.begin());
-            m_arg_added[argIndex] = true;
+            if (m_arg_added[argIndex][element])
+            {
+                errorMessage = std::format("Shader input {}[{}] is already assigned", foundConstant->m_name, element);
+                return false;
+            }
+            m_arg_added[argIndex][element] = true;
 
             return true;
         }
@@ -467,10 +476,19 @@ namespace
             if (foundConstant == m_shader_info->m_constants.end())
                 return false;
 
-            commonDestination.dx9.m_destination_register = foundConstant->m_register_index;
+            unsigned element, registerCount;
+            if (!FindElement(*foundConstant, input, element, registerCount, errorMessage))
+                return false;
+
+            commonDestination.dx9.m_destination_register = foundConstant->m_register_index + element * registerCount;
 
             const auto argIndex = static_cast<size_t>(foundConstant - m_shader_info->m_constants.begin());
-            m_arg_added[argIndex] = true;
+            if (m_arg_added[argIndex][element])
+            {
+                errorMessage = std::format("Shader input {}[{}] is already assigned", foundConstant->m_name, element);
+                return false;
+            }
+            m_arg_added[argIndex][element] = true;
 
             return true;
         }
@@ -480,22 +498,19 @@ namespace
             const auto argCount = m_shader_info->m_constants.size();
             for (size_t argIndex = 0; argIndex < argCount; argIndex++)
             {
-                if (m_arg_added[argIndex])
-                    continue;
-
                 const auto& shaderArg = m_shader_info->m_constants[argIndex];
-
-                if (shaderArg.m_register_set == d3d9::RegisterSet::FLOAT_4)
+                for (auto element = 0u; element < m_arg_added[argIndex].size(); ++element)
                 {
-                    auto result = AutoCreateConstantArg(shaderArg);
-                    if (!result)
-                        return std::move(result);
-                }
-                else
-                {
-                    assert(shaderArg.m_register_set == d3d9::RegisterSet::SAMPLER);
+                    if (m_arg_added[argIndex][element])
+                        continue;
 
-                    auto result = AutoCreateSamplerArg(shaderArg);
+                    std::expected<void, std::string> result;
+                    if (shaderArg.m_register_set == d3d9::RegisterSet::FLOAT_4)
+                        result = AutoCreateConstantArg(shaderArg, element);
+                    else if (shaderArg.m_register_set == d3d9::RegisterSet::SAMPLER)
+                        result = AutoCreateSamplerArg(shaderArg, element);
+                    else
+                        return std::unexpected(std::format("Unsupported register set for shader input {}", shaderArg.m_name));
                     if (!result)
                         return std::move(result);
                 }
@@ -505,7 +520,29 @@ namespace
         }
 
     private:
-        std::expected<void, std::string> AutoCreateConstantArg(const d3d9::ShaderConstant& shaderArg)
+        static bool FindElement(const d3d9::ShaderConstant& constant,
+                                const techset::CommonShaderArgCreatorDestination& input,
+                                unsigned& element,
+                                unsigned& registerCount,
+                                std::string& errorMessage)
+        {
+            const auto elements = std::max(constant.m_type_elements, 1u);
+            element = input.m_argument_index.value_or(0);
+            if (element >= elements)
+            {
+                errorMessage = std::format("Index for shader input {} is out of bounds: {} (must be < {})", constant.m_name, element, elements);
+                return false;
+            }
+            registerCount = constant.m_register_count / elements;
+            if (!registerCount || constant.m_register_count % elements)
+            {
+                errorMessage = std::format("Invalid register count for shader input {}", constant.m_name);
+                return false;
+            }
+            return true;
+        }
+
+        std::expected<void, std::string> AutoCreateConstantArg(const d3d9::ShaderConstant& shaderArg, const unsigned element)
         {
             if (!IsArgumentTypeSupported(
                     techset::CommonShaderArgumentType{.m_shader_type = m_shader_type, .m_value_type = techset::CommonShaderValueType::CODE_CONST}))
@@ -530,8 +567,10 @@ namespace
             if (!constInfo)
                 return std::unexpected(std::format("Missing info for code const {}", shaderArg.m_name));
 
-            const auto elementSize = ElementSizeForArg(shaderArg);
-            const auto elementCount = utils::Align(shaderArg.m_register_count, elementSize) / elementSize;
+            const auto elementCount = std::max(shaderArg.m_type_elements, 1u);
+            const auto elementSize = shaderArg.m_register_count / elementCount;
+            if (!elementSize || shaderArg.m_register_count % elementCount)
+                return std::unexpected(std::format("Invalid register count for shader input {}", shaderArg.m_name));
             const auto infoArrayCount = std::max<unsigned>(constInfo->arrayCount, 1);
             if (elementCount > infoArrayCount)
             {
@@ -541,36 +580,16 @@ namespace
                                                    infoArrayCount));
             }
 
-            techset::CommonShaderArgDestination commonDestination;
+            techset::CommonShaderArgDestination commonDestination{};
             const auto isTransposed = shaderArg.m_class == d3d9::ParameterClass::MATRIX_COLUMNS;
-            for (auto elementIndex = 0u; elementIndex < elementCount; elementIndex++)
-            {
-                commonDestination.dx9.m_destination_register = shaderArg.m_register_index + elementIndex;
-                auto result = AcceptShaderConstantArgument(commonDestination, isTransposed, shaderArg.m_register_count, *maybeCodeConst, elementIndex);
-                if (!result)
-                    return std::move(result);
-            }
-
-            if (constInfo->techFlags && (!constInfo->techFlagShaderType || *constInfo->techFlagShaderType == m_shader_type))
-                m_tech_flags |= *constInfo->techFlags;
-
-            return {};
+            commonDestination.dx9.m_destination_register = shaderArg.m_register_index + element * elementSize;
+            return AcceptShaderConstantArgument(commonDestination, isTransposed, elementSize, *maybeCodeConst, element);
         }
 
-        [[nodiscard]] static unsigned ElementSizeForArg(const d3d9::ShaderConstant& arg)
+        std::expected<void, std::string> AutoCreateSamplerArg(const d3d9::ShaderConstant& shaderArg, const unsigned element)
         {
-            switch (arg.m_class)
-            {
-            case d3d9::ParameterClass::MATRIX_COLUMNS:
-            case d3d9::ParameterClass::MATRIX_ROWS:
-                return 4;
-            default:
-                return 1;
-            }
-        }
-
-        std::expected<void, std::string> AutoCreateSamplerArg(const d3d9::ShaderConstant& shaderArg)
-        {
+            if (element || shaderArg.m_register_count != 1)
+                return std::unexpected(std::format("Code sampler {} is not an array", shaderArg.m_name));
             if (!IsArgumentTypeSupported(
                     techset::CommonShaderArgumentType{.m_shader_type = m_shader_type, .m_value_type = techset::CommonShaderValueType::CODE_SAMPLER}))
             {
@@ -600,7 +619,7 @@ namespace
         }
 
         std::unique_ptr<d3d9::ShaderInfo> m_shader_info;
-        std::vector<bool> m_arg_added;
+        std::vector<std::vector<bool>> m_arg_added;
     };
 
     class CommonShaderArgCreatorDx11 final : public BaseCommonShaderArgCreator
@@ -954,6 +973,11 @@ namespace
 
 namespace techset
 {
+    std::unique_ptr<d3d9::ShaderInfo> ITechniqueShaderLoader::GetShaderInfoDx9(const CommonTechniqueShaderBin& shader) const
+    {
+        return d3d9::ShaderAnalyser::GetShaderInfo(shader.m_shader_bin, shader.m_shader_bin_size);
+    }
+
     CommonShaderArgCreatorDestination::CommonShaderArgCreatorDestination(std::string argumentName)
         : m_argument_name(std::move(argumentName))
     {
