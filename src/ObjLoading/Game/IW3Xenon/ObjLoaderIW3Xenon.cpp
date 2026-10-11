@@ -10,6 +10,7 @@
 #include "Game/IW3Xenon/XAnim/XAnimLoaderIW3Xenon.h"
 #include "Game/IW3Xenon/XModel/LoaderXModelIW3Xenon.h"
 #include "Image/LoaderImageIW3Xenon.h"
+#include "LightDef/LightDefLoaderIW3Xenon.h"
 #include "Localize/AssetLoaderLocalizeIW3Xenon.h"
 #include "Maps/MapEntsLoaderIW3Xenon.h"
 #include "PhysPreset/GdtLoaderPhysPresetIW3Xenon.h"
@@ -40,6 +41,7 @@ void ObjLoader::ConfigureCreatorCollection(AssetCreatorCollection& collection, Z
     collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetSoundCurve>>(memory));
     collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetLoadedSound>>(memory));
     collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetMapEnts>>(memory));
+    collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetLightDef>>(memory));
     collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetLocalize>>(memory));
     collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetWeapon>>(memory));
     collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetFx>>(memory));
@@ -58,6 +60,7 @@ void ObjLoader::ConfigureCreatorCollection(AssetCreatorCollection& collection, Z
     collection.AddAssetCreator(weapon::CreateGdtLoaderIW3Xenon(memory, searchPath, gdt, zone));
     collection.AddAssetCreator(raw_file::CreateLoaderIW3Xenon(memory, searchPath));
     collection.AddAssetCreator(string_table::CreateLoaderIW3Xenon(memory, searchPath));
+    collection.AddAssetCreator(light_def::CreateLoaderIW3Xenon(memory, searchPath));
     collection.AddAssetCreator(map_ents::CreateLoaderIW3Xenon(memory, searchPath));
 
     collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetPhysPreset>>(zone));
@@ -76,6 +79,7 @@ void ObjLoader::ConfigureCreatorCollection(AssetCreatorCollection& collection, Z
     collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetRawFile>>(zone));
     collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetStringTable>>(zone));
     collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetMapEnts>>(zone));
+    collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetLightDef>>(zone));
 
     collection.AddSubAssetCreator(weapon::CreateAccuracyGraphLoaderIW3Xenon(memory, searchPath));
 }
