@@ -49,7 +49,7 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | MaterialTechniqueSet | ❌              | ❌              |                                                                              |
 | GfxImage             | ✅              | ✅              | DDS/IWI, 2D and cube textures.                                               |
 | snd_alias_list_t     | ❌              | ❌              |                                                                              |
-| SndCurve             | ❌              | ❌              |                                                                              |
+| SndCurve             | ✅              | ✅              | IW3 PC-compatible `.vfcurve` files in `soundaliases/`.                         |
 | LoadedSound          | ❌              | ❌              |                                                                              |
 | clipMap_t            | ❌              | ❌              |                                                                              |
 | ComWorld             | ❌              | ❌              |                                                                              |

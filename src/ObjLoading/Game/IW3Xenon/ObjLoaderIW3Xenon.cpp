@@ -16,6 +16,7 @@
 #include "PhysPreset/GdtLoaderPhysPresetIW3Xenon.h"
 #include "PhysPreset/RawLoaderPhysPresetIW3Xenon.h"
 #include "RawFile/AssetLoaderRawFileIW3Xenon.h"
+#include "Sound/LoaderSoundCurveIW3Xenon.h"
 #include "StringTable/LoaderStringTableIW3Xenon.h"
 
 #include <memory>
@@ -61,6 +62,7 @@ void ObjLoader::ConfigureCreatorCollection(AssetCreatorCollection& collection, Z
     collection.AddAssetCreator(raw_file::CreateLoaderIW3Xenon(memory, searchPath));
     collection.AddAssetCreator(string_table::CreateLoaderIW3Xenon(memory, searchPath));
     collection.AddAssetCreator(light_def::CreateLoaderIW3Xenon(memory, searchPath));
+    collection.AddAssetCreator(sound_curve::CreateLoaderIW3Xenon(memory, searchPath));
     collection.AddAssetCreator(map_ents::CreateLoaderIW3Xenon(memory, searchPath));
 
     collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetPhysPreset>>(zone));
