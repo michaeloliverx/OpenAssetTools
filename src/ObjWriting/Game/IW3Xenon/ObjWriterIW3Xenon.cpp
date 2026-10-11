@@ -1,6 +1,7 @@
 #include "ObjWriterIW3Xenon.h"
 
 #include "Game/IW3Xenon/Image/ImageDumperIW3Xenon.h"
+#include "Game/IW3Xenon/Maps/MapEntsDumperIW3Xenon.h"
 #include "Game/IW3Xenon/Material/MaterialJsonDumperIW3Xenon.h"
 #include "Game/IW3Xenon/Techset/PixelShaderDumperIW3Xenon.h"
 #include "Game/IW3Xenon/Weapon/WeaponDumperIW3Xenon.h"
@@ -21,6 +22,7 @@ void ObjWriter::RegisterAssetDumpers(AssetDumpingContext& context)
     RegisterAssetDumper(std::make_unique<material::JsonDumperIW3Xenon>());
     RegisterAssetDumper(std::make_unique<techset::PixelShaderDumperIW3Xenon>());
     RegisterAssetDumper(std::make_unique<image::DumperIW3Xenon>());
+    RegisterAssetDumper(std::make_unique<map_ents::DumperIW3Xenon>());
     RegisterAssetDumper(std::make_unique<localize::DumperIW3Xenon>());
     RegisterAssetDumper(std::make_unique<weapon::DumperIW3Xenon>());
     RegisterAssetDumper(std::make_unique<raw_file::DumperIW3Xenon>());
