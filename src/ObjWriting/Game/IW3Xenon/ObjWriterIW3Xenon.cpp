@@ -11,6 +11,7 @@
 #include "Localize/LocalizeDumperIW3Xenon.h"
 #include "PhysPreset/PhysPresetInfoStringDumperIW3Xenon.h"
 #include "RawFile/RawFileDumperIW3Xenon.h"
+#include "Sound/SndCurveDumperIW3Xenon.h"
 #include "StringTable/StringTableDumperIW3Xenon.h"
 
 using namespace IW3Xenon;
@@ -24,6 +25,7 @@ void ObjWriter::RegisterAssetDumpers(AssetDumpingContext& context)
     RegisterAssetDumper(std::make_unique<techset::DumperIW3Xenon>());
     RegisterAssetDumper(std::make_unique<techset::PixelShaderDumperIW3Xenon>());
     RegisterAssetDumper(std::make_unique<image::DumperIW3Xenon>());
+    RegisterAssetDumper(std::make_unique<sound_curve::DumperIW3Xenon>());
     RegisterAssetDumper(std::make_unique<map_ents::DumperIW3Xenon>());
     RegisterAssetDumper(std::make_unique<light_def::DumperIW3Xenon>());
     RegisterAssetDumper(std::make_unique<localize::DumperIW3Xenon>());
