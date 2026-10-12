@@ -17,7 +17,8 @@ struct WavChunkHeader
 
 enum class WavFormat : int16_t
 {
-    PCM = 1
+    PCM = 1,
+    IMA_ADPCM = 17
 };
 
 struct WavFormatChunkPcm
