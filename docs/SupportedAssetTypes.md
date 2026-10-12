@@ -58,7 +58,7 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | MapEnts              | ✅              | ✅              | IW3 PC-compatible `.d3dbsp.ents` entity strings.                               |
 | GfxWorld             | ❌              | ❌              |                                                                              |
 | GfxLightDef          | ✅              | ✅              | IW3 PC-compatible attenuation files in `lights/`.                             |
-| Font_s               | ❌              | ❌              |                                                                              |
+| Font_s               | ✅              | ✅              | IW3 PC-compatible compiled font JSON; TrueType compilation is unsupported.    |
 | MenuList             | ❌              | ❌              |                                                                              |
 | menuDef_t            | ❌              | ❌              |                                                                              |
 | LocalizeEntry        | ✅              | ✅              |                                                                              |

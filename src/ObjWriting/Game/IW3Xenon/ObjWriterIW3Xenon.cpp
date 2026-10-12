@@ -1,5 +1,6 @@
 #include "ObjWriterIW3Xenon.h"
 
+#include "Game/IW3Xenon/Font/FontDumperIW3Xenon.h"
 #include "Game/IW3Xenon/Image/ImageDumperIW3Xenon.h"
 #include "Game/IW3Xenon/Maps/MapEntsDumperIW3Xenon.h"
 #include "Game/IW3Xenon/Material/MaterialJsonDumperIW3Xenon.h"
@@ -32,6 +33,7 @@ void ObjWriter::RegisterAssetDumpers(AssetDumpingContext& context)
     RegisterAssetDumper(std::make_unique<sound::LoadedSoundDumperIW3Xenon>());
     RegisterAssetDumper(std::make_unique<map_ents::DumperIW3Xenon>());
     RegisterAssetDumper(std::make_unique<light_def::DumperIW3Xenon>());
+    RegisterAssetDumper(std::make_unique<font::JsonDumperIW3Xenon>());
     RegisterAssetDumper(std::make_unique<localize::DumperIW3Xenon>());
     RegisterAssetDumper(std::make_unique<weapon::DumperIW3Xenon>());
     RegisterAssetDumper(std::make_unique<raw_file::DumperIW3Xenon>());
