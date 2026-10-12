@@ -12,9 +12,11 @@
 
 using namespace menu;
 
-MenuFileReader::MenuFileReader(std::istream& stream, std::string fileName, const FeatureLevel featureLevel, ISearchPath& searchPath)
+MenuFileReader::MenuFileReader(
+    std::istream& stream, std::string fileName, const FeatureLevel featureLevel, ISearchPath& searchPath, const GamePlatform platform)
     : SearchPathMultiInputStream(searchPath),
       m_feature_level(featureLevel),
+      m_platform(platform),
       m_file_name(std::move(fileName)),
       m_stream(nullptr),
       m_zone_state(nullptr),
@@ -36,7 +38,18 @@ void MenuFileReader::SetupDefinesProxy()
 {
     auto defines = std::make_unique<DefinesStreamProxy>(m_open_streams.back().get());
 
-    defines->AddDefine(DefinesStreamProxy::Define("PC", "1"));
+    switch (m_platform)
+    {
+    case GamePlatform::PC:
+        defines->AddDefine(DefinesStreamProxy::Define("PC", "1"));
+        break;
+    case GamePlatform::XBOX:
+        defines->AddDefine(DefinesStreamProxy::Define("XENON", "1"));
+        defines->AddDefine(DefinesStreamProxy::Define("CONSOLE", "1"));
+        break;
+    default:
+        break;
+    }
     switch (m_feature_level)
     {
     case FeatureLevel::IW3:

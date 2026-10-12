@@ -2746,7 +2746,7 @@ namespace IW3Xenon
         int elementStyle;
         int numColumns;
         columnInfo_s columnInfo[16];
-        const char* doubleClick;
+        const char* onDoubleClick;
         int notselectable;
         int noScrollBars;
         int usePaging;
@@ -2864,7 +2864,7 @@ namespace IW3Xenon
     {
         int intVal;
         float floatVal;
-        const char* string;
+        const char* stringVal;
     };
 
     struct Operand
@@ -3006,6 +3006,12 @@ namespace IW3Xenon
         ITEM_TYPE_DECIMALFIELD = 0x11,
         ITEM_TYPE_UPREDITFIELD = 0x12,
         ITEM_TYPE_GAME_MESSAGE_WINDOW = 0x13
+    };
+
+    enum ItemDefFlag : unsigned int
+    {
+        ITEM_FLAG_SAVE_GAME_INFO = 0x1,
+        ITEM_FLAG_CINEMATIC_SUBTITLE = 0x2,
     };
 
     enum ItemDefDvarFlag

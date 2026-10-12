@@ -2,6 +2,7 @@
 
 #include "Domain/MenuFeatureLevel.h"
 #include "Domain/MenuParsingResult.h"
+#include "Game/GamePlatform.h"
 #include "MenuAssetZoneState.h"
 #include "MenuFileParserState.h"
 #include "Parsing/IParserLineStream.h"
@@ -17,7 +18,8 @@ namespace menu
     class MenuFileReader : public SearchPathMultiInputStream
     {
     public:
-        MenuFileReader(std::istream& stream, std::string fileName, FeatureLevel featureLevel, ISearchPath& searchPath);
+        MenuFileReader(
+            std::istream& stream, std::string fileName, FeatureLevel featureLevel, ISearchPath& searchPath, GamePlatform platform = GamePlatform::PC);
 
         void IncludeZoneState(const MenuAssetZoneState& zoneState);
         void SetPermissiveMode(bool usePermissiveMode);
@@ -33,6 +35,7 @@ namespace menu
         std::unique_ptr<ParsingResult> CreateParsingResult(MenuFileParserState* state) const;
 
         const FeatureLevel m_feature_level;
+        const GamePlatform m_platform;
         const std::string m_file_name;
 
         IParserLineStream* m_stream;
