@@ -4,6 +4,7 @@
 #include "Game/IW3Xenon/AssetMarkerIW3Xenon.h"
 #include "Game/IW3Xenon/Font/FontLoaderIW3Xenon.h"
 #include "Game/IW3Xenon/Material/LoaderMaterialIW3Xenon.h"
+#include "Game/IW3Xenon/Menu/LoaderMenuListIW3Xenon.h"
 #include "Game/IW3Xenon/Techset/ShaderLoaderIW3Xenon.h"
 #include "Game/IW3Xenon/Weapon/AccuracyGraphLoaderIW3Xenon.h"
 #include "Game/IW3Xenon/Weapon/WeaponGdtLoaderIW3Xenon.h"
@@ -43,6 +44,8 @@ void ObjLoader::ConfigureCreatorCollection(AssetCreatorCollection& collection, Z
     collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetSoundCurve>>(memory));
     collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetLoadedSound>>(memory));
     collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetFont>>(memory));
+    collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetMenuList>>(memory));
+    collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetMenu>>(memory));
     collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetMapEnts>>(memory));
     collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetLightDef>>(memory));
     collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetLocalize>>(memory));
@@ -65,6 +68,7 @@ void ObjLoader::ConfigureCreatorCollection(AssetCreatorCollection& collection, Z
     collection.AddAssetCreator(string_table::CreateLoaderIW3Xenon(memory, searchPath));
     collection.AddAssetCreator(light_def::CreateLoaderIW3Xenon(memory, searchPath));
     collection.AddAssetCreator(font::CreateLoaderIW3Xenon(memory, searchPath));
+    collection.AddAssetCreator(menu::CreateMenuListLoaderIW3Xenon(memory, searchPath));
     collection.AddAssetCreator(sound_curve::CreateLoaderIW3Xenon(memory, searchPath));
     collection.AddAssetCreator(map_ents::CreateLoaderIW3Xenon(memory, searchPath));
 
@@ -79,6 +83,8 @@ void ObjLoader::ConfigureCreatorCollection(AssetCreatorCollection& collection, Z
     collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetSoundCurve>>(zone));
     collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetLoadedSound>>(zone));
     collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetFont>>(zone));
+    collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetMenuList>>(zone));
+    collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetMenu>>(zone));
     collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetLocalize>>(zone));
     collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetWeapon>>(zone));
     collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetFx>>(zone));

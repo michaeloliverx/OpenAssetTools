@@ -59,8 +59,8 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | GfxWorld             | ❌              | ❌              |                                                                              |
 | GfxLightDef          | ✅              | ✅              | IW3 PC-compatible attenuation files in `lights/`.                             |
 | Font_s               | ✅              | ✅              | IW3 PC-compatible compiled font JSON; TrueType compilation is unsupported.    |
-| MenuList             | ❌              | ❌              |                                                                              |
-| menuDef_t            | ❌              | ❌              |                                                                              |
+| MenuList             | ✅              | ✅              | IW3 PC-compatible `.menu` files and menu lists.                              |
+| menuDef_t            | ✅              | ✅              | See menulist; expressions and scripts are decompiled.                        |
 | LocalizeEntry        | ✅              | ✅              |                                                                              |
 | WeaponDef            | ✅              | ✅              | Raw weapon files and GDT entries, including accuracy graphs.                  |
 | SndDriverGlobals     | ❌              | ❌              |                                                                              |

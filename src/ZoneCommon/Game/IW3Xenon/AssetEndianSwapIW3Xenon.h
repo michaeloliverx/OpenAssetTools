@@ -1788,7 +1788,7 @@ static inline void EndianSwap(IW3Xenon::Operand& v, [[maybe_unused]] const Endia
         break;
 
     case IW3Xenon::VAL_STRING:
-        EndianSwap(v.internals.string);
+        EndianSwap(v.internals.stringVal);
         break;
 
     default:
@@ -1935,7 +1935,7 @@ static inline void EndianSwap(IW3Xenon::listBoxDef_s& v, [[maybe_unused]] const 
         EndianSwap(v.columnInfo[i].alignment);
     }
 
-    EndianSwap(v.doubleClick);
+    EndianSwap(v.onDoubleClick);
     EndianSwap(v.notselectable);
     EndianSwap(v.noScrollBars);
     EndianSwap(v.usePaging);

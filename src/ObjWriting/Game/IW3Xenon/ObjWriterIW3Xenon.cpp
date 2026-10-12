@@ -10,6 +10,8 @@
 #include "Game/IW3Xenon/XModel/XModelDumperIW3Xenon.h"
 #include "LightDef/LightDefDumperIW3Xenon.h"
 #include "Localize/LocalizeDumperIW3Xenon.h"
+#include "Menu/MenuDumperIW3Xenon.h"
+#include "Menu/MenuListDumperIW3Xenon.h"
 #include "PhysPreset/PhysPresetInfoStringDumperIW3Xenon.h"
 #include "RawFile/RawFileDumperIW3Xenon.h"
 #include "Sound/LoadedSoundDumperIW3Xenon.h"
@@ -34,6 +36,8 @@ void ObjWriter::RegisterAssetDumpers(AssetDumpingContext& context)
     RegisterAssetDumper(std::make_unique<map_ents::DumperIW3Xenon>());
     RegisterAssetDumper(std::make_unique<light_def::DumperIW3Xenon>());
     RegisterAssetDumper(std::make_unique<font::JsonDumperIW3Xenon>());
+    RegisterAssetDumper(std::make_unique<menu::MenuListDumperIW3Xenon>());
+    RegisterAssetDumper(std::make_unique<menu::MenuDumperIW3Xenon>());
     RegisterAssetDumper(std::make_unique<localize::DumperIW3Xenon>());
     RegisterAssetDumper(std::make_unique<weapon::DumperIW3Xenon>());
     RegisterAssetDumper(std::make_unique<raw_file::DumperIW3Xenon>());
