@@ -1,8 +1,10 @@
-#options GAME (IW3, IW4, IW5, QOS, T4, T5, T6)
+#options GAME (IW3, IW3Xenon, IW4, IW5, QOS, T4, T5, T6)
 
 #filename "Game/" + GAME + "/Font/FontDumper" + GAME + ".cpp"
 
 #if GAME == "IW3"
+#define GAME_LOWER "iw3"
+#elif GAME == "IW3Xenon"
 #define GAME_LOWER "iw3"
 #elif GAME == "IW4"
 #define GAME_LOWER "iw4"
