@@ -6,6 +6,7 @@
 #include "Game/IW5/ZoneLoaderFactoryIW5.h"
 #include "Game/QOS/ZoneLoaderFactoryQOS.h"
 #include "Game/T4/ZoneLoaderFactoryT4.h"
+#include "Game/T4Xenon/ZoneLoaderFactoryT4Xenon.h"
 #include "Game/T5/ZoneLoaderFactoryT5.h"
 #include "Game/T6/ZoneLoaderFactoryT6.h"
 
@@ -20,6 +21,7 @@ const IZoneLoaderFactory* IZoneLoaderFactory::GetZoneLoaderFactoryForGame(GameId
         new IW5::ZoneLoaderFactory(),
         new QOS::ZoneLoaderFactory(),
         new T4::ZoneLoaderFactory(),
+        new T4Xenon::ZoneLoaderFactory(),
         new T5::ZoneLoaderFactory(),
         new T6::ZoneLoaderFactory(),
     };

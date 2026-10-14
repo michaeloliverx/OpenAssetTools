@@ -6,6 +6,7 @@
 #include "Game/IW5/ObjCompilerIW5.h"
 #include "Game/QOS/ObjCompilerQOS.h"
 #include "Game/T4/ObjCompilerT4.h"
+#include "Game/T4Xenon/ObjCompilerT4Xenon.h"
 #include "Game/T5/ObjCompilerT5.h"
 #include "Game/T6/ObjCompilerT6.h"
 
@@ -20,6 +21,7 @@ const IObjCompiler* IObjCompiler::GetObjCompilerForGame(GameId game)
         new IW5::ObjCompiler(),
         new QOS::ObjCompiler(),
         new T4::ObjCompiler(),
+        new T4Xenon::ObjCompiler(),
         new T5::ObjCompiler(),
         new T6::ObjCompiler(),
     };

@@ -33,7 +33,7 @@ set count paEntries EntryCount;
 
 // StreamedSound
 use StreamedSound;
-// The latest version of the executable has an additional check for -1
+// File indices 0 and -1 denote loose sounds.
 set condition StreamedSound::filename::info::raw StreamedSound::filename::fileIndex == 0
     || StreamedSound::filename::fileIndex == -1;
 set string StreamedSound::filename::info::raw::dir;

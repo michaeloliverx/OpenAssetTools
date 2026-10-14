@@ -6,6 +6,7 @@
 #include "Game/IW5/XModel/XModelToCommonConverterIW5.h"
 #include "Game/QOS/XModel/XModelToCommonConverterQOS.h"
 #include "Game/T4/XModel/XModelToCommonConverterT4.h"
+#include "Game/T4Xenon/XModel/XModelToCommonConverterT4Xenon.h"
 #include "Game/T5/XModel/XModelToCommonConverterT5.h"
 #include "Game/T6/XModel/XModelToCommonConverterT6.h"
 
@@ -22,6 +23,7 @@ namespace xmodel
             new ToCommonConverterIW5(),
             new ToCommonConverterQOS(),
             new ToCommonConverterT4(),
+            new ToCommonConverterT4Xenon(),
             new ToCommonConverterT5(),
             new ToCommonConverterT6(),
         };

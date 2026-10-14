@@ -6,6 +6,7 @@
 #include "IW5/GameIW5.h"
 #include "QOS/GameQOS.h"
 #include "T4/GameT4.h"
+#include "T4Xenon/GameT4Xenon.h"
 #include "T5/GameT5.h"
 #include "T6/GameT6.h"
 #include "Utils/StringUtils.h"
@@ -21,6 +22,7 @@ IGame* IGame::GetGameById(GameId gameId)
         new IW5::Game(),
         new QOS::Game(),
         new T4::Game(),
+        new T4Xenon::Game(),
         new T5::Game(),
         new T6::Game(),
     };

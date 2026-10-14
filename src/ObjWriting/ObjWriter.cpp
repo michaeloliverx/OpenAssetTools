@@ -1,4 +1,4 @@
-﻿#include "ObjWriter.h"
+#include "ObjWriter.h"
 
 #include "Game/IW3/ObjWriterIW3.h"
 #include "Game/IW3Xenon/ObjWriterIW3Xenon.h"
@@ -6,6 +6,7 @@
 #include "Game/IW5/ObjWriterIW5.h"
 #include "Game/QOS/ObjWriterQOS.h"
 #include "Game/T4/ObjWriterT4.h"
+#include "Game/T4Xenon/ObjWriterT4Xenon.h"
 #include "Game/T5/ObjWriterT5.h"
 #include "Game/T6/ObjWriterT6.h"
 #include "ObjWriting.h"
@@ -50,6 +51,7 @@ IObjWriter* IObjWriter::GetObjWriterForGame(GameId game)
         new IW5::ObjWriter(),
         new QOS::ObjWriter(),
         new T4::ObjWriter(),
+        new T4Xenon::ObjWriter(),
         new T5::ObjWriter(),
         new T6::ObjWriter(),
     };

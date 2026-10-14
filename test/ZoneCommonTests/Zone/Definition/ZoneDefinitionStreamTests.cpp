@@ -1,4 +1,5 @@
 ﻿#include "Game/IW3Xenon/IW3Xenon.h"
+#include "Game/T4Xenon/T4Xenon.h"
 #include "Game/T6/T6.h"
 #include "SearchPath/MockSearchPath.h"
 #include "Zone/Definition/ZoneDefWriter.h"
@@ -11,6 +12,34 @@
 
 namespace test::zone::definition::zone_definition_stream
 {
+    TEST_CASE("ZoneDefinitionInputStream: T4 Xbox uses native asset indices", "[zonedefinition][t4xenon]")
+    {
+        const auto header = GENERATE(">game,T4\n>platform,xbox360\n", ">platform,xbox360\n>game,T4\n");
+        std::istringstream inputData(std::string(header) + "pixelshader,test_shader\nrawfile,test.txt\n");
+        MockSearchPath searchPath;
+        ZoneDefinitionInputStream inputStream(inputData, "test", "test.zone", searchPath);
+        const auto definition = inputStream.ReadDefinition();
+        REQUIRE(definition);
+        REQUIRE(definition->m_game == GameId::T4);
+        REQUIRE(definition->m_platform == GamePlatform::XBOX);
+        REQUIRE(definition->GetResolvedGameId() == GameId::T4Xenon);
+        REQUIRE(definition->m_assets.size() == 2);
+        REQUIRE(definition->m_assets[0].m_asset_type == T4Xenon::ASSET_TYPE_PIXELSHADER);
+        REQUIRE(definition->m_assets[1].m_asset_type == T4Xenon::ASSET_TYPE_RAWFILE);
+    }
+
+    TEST_CASE("ZoneDefinitionInputStream: Inherited T4 Xbox target retains its platform", "[zonedefinition][t4xenon]")
+    {
+        std::istringstream inputData("rawfile,test.txt\n");
+        MockSearchPath searchPath;
+        ZoneDefinitionInputStream inputStream(inputData, "test", "test.zone", searchPath);
+        inputStream.SetPreviouslySetGame(GameId::T4Xenon);
+        const auto definition = inputStream.ReadDefinition();
+        REQUIRE(definition);
+        REQUIRE(definition->GetResolvedGameId() == GameId::T4Xenon);
+        REQUIRE(definition->m_platform == GamePlatform::XBOX);
+    }
+
     TEST_CASE("ZoneDefinitionInputStream: Ensure game names are case insensitive", "[zonedefinition]")
     {
         std::istringstream inputData(R"sampledata(

@@ -24,10 +24,11 @@ set reusable aiVsAiAccuracyGraphKnots;
 set count aiVsAiAccuracyGraphKnots aiVsAiAccuracyGraphKnotCount;
 set reusable aiVsPlayerAccuracyGraphKnots;
 set count aiVsPlayerAccuracyGraphKnots aiVsPlayerAccuracyGraphKnotCount;
+// Original knot arrays are serialized using the current graph counts.
 set reusable originalAiVsAiAccuracyGraphKnots;
-set count originalAiVsAiAccuracyGraphKnots aiVsAiAccuracyGraphKnotCount; // yeah it does not use original count
+set count originalAiVsAiAccuracyGraphKnots aiVsAiAccuracyGraphKnotCount;
 set reusable originalAiVsPlayerAccuracyGraphKnots;
-set count originalAiVsPlayerAccuracyGraphKnots aiVsPlayerAccuracyGraphKnotCount; // yeah it does not use original count
+set count originalAiVsPlayerAccuracyGraphKnots aiVsPlayerAccuracyGraphKnotCount;
 set string szUseHintString;
 set string dropHintString;
 set string szScript;

@@ -19,6 +19,7 @@ enum class GameId : std::uint8_t
     IW5,
     QOS,
     T4,
+    T4Xenon,
     T5,
     T6,
 
@@ -48,6 +49,7 @@ static constexpr const char* GameId_Names[]{
     "IW5",
     "QOS",
     "T4",
+    "T4XENON",
     "T5",
     "T6",
 };

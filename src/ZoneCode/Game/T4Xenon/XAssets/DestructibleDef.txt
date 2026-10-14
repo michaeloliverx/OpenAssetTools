@@ -1,0 +1,25 @@
+// =========================================
+// DestructibleDef
+// =========================================
+use DestructibleDef;
+set block XFILE_BLOCK_TEMP;
+set string name;
+set count pieces numPieces;
+
+// DestructiblePiece
+use DestructiblePiece;
+set string attachBone;
+set scriptstring attachBoneHash;
+set reusable damageSound;
+set reusable burnSound;
+set scriptstring enableLabel;
+
+// DestructibleModel
+use DestructibleModel;
+set reusable breakSound;
+set string breakNotify;
+set string loopSound;
+
+// snd_alias_list_name
+use snd_alias_list_name;
+set string soundName;

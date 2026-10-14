@@ -6,6 +6,7 @@
 #include "Game/IW5/Image/ImageToCommonConverterIW5.h"
 #include "Game/QOS/Image/ImageToCommonConverterQOS.h"
 #include "Game/T4/Image/ImageToCommonConverterT4.h"
+#include "Game/T4Xenon/Image/ImageToCommonConverterT4Xenon.h"
 #include "Game/T5/Image/ImageToCommonConverterT5.h"
 #include "Game/T6/Image/ImageToCommonConverterT6.h"
 
@@ -22,6 +23,7 @@ namespace image
             new ToCommonConverterIW5(),
             new ToCommonConverterQOS(),
             new ToCommonConverterT4(),
+            new ToCommonConverterT4Xenon(),
             new ToCommonConverterT5(),
             new ToCommonConverterT6(),
         };

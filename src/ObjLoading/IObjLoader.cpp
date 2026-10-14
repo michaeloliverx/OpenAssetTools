@@ -6,6 +6,7 @@
 #include "Game/IW5/ObjLoaderIW5.h"
 #include "Game/QOS/ObjLoaderQOS.h"
 #include "Game/T4/ObjLoaderT4.h"
+#include "Game/T4Xenon/ObjLoaderT4Xenon.h"
 #include "Game/T5/ObjLoaderT5.h"
 #include "Game/T6/ObjLoaderT6.h"
 
@@ -20,6 +21,7 @@ const IObjLoader* IObjLoader::GetObjLoaderForGame(GameId game)
         new IW5::ObjLoader(),
         new QOS::ObjLoader(),
         new T4::ObjLoader(),
+        new T4Xenon::ObjLoader(),
         new T5::ObjLoader(),
         new T6::ObjLoader(),
     };

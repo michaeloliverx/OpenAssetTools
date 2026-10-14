@@ -1,0 +1,35 @@
+// =========================================
+// snd_alias_list_t
+// =========================================
+
+use snd_alias_list_t;
+set block XFILE_BLOCK_TEMP;
+set string aliasName;
+set reusable head;
+set count head count;
+
+// snd_alias_t
+use snd_alias_t;
+set string aliasName;
+set string subtitle;
+set string secondaryAliasName;
+set string chainAliasName;
+set reusable soundFile;
+
+// SoundFile
+use SoundFile;
+set condition SoundFile::u::loadSnd type == SAT_LOADED;
+
+// StreamedSound
+use StreamedSound;
+set string filename::dir;
+set string filename::name;
+set reusable primeSnd;
+
+// PrimedSound
+use PrimedSound;
+set string name;
+set block buffer XFILE_BLOCK_LARGE;
+set allocalign buffer 2048;
+set reusable buffer;
+set count buffer size;

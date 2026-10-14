@@ -223,6 +223,40 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | StringTable          | ✅              | ✅              |                                                                              |
 | PackIndex            | ❌              | ❌              |                                                                              |
 
+## T4 Xbox 360 (Call of Duty: World at War)
+
+| Asset Type           | Dumping Support | Loading Support | Notes                                                                        |
+|----------------------|-----------------|-----------------|------------------------------------------------------------------------------|
+| PhysPreset           | ❌              | ❌              |                                                                              |
+| PhysConstraints      | ❌              | ❌              |                                                                              |
+| DestructibleDef      | ❌              | ❌              |                                                                              |
+| XAnimParts           | ❌              | ❌              |                                                                              |
+| XModel               | ❌              | ❌              |                                                                              |
+| Material             | ❌              | ❌              |                                                                              |
+| MaterialPixelShader  | ❌              | ❌              |                                                                              |
+| MaterialTechniqueSet | ❌              | ❌              |                                                                              |
+| GfxImage             | ❌              | ❌              |                                                                              |
+| snd_alias_list_t     | ❌              | ❌              |                                                                              |
+| SndDriverGlobals     | ❌              | ❌              |                                                                              |
+| LoadedSound          | ❌              | ❌              |                                                                              |
+| clipMap_t            | ❌              | ❌              |                                                                              |
+| ComWorld             | ❌              | ❌              |                                                                              |
+| GameWorldSp          | ❌              | ❌              |                                                                              |
+| GameWorldMp          | ❌              | ❌              |                                                                              |
+| MapEnts              | ❌              | ❌              |                                                                              |
+| GfxWorld             | ❌              | ❌              |                                                                              |
+| GfxLightDef          | ❌              | ❌              |                                                                              |
+| Font_s               | ❌              | ❌              |                                                                              |
+| MenuList             | ❌              | ❌              |                                                                              |
+| menuDef_t            | ❌              | ❌              |                                                                              |
+| LocalizeEntry        | ❌              | ❌              |                                                                              |
+| WeaponDef            | ❌              | ❌              |                                                                              |
+| FxEffectDef          | ❌              | ❌              |                                                                              |
+| FxImpactTable        | ❌              | ❌              |                                                                              |
+| RawFile              | ❌              | ❌              |                                                                              |
+| StringTable          | ❌              | ❌              |                                                                              |
+| PackIndex            | ❌              | ❌              |                                                                              |
+
 ## T5 (Call of Duty: Black Ops)
 
 | Asset Type           | Dumping Support | Loading Support | Notes                                                                        |

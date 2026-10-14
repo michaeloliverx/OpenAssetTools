@@ -7,6 +7,7 @@
 #include "IW5/AutoSearchPathsIW5.h"
 #include "QOS/AutoSearchPathsQOS.h"
 #include "T4/AutoSearchPathsT4.h"
+#include "T4Xenon/AutoSearchPathsT4Xenon.h"
 #include "T5/AutoSearchPathsT5.h"
 #include "T6/AutoSearchPathsT6.h"
 #include "Utils/StringUtils.h"
@@ -81,6 +82,7 @@ AutoSearchPaths* AutoSearchPaths::GetForGame(GameId gameId)
         new AutoSearchPathsIW5(),
         new AutoSearchPathsQOS(),
         new AutoSearchPathsT4(),
+        new AutoSearchPathsT4Xenon(),
         new AutoSearchPathsT5(),
         new AutoSearchPathsT6(),
     };

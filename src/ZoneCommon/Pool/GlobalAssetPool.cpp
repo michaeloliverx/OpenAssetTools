@@ -1,4 +1,4 @@
-﻿#include "GlobalAssetPool.h"
+#include "GlobalAssetPool.h"
 
 #include <algorithm>
 #include <cassert>
@@ -203,6 +203,7 @@ GameGlobalAssetPools* GameGlobalAssetPools::GetGlobalPoolsForGame(GameId gameId)
         new GameGlobalAssetPools(GameId::IW5),
         new GameGlobalAssetPools(GameId::QOS),
         new GameGlobalAssetPools(GameId::T4),
+        new GameGlobalAssetPools(GameId::T4Xenon),
         new GameGlobalAssetPools(GameId::T5),
         new GameGlobalAssetPools(GameId::T6),
     };
