@@ -294,10 +294,49 @@ namespace T4Xenon
         XAnimDeltaPart* deltaPart;
     };
 
+    union vec3_t
+    {
+        struct
+        {
+            float x;
+            float y;
+            float z;
+        };
+
+        float v[3];
+    };
+
+    union vec4_t
+    {
+        float v[4];
+
+        struct
+        {
+            float x;
+            float y;
+            float z;
+            float w;
+        };
+
+        struct
+        {
+            float r;
+            float g;
+            float b;
+            float a;
+        };
+    };
+
+    struct DObjSkelMat
+    {
+        float axis[3][4];
+        float origin[4];
+    };
+
     struct DObjAnimMat
     {
-        float quat[4];
-        float trans[3];
+        vec4_t quat;
+        vec3_t trans;
         float transWeight;
     };
 
@@ -319,7 +358,7 @@ namespace T4Xenon
 
     struct GfxPackedVertex
     {
-        float xyz[3];
+        vec3_t xyz;
         float binormalSign;
         GfxColor color;
         PackedTexCoords texCoord;
@@ -347,8 +386,8 @@ namespace T4Xenon
 
     struct XSurfaceCollisionTree
     {
-        float trans[3];
-        float scale[3];
+        vec3_t trans;
+        vec3_t scale;
         unsigned int nodeCount;
         XSurfaceCollisionNode* nodes;
         unsigned int leafCount;
@@ -380,13 +419,20 @@ namespace T4Xenon
         char data[0x20];
     };
 
+    struct XSurfaceTri
+    {
+        uint16_t i[3];
+    };
+
+    typedef tdef_align32(16) XSurfaceTri XSurfaceTri16;
+
     struct XSurface
     {
         unsigned __int8 tileMode;
         bool deformed;
         unsigned __int16 vertCount;
         unsigned __int16 triCount;
-        unsigned __int16* triIndices;
+        XSurfaceTri16* triIndices;
         XSurfaceVertexInfo vertInfo;
         GfxPackedVertex* verts0;
         D3DVertexBuffer vb0;
@@ -405,17 +451,42 @@ namespace T4Xenon
         int surfFlags;
     };
 
+    enum hitLocation_t
+    {
+        HITLOC_NONE = 0x0,
+        HITLOC_HELMET = 0x1,
+        HITLOC_HEAD = 0x2,
+        HITLOC_NECK = 0x3,
+        HITLOC_TORSO_UPR = 0x4,
+        HITLOC_TORSO_LWR = 0x5,
+        HITLOC_R_ARM_UPR = 0x6,
+        HITLOC_L_ARM_UPR = 0x7,
+        HITLOC_R_ARM_LWR = 0x8,
+        HITLOC_L_ARM_LWR = 0x9,
+        HITLOC_R_HAND = 0xA,
+        HITLOC_L_HAND = 0xB,
+        HITLOC_R_LEG_UPR = 0xC,
+        HITLOC_L_LEG_UPR = 0xD,
+        HITLOC_R_LEG_LWR = 0xE,
+        HITLOC_L_LEG_LWR = 0xF,
+        HITLOC_R_FOOT = 0x10,
+        HITLOC_L_FOOT = 0x11,
+        HITLOC_GUN = 0x12,
+
+        HITLOC_COUNT,
+    };
+
     struct XBoneInfo
     {
-        float bounds[2][3];
-        float offset[3];
+        vec3_t bounds[2];
+        vec3_t offset;
         float radiusSquared;
     };
 
     struct XModelHighMipBounds
     {
-        float mins[3];
-        float maxs[3];
+        vec3_t mins;
+        vec3_t maxs;
     };
 
     struct cplane_s
@@ -589,16 +660,29 @@ namespace T4Xenon
         XModelHighMipBounds* highMipBounds;
     };
 
+    enum XModelLodRampType : unsigned char
+    {
+        XMODEL_LOD_RAMP_RIGID = 0x0,
+        XMODEL_LOD_RAMP_SKINNED = 0x1,
+
+        XMODEL_LOD_RAMP_COUNT
+    };
+
+    struct XModelQuat
+    {
+        int16_t v[4];
+    };
+
     struct XModel
     {
         const char* name;
         unsigned __int8 numBones;
         unsigned __int8 numRootBones;
         unsigned __int8 numsurfs;
-        unsigned __int8 lodRampType;
+        XModelLodRampType lodRampType;
         ScriptString* boneNames;
         unsigned __int8* parentList;
-        __int16* quats;
+        XModelQuat* quats;
         float* trans;
         unsigned __int8* partClassification;
         DObjAnimMat* baseMat;
@@ -610,9 +694,9 @@ namespace T4Xenon
         int contents;
         XBoneInfo* boneInfo;
         float radius;
-        float mins[3];
-        float maxs[3];
-        __int16 numLods;
+        vec3_t mins;
+        vec3_t maxs;
+        uint16_t numLods;
         __int16 collLod;
         XModelStreamInfo streamInfo;
         int memUsage;

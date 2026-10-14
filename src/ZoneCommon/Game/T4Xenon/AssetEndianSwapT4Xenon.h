@@ -198,6 +198,26 @@ namespace T4Xenon
 
     // ---- XModel
 
+    static inline void EndianSwap(T4Xenon::vec3_t& v, [[maybe_unused]] const EndianOperation operation = EndianOperation::Decode)
+    {
+        EndianSwap(v.v);
+    }
+
+    static inline void EndianSwap(T4Xenon::vec4_t& v, [[maybe_unused]] const EndianOperation operation = EndianOperation::Decode)
+    {
+        EndianSwap(v.v);
+    }
+
+    static inline void EndianSwap(T4Xenon::XModelQuat& v, [[maybe_unused]] const EndianOperation operation = EndianOperation::Decode)
+    {
+        EndianSwap(v.v);
+    }
+
+    static inline void EndianSwap(T4Xenon::XSurfaceTri& v, [[maybe_unused]] const EndianOperation operation = EndianOperation::Decode)
+    {
+        EndianSwap(v.i);
+    }
+
     static inline void EndianSwap(T4Xenon::GfxColor& v, [[maybe_unused]] const EndianOperation operation)
     {
         EndianSwap(v.packed);

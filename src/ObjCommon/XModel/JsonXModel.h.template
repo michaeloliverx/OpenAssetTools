@@ -1,4 +1,4 @@
-#options GAME (IW3, IW3Xenon, IW4, IW5, QOS, T4, T5, T6)
+#options GAME (IW3, IW3Xenon, IW4, IW5, QOS, T4, T4Xenon, T5, T6)
 
 #filename "Game/" + GAME + "/XModel/JsonXModel" + GAME + ".h"
 
@@ -12,7 +12,7 @@
 #define FEATURE_IW5
 #elif GAME == "QOS"
 #define FEATURE_QOS
-#elif GAME == "T4"
+#elif GAME == "T4" || GAME == "T4Xenon"
 #define FEATURE_T4
 #elif GAME == "T5"
 #define FEATURE_T5

@@ -231,7 +231,7 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | PhysConstraints      | ❌              | ❌              |                                                                              |
 | DestructibleDef      | ❌              | ❌              |                                                                              |
 | XAnimParts           | ❌              | ❌              |                                                                              |
-| XModel               | ❌              | ❌              |                                                                              |
+| XModel               | ✅              | ✅              | Model data can be exported to `XMODEL_EXPORT/XMODEL_BIN`, `OBJ`, `GLB/GLTF`. |
 | Material             | ❌              | ❌              |                                                                              |
 | MaterialPixelShader  | ❌              | ❌              |                                                                              |
 | MaterialTechniqueSet | ❌              | ❌              |                                                                              |

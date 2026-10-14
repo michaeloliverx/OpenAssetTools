@@ -1,4 +1,4 @@
-#options GAME(IW3, IW3Xenon, IW4, IW5, T4, T5, T6)
+#options GAME(IW3, IW3Xenon, IW4, IW5, T4, T4Xenon, T5, T6)
 
 #filename "Game/" + GAME + "/XModel/LoaderXModel" + GAME + ".cpp"
 
@@ -16,7 +16,7 @@
 #elif GAME == "IW5"
 #define FEATURE_IW5
 #define EVEN_TRI_COUNT
-#elif GAME == "T4"
+#elif GAME == "T4" || GAME == "T4Xenon"
 #define FEATURE_T4
 #define EVEN_TRI_COUNT
 #elif GAME == "T5"
@@ -26,8 +26,8 @@
 #define FEATURE_T6
 #endif
 
-#if GAME == "IW3Xenon"
-#define FEATURE_IW3XENON
+#if GAME == "IW3Xenon" || GAME == "T4Xenon"
+#define FEATURE_XENON
 #endif
 
 #include LOADER_HEADER
@@ -61,8 +61,9 @@
 #include HIGH_MIPS_HEADER
 #endif
 
-#ifdef FEATURE_IW3XENON
-#include "Game/IW3Xenon/XModel/XModelHighMipBoundsIW3Xenon.h"
+#ifdef FEATURE_XENON
+#set HIGH_MIP_BOUNDS_HEADER "\"Game/" + GAME + "/XModel/XModelHighMipBounds" + GAME + ".h\""
+#include HIGH_MIP_BOUNDS_HEADER
 #endif
 
 #include <algorithm>
@@ -899,7 +900,7 @@ namespace
                 }
             }
 
-#ifndef FEATURE_IW3XENON
+#ifndef FEATURE_XENON
             surface.baseVertIndex = static_cast<uint16_t>(vertexOffset);
 #endif
             surface.vertCount = static_cast<uint16_t>(xmodelToCommonVertexIndexLookup.size());
@@ -1266,8 +1267,9 @@ namespace
             xmodel.streamInfo.highMipBounds = xmodel::GenerateHighMipVolumeT5(xmodel, m_memory);
 #endif
 
-#ifdef FEATURE_IW3XENON
-            xmodel.streamInfo.highMipBounds = xmodel::GenerateHighMipBoundsIW3Xenon(xmodel, m_memory);
+#ifdef FEATURE_XENON
+#set GENERATE_HIGH_MIP_BOUNDS_METHOD "GenerateHighMipBounds" + GAME
+            xmodel.streamInfo.highMipBounds = xmodel::GENERATE_HIGH_MIP_BOUNDS_METHOD(xmodel, m_memory);
 #endif
 
             return true;
