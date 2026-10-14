@@ -697,19 +697,9 @@ namespace T4Xenon
 
     // ---- GfxImage
 
-    static inline void EndianSwap(T4Xenon::DummyD3DVolumeTexture& v, [[maybe_unused]] const EndianOperation operation)
+    static inline void EndianSwap(T4Xenon::D3DBaseTexture&, [[maybe_unused]] const EndianOperation operation = EndianOperation::Decode)
     {
-        return;
-    }
-
-    static inline void EndianSwap(T4Xenon::DummyD3DCubeTexture& v, [[maybe_unused]] const EndianOperation operation)
-    {
-        return;
-    }
-
-    static inline void EndianSwap(T4Xenon::DummyD3DTexture& v, [[maybe_unused]] const EndianOperation operation)
-    {
-        return;
+        // GPU resource and fetch words retain their serialized little-endian order.
     }
 
     static inline void EndianSwap(T4Xenon::GfxTexture& v, [[maybe_unused]] const EndianOperation operation)

@@ -22,10 +22,10 @@ void Actions_GfxImage::LoadImageData(GfxImageLoadDef* loadDef, GfxImage* image) 
 
     memcpy(new_loadDef, loadDef, sizeof(GfxImageLoadDef));
 
-    // Deep copy the D3D texture object (52 bytes)
-    auto* new_tex = static_cast<DummyD3DTexture*>(m_zone.Memory().AllocRaw(sizeof(DummyD3DTexture)));
+    // Deep copy the serialized XDK D3D texture metadata (52 bytes).
+    auto* new_tex = static_cast<D3DTexture*>(m_zone.Memory().AllocRaw(sizeof(D3DTexture)));
 
-    memcpy(new_tex, loadDef->texture.map, sizeof(DummyD3DTexture));
+    memcpy(new_tex, loadDef->texture.map, sizeof(D3DTexture));
 
     new_loadDef->texture.map = new_tex;
     image->texture.loadDef = new_loadDef;

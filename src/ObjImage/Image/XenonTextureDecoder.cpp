@@ -755,7 +755,8 @@ namespace image::xenon
         ApplyGpuEndian(header.fetch.endian, sourceData.data(), sourceData.size());
 
         const auto faceCount = config.textureType == TextureType::T_CUBE ? 6u : 1u;
-        const auto levelCount = std::max(1u, config.levelCount);
+        // Native runtime textures use zero for a full mip chain; the GPU header records its last level.
+        const auto levelCount = config.levelCount ? config.levelCount : header.fetch.maxMipLevel + 1u;
         const auto baseLayout = CalculateBaseLevelLayout(header.fetch, config.width, config.height, *formatInfo);
         const auto isTiled = header.fetch.tiled != 0u;
         const auto packedLevel =

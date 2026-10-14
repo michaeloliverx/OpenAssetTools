@@ -1,12 +1,18 @@
 #pragma once
 
 #include "Image/XenonTextureDecoder.h"
+#include "SearchPath/ISearchPath.h"
 
+#include <string_view>
 #include <type_traits>
 
 namespace image::xenon
 {
-    template<typename GfxImage> std::unique_ptr<Texture> LoadImage(const GfxImage* image, TextureType textureType, std::string* error = nullptr)
+    std::unique_ptr<Texture>
+        LoadImage(const XenonTextureLoadConfig& config, std::string_view imageName, bool streaming, ISearchPath& searchPath, std::string* error = nullptr);
+
+    template<typename GfxImage>
+    std::unique_ptr<Texture> LoadImage(const GfxImage* image, TextureType textureType, ISearchPath& searchPath, std::string* error = nullptr)
     {
         if (!image)
         {
@@ -24,16 +30,19 @@ namespace image::xenon
         }
 
         using TextureHeader = std::remove_pointer_t<decltype(loadDef->texture.map)>;
-        return LoadTexture({reinterpret_cast<const std::uint8_t*>(loadDef->texture.map),
-                            sizeof(TextureHeader),
-                            image->pixels,
-                            image->cardMemory.platform[0] > 0 ? static_cast<std::size_t>(image->cardMemory.platform[0]) : 0u,
-                            image->width,
-                            image->height,
-                            image->depth,
-                            loadDef->levelCount,
-                            static_cast<std::uint32_t>(loadDef->format),
-                            textureType},
-                           error);
+        return LoadImage({reinterpret_cast<const std::uint8_t*>(loadDef->texture.map),
+                          sizeof(TextureHeader),
+                          image->pixels,
+                          image->cardMemory.platform[0] > 0 ? static_cast<std::size_t>(image->cardMemory.platform[0]) : 0u,
+                          image->width,
+                          image->height,
+                          image->depth,
+                          loadDef->levelCount,
+                          static_cast<std::uint32_t>(loadDef->format),
+                          textureType},
+                         image->name,
+                         image->streaming,
+                         searchPath,
+                         error);
     }
 } // namespace image::xenon

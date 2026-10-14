@@ -3,11 +3,16 @@
 #ifndef __T4XENON_ASSETS_H
 #define __T4XENON_ASSETS_H
 
+#include "../../Platform/Xenon/XenonGraphics.h"
 #include "../../Utils/TypeAlignment.h"
 
 #ifndef __zonecodegenerator
 namespace T4Xenon
 {
+    using oat::xenon::GPUENDIAN;
+    using oat::xenon::GPUTEXTUREFORMAT;
+    using enum oat::xenon::GPUTEXTUREFORMAT;
+    using enum oat::xenon::GPUENDIAN;
 #endif
     enum XAssetType
     {
@@ -1308,103 +1313,135 @@ namespace T4Xenon
         MaterialTechnique* techniques[51];
     };
 
-    enum GPUTEXTUREFORMAT
+    struct GPUTEXTURESIZE_1D
     {
-        GPUTEXTUREFORMAT_1_REVERSE = 0,
-        GPUTEXTUREFORMAT_1 = 1,
-        GPUTEXTUREFORMAT_8 = 2,
-        GPUTEXTUREFORMAT_1_5_5_5 = 3,
-        GPUTEXTUREFORMAT_5_6_5 = 4,
-        GPUTEXTUREFORMAT_6_5_5 = 5,
-        GPUTEXTUREFORMAT_8_8_8_8 = 6,
-        GPUTEXTUREFORMAT_2_10_10_10 = 7,
-        GPUTEXTUREFORMAT_8_A = 8,
-        GPUTEXTUREFORMAT_8_B = 9,
-        GPUTEXTUREFORMAT_8_8 = 10,
-        GPUTEXTUREFORMAT_Cr_Y1_Cb_Y0_REP = 11,
-        GPUTEXTUREFORMAT_Y1_Cr_Y0_Cb_REP = 12,
-        GPUTEXTUREFORMAT_16_16_EDRAM = 13, // EDRAM render target only
-        GPUTEXTUREFORMAT_8_8_8_8_A = 14,
-        GPUTEXTUREFORMAT_4_4_4_4 = 15,
-        GPUTEXTUREFORMAT_10_11_11 = 16,
-        GPUTEXTUREFORMAT_11_11_10 = 17,
-        GPUTEXTUREFORMAT_DXT1 = 18,
-        GPUTEXTUREFORMAT_DXT2_3 = 19,
-        GPUTEXTUREFORMAT_DXT4_5 = 20,
-        GPUTEXTUREFORMAT_16_16_16_16_EDRAM = 21, // EDRAM render target only
-        GPUTEXTUREFORMAT_24_8 = 22,
-        GPUTEXTUREFORMAT_24_8_FLOAT = 23,
-        GPUTEXTUREFORMAT_16 = 24,
-        GPUTEXTUREFORMAT_16_16 = 25,
-        GPUTEXTUREFORMAT_16_16_16_16 = 26,
-        GPUTEXTUREFORMAT_16_EXPAND = 27,
-        GPUTEXTUREFORMAT_16_16_EXPAND = 28,
-        GPUTEXTUREFORMAT_16_16_16_16_EXPAND = 29,
-        GPUTEXTUREFORMAT_16_FLOAT = 30,
-        GPUTEXTUREFORMAT_16_16_FLOAT = 31,
-        GPUTEXTUREFORMAT_16_16_16_16_FLOAT = 32,
-        GPUTEXTUREFORMAT_32 = 33,
-        GPUTEXTUREFORMAT_32_32 = 34,
-        GPUTEXTUREFORMAT_32_32_32_32 = 35,
-        GPUTEXTUREFORMAT_32_FLOAT = 36,
-        GPUTEXTUREFORMAT_32_32_FLOAT = 37,
-        GPUTEXTUREFORMAT_32_32_32_32_FLOAT = 38,
-        GPUTEXTUREFORMAT_32_AS_8 = 39,
-        GPUTEXTUREFORMAT_32_AS_8_8 = 40,
-        GPUTEXTUREFORMAT_16_MPEG = 41,
-        GPUTEXTUREFORMAT_16_16_MPEG = 42,
-        GPUTEXTUREFORMAT_8_INTERLACED = 43,
-        GPUTEXTUREFORMAT_32_AS_8_INTERLACED = 44,
-        GPUTEXTUREFORMAT_32_AS_8_8_INTERLACED = 45,
-        GPUTEXTUREFORMAT_16_INTERLACED = 46,
-        GPUTEXTUREFORMAT_16_MPEG_INTERLACED = 47,
-        GPUTEXTUREFORMAT_16_16_MPEG_INTERLACED = 48,
-        GPUTEXTUREFORMAT_DXN = 49,
-        GPUTEXTUREFORMAT_8_8_8_8_AS_16_16_16_16 = 50,
-        GPUTEXTUREFORMAT_DXT1_AS_16_16_16_16 = 51,
-        GPUTEXTUREFORMAT_DXT2_3_AS_16_16_16_16 = 52,
-        GPUTEXTUREFORMAT_DXT4_5_AS_16_16_16_16 = 53,
-        GPUTEXTUREFORMAT_2_10_10_10_AS_16_16_16_16 = 54,
-        GPUTEXTUREFORMAT_10_11_11_AS_16_16_16_16 = 55,
-        GPUTEXTUREFORMAT_11_11_10_AS_16_16_16_16 = 56,
-        GPUTEXTUREFORMAT_32_32_32_FLOAT = 57,
-        GPUTEXTUREFORMAT_DXT3A = 58,
-        GPUTEXTUREFORMAT_DXT5A = 59,
-        GPUTEXTUREFORMAT_CTX1 = 60,
-        GPUTEXTUREFORMAT_DXT3A_AS_1_1_1_1 = 61,
-        GPUTEXTUREFORMAT_8_8_8_8_GAMMA_EDRAM = 62,    // EDRAM render target only
-        GPUTEXTUREFORMAT_2_10_10_10_FLOAT_EDRAM = 63, // EDRAM render target only
+        uint32_t Width : 24;
+        uint32_t Unused : 8;
     };
 
-    enum GPUENDIAN
+    struct GPUTEXTURESIZE_2D
     {
-        GPUENDIAN_NONE = 0,
-        GPUENDIAN_8IN16 = 1,
-        GPUENDIAN_8IN32 = 2,
-        GPUENDIAN_16IN32 = 3,
+        uint32_t Width : 13;
+        uint32_t Height : 13;
+        uint32_t Unused : 6;
     };
 
-    struct type_align(4) DummyD3DTexture
+    struct GPUTEXTURESIZE_STACK
     {
-        char pad[52];
+        uint32_t Width : 13;
+        uint32_t Height : 13;
+        uint32_t Depth : 6;
     };
 
-    struct type_align(4) DummyD3DVolumeTexture
+    struct GPUTEXTURESIZE_3D
     {
-        char pad[52];
+        uint32_t Width : 11;
+        uint32_t Height : 11;
+        uint32_t Depth : 10;
     };
 
-    struct type_align(4) DummyD3DCubeTexture
+    // Matches the XDK GPU fetch constant. The raw words are stored in GPU
+    // little-endian order in the fastfile, so code that needs host values must
+    // decode them explicitly rather than using the bit fields directly.
+    union GPUTEXTURE_FETCH_CONSTANT
     {
-        char pad[52];
+        struct
+        {
+            // DWORD 0
+            uint32_t Type : 2;
+            uint32_t SignX : 2;
+            uint32_t SignY : 2;
+            uint32_t SignZ : 2;
+            uint32_t SignW : 2;
+            uint32_t ClampX : 3;
+            uint32_t ClampY : 3;
+            uint32_t ClampZ : 3;
+            uint32_t Unused0 : 2;
+            uint32_t Unused1 : 1;
+            uint32_t Pitch : 9;
+            uint32_t Tiled : 1;
+
+            // DWORD 1
+            uint32_t DataFormat : 6;
+            uint32_t Endian : 2;
+            uint32_t RequestSize : 2;
+            uint32_t Stacked : 1;
+            uint32_t ClampPolicy : 1;
+            uint32_t BaseAddress : 20;
+
+            // DWORD 2
+            union
+            {
+                GPUTEXTURESIZE_1D OneD;
+                GPUTEXTURESIZE_2D TwoD;
+                GPUTEXTURESIZE_3D ThreeD;
+                GPUTEXTURESIZE_STACK Stack;
+            } Size;
+
+            // DWORD 3
+            uint32_t NumFormat : 1;
+            uint32_t SwizzleX : 3;
+            uint32_t SwizzleY : 3;
+            uint32_t SwizzleZ : 3;
+            uint32_t SwizzleW : 3;
+            int32_t ExpAdjust : 6;
+            uint32_t MagFilter : 2;
+            uint32_t MinFilter : 2;
+            uint32_t MipFilter : 2;
+            uint32_t AnisoFilter : 3;
+            uint32_t Unused2 : 3;
+            uint32_t BorderSize : 1;
+
+            // DWORD 4
+            uint32_t VolMagFilter : 1;
+            uint32_t VolMinFilter : 1;
+            uint32_t MinMipLevel : 4;
+            uint32_t MaxMipLevel : 4;
+            uint32_t MagAnisoWalk : 1;
+            uint32_t MinAnisoWalk : 1;
+            int32_t LODBias : 10;
+            int32_t GradExpAdjustH : 5;
+            int32_t GradExpAdjustV : 5;
+
+            // DWORD 5
+            uint32_t BorderColor : 2;
+            uint32_t ForceBCWToMax : 1;
+            uint32_t TriClamp : 2;
+            int32_t AnisoBias : 4;
+            uint32_t Dimension : 2;
+            uint32_t PackedMips : 1;
+            uint32_t MipAddress : 20;
+        } fields;
+
+        uint32_t dword[6];
     };
+
+    // This is the C layout of the XDK D3DBaseTexture used in the fastfile. It
+    // is serialized metadata, not a live C++ D3D interface object.
+    struct type_align(4) D3DBaseTexture
+    {
+        uint32_t Common;
+        uint32_t ReferenceCount;
+        uint32_t Fence;
+        uint32_t ReadFence;
+        uint32_t Identifier;
+        uint32_t BaseFlush;
+        uint32_t MipFlush;
+        GPUTEXTURE_FETCH_CONSTANT Format;
+    };
+
+    // The three XDK texture interfaces add no serialized fields beyond
+    // D3DBaseTexture; their distinction is only their C++ API surface.
+    typedef D3DBaseTexture D3DTexture;
+    typedef D3DBaseTexture D3DVolumeTexture;
+    typedef D3DBaseTexture D3DCubeTexture;
 
     union GfxTexture
     {
-        // DummyD3DBaseTexture* basemap;
-        DummyD3DTexture* map;
-        DummyD3DVolumeTexture* volmap;
-        DummyD3DCubeTexture* cubemap;
+        // D3DBaseTexture* basemap;
+        D3DTexture* map;
+        D3DVolumeTexture* volmap;
+        D3DCubeTexture* cubemap;
     };
 
     enum file_image_flags_t

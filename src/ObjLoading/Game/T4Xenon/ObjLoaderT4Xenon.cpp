@@ -4,6 +4,7 @@
 #include "Game/T4Xenon/AssetMarkerT4Xenon.h"
 #include "Game/T4Xenon/T4Xenon.h"
 #include "Game/T4Xenon/XModel/LoaderXModelT4Xenon.h"
+#include "Image/LoaderImageT4Xenon.h"
 #include "Localize/AssetLoaderLocalizeT4Xenon.h"
 #include "Maps/MapEntsLoaderT4Xenon.h"
 #include "RawFile/AssetLoaderRawFileT4Xenon.h"
@@ -25,6 +26,7 @@ namespace
         collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetPhysConstraints>>(memory));
         collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetXModel>>(memory));
         collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetMaterial>>(memory));
+        collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetImage>>(memory));
         collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetMapEnts>>(memory));
         collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetLocalize>>(memory));
         collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetRawFile>>(memory));
@@ -51,6 +53,7 @@ namespace
         auto& memory = zone.Memory();
 
         collection.AddAssetCreator(xmodel::CreateLoaderT4Xenon(memory, searchPath, zone));
+        collection.AddAssetCreator(image::CreateLoaderT4Xenon(memory, searchPath));
         collection.AddAssetCreator(localize::CreateLoaderT4Xenon(memory, searchPath, zone));
         collection.AddAssetCreator(map_ents::CreateLoaderT4Xenon(memory, searchPath));
         collection.AddAssetCreator(raw_file::CreateLoaderT4Xenon(memory, searchPath));

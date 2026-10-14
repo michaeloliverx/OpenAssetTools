@@ -235,7 +235,7 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | Material             | ❌              | ❌              |                                                                              |
 | MaterialPixelShader  | ❌              | ❌              |                                                                              |
 | MaterialTechniqueSet | ❌              | ❌              |                                                                              |
-| GfxImage             | ❌              | ❌              |                                                                              |
+| GfxImage             | ✅              | ✅              | DDS/IWI, 2D and cube textures. External highmips used when available.         |
 | snd_alias_list_t     | ❌              | ❌              |                                                                              |
 | SndDriverGlobals     | ❌              | ❌              |                                                                              |
 | LoadedSound          | ❌              | ❌              |                                                                              |
