@@ -7,6 +7,8 @@
 #include "Image/LoaderImageT4Xenon.h"
 #include "Localize/AssetLoaderLocalizeT4Xenon.h"
 #include "Maps/MapEntsLoaderT4Xenon.h"
+#include "PhysPreset/GdtLoaderPhysPresetT4Xenon.h"
+#include "PhysPreset/RawLoaderPhysPresetT4Xenon.h"
 #include "RawFile/AssetLoaderRawFileT4Xenon.h"
 #include "StringTable/LoaderStringTableT4Xenon.h"
 
@@ -56,6 +58,8 @@ namespace
         collection.AddAssetCreator(image::CreateLoaderT4Xenon(memory, searchPath));
         collection.AddAssetCreator(localize::CreateLoaderT4Xenon(memory, searchPath, zone));
         collection.AddAssetCreator(map_ents::CreateLoaderT4Xenon(memory, searchPath));
+        collection.AddAssetCreator(phys_preset::CreateRawLoaderT4Xenon(memory, searchPath, zone));
+        collection.AddAssetCreator(phys_preset::CreateGdtLoaderT4Xenon(memory, gdt, zone));
         collection.AddAssetCreator(raw_file::CreateLoaderT4Xenon(memory, searchPath));
         collection.AddAssetCreator(string_table::CreateLoaderT4Xenon(memory, searchPath));
     }

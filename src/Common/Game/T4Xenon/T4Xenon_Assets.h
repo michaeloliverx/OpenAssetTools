@@ -174,6 +174,21 @@ namespace T4Xenon
         int canFloat;
     };
 
+    struct PhysPresetInfo
+    {
+        float mass;
+        float bounce;
+        float friction;
+        int isFrictionInfinity;
+        float bulletForceScale;
+        float explosiveForceScale;
+        const char* sndAliasPrefix;
+        float piecesSpreadFraction;
+        float piecesUpwardVelocity;
+        int canFloat;
+        int tempDefaultToCylinder;
+    };
+
     struct XAnimNotifyInfo
     {
         ScriptString name;
