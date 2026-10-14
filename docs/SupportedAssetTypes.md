@@ -243,18 +243,18 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | ComWorld             | ❌              | ❌              |                                                                              |
 | GameWorldSp          | ❌              | ❌              |                                                                              |
 | GameWorldMp          | ❌              | ❌              |                                                                              |
-| MapEnts              | ❌              | ❌              |                                                                              |
+| MapEnts              | ✅              | ✅              |                                                                              |
 | GfxWorld             | ❌              | ❌              |                                                                              |
 | GfxLightDef          | ❌              | ❌              |                                                                              |
 | Font_s               | ❌              | ❌              |                                                                              |
 | MenuList             | ❌              | ❌              |                                                                              |
 | menuDef_t            | ❌              | ❌              |                                                                              |
-| LocalizeEntry        | ❌              | ❌              |                                                                              |
+| LocalizeEntry        | ✅              | ✅              |                                                                              |
 | WeaponDef            | ❌              | ❌              |                                                                              |
 | FxEffectDef          | ❌              | ❌              |                                                                              |
 | FxImpactTable        | ❌              | ❌              |                                                                              |
-| RawFile              | ❌              | ❌              |                                                                              |
-| StringTable          | ❌              | ❌              |                                                                              |
+| RawFile              | ✅              | ✅              |                                                                              |
+| StringTable          | ✅              | ✅              |                                                                              |
 | PackIndex            | ❌              | ❌              |                                                                              |
 
 ## T5 (Call of Duty: Black Ops)
