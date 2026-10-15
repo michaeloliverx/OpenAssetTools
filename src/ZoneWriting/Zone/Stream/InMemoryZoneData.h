@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <typeindex>
 #include <vector>
 
 class InMemoryZoneData
@@ -17,6 +18,13 @@ public:
         explicit MemoryBuffer(size_t size);
     };
 
+    struct ReusableWriteOrderEntry
+    {
+        void* m_ptr;
+        std::type_index m_type;
+    };
+
+    std::vector<ReusableWriteOrderEntry> m_reusable_write_order;
     int64_t m_total_size;
     std::vector<MemoryBuffer> m_buffers;
 

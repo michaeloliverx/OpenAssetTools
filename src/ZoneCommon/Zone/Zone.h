@@ -3,12 +3,14 @@
 #include "Game/GameLanguage.h"
 #include "Game/IGame.h"
 #include "Pool/AssetPool.h"
+#include "XAssetStreamFile.h"
 #include "Zone/ZoneTypes.h"
 #include "ZoneMemory.h"
 #include "ZoneScriptStrings.h"
 
 #include <memory>
 #include <string>
+#include <unordered_map>
 
 class Zone
 {
@@ -31,6 +33,10 @@ public:
     GamePlatform m_platform;
     ZoneScriptStrings m_script_strings;
     ZoneAssetPools m_pools;
+
+    std::vector<XAssetStreamFile> m_xfile_image_stream_files;
+    std::size_t m_xfile_image_stream_read_index = 0u;
+    std::unordered_map<std::string, std::vector<XAssetStreamFilesForImage>> m_xfile_image_stream_files_by_name;
 
 private:
     std::unique_ptr<ZoneMemory> m_memory;

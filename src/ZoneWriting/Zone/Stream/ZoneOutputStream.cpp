@@ -295,6 +295,8 @@ namespace
         {
             assert(!m_block_stack.empty());
 
+            m_zone_data.m_reusable_write_order.push_back({ptr, type});
+
             const auto inTemp = m_block_stack.top()->m_type == XBlockType::BLOCK_TYPE_TEMP;
             auto zoneOffset = inTemp ? InsertPointer() : GetCurrentZonePointer();
             const auto foundEntriesForType = m_reusable_entries.find(type);

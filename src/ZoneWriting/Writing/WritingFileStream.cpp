@@ -19,3 +19,10 @@ int64_t WritingFileStream::Pos()
 {
     return m_stream.tellp();
 }
+
+bool WritingFileStream::SetPos(const int64_t position)
+{
+    m_stream.clear();
+    m_stream.seekp(position, std::ios::beg);
+    return m_stream.good();
+}

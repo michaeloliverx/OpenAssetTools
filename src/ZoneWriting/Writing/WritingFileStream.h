@@ -13,4 +13,5 @@ public:
     void Write(const void* buffer, size_t length) override;
     void Flush() override;
     int64_t Pos() override;
+    bool SetPos(int64_t position) override;
 };
