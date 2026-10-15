@@ -388,7 +388,9 @@ namespace image::xenon
             temporaryFetch.pitch = pitch;
             const auto baseLayout = CalculateBaseLevelLayout(temporaryFetch, config.width, config.height, *formatInfo);
             const auto baseRegionSize = baseLayout.arraySliceStrideBytes * faceCount;
-            const auto mipAddressPages = levelCount > 1u ? baseRegionSize >> GPU_TEXTURE_ADDRESS_SHIFT : 0u;
+            // Small native images can store the entire packed mip chain in the base allocation.
+            const auto sharedPackedBase = hasPackedMips && packedLevel == 0u && config.pixelDataSize == baseRegionSize;
+            const auto mipAddressPages = levelCount > 1u && !sharedPackedBase ? baseRegionSize >> GPU_TEXTURE_ADDRESS_SHIFT : 0u;
 
             fetch = {};
             SetTextureFetchFormat(fetch, config.rawFormat);
