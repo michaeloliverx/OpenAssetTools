@@ -11,6 +11,8 @@
 #include "Menu/MenuListDumperT4Xenon.h"
 #include "PhysPreset/PhysPresetInfoStringDumperT4Xenon.h"
 #include "RawFile/RawFileDumperT4Xenon.h"
+#include "Sound/LoadedSoundDumperT4Xenon.h"
+#include "Sound/SoundDumperT4Xenon.h"
 #include "StringTable/StringTableDumperT4Xenon.h"
 #include "Techset/PixelShaderDumperT4Xenon.h"
 #include "Weapon/WeaponDumperT4Xenon.h"
@@ -25,6 +27,8 @@ void ObjWriter::RegisterAssetDumpers(AssetDumpingContext& context)
     RegisterAssetDumper(std::make_unique<material::JsonDumperT4Xenon>());
     RegisterAssetDumper(std::make_unique<techset::PixelShaderDumperT4Xenon>());
     RegisterAssetDumper(std::make_unique<image::DumperT4Xenon>());
+    RegisterAssetDumper(std::make_unique<sound::SoundDumperT4Xenon>());
+    RegisterAssetDumper(std::make_unique<sound::LoadedSoundDumperT4Xenon>());
     RegisterAssetDumper(std::make_unique<map_ents::DumperT4Xenon>());
     RegisterAssetDumper(std::make_unique<font::JsonDumperT4Xenon>());
     RegisterAssetDumper(std::make_unique<menu::MenuListDumperT4Xenon>());

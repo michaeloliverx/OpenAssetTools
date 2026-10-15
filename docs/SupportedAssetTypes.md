@@ -236,9 +236,9 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | MaterialPixelShader  | ✅              | ✅              | Native `.xpu` microcode in `shader_bin/`.                                    |
 | MaterialTechniqueSet | ❌              | ❌              |                                                                              |
 | GfxImage             | ✅              | ✅              | DDS/IWI, 2D and cube textures. External highmips used when available.         |
-| snd_alias_list_t     | ❌              | ❌              |                                                                              |
+| snd_alias_list_t     | ⁉️              | ❌              | Extracts loose/packed native `.xma`; alias definitions are not dumped.       |
 | SndDriverGlobals     | ❌              | ❌              |                                                                              |
-| LoadedSound          | ❌              | ❌              |                                                                              |
+| LoadedSound          | ✅              | ❌              | Embedded XMA audio as RIFF `.xma` files.                                     |
 | clipMap_t            | ❌              | ❌              |                                                                              |
 | ComWorld             | ❌              | ❌              |                                                                              |
 | GameWorldSp          | ❌              | ❌              |                                                                              |
