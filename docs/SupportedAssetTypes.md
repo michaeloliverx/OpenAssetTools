@@ -195,6 +195,51 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | VehicleDef                | ✅              | ✅              |                                                                                                               |
 | AddonMapEnts              | ⁉️               | ❌              | MapEnts String can be exported. Binary data currently not.                                                    |
 
+## NX1 (Call of Duty: Future Warfare, Xbox 360)
+
+| Asset Type               | Dumping Support  | Loading Support  | Notes                                                                                                                        |
+|--------------------------|------------------|------------------|------------------------------------------------------------------------------------------------------------------------------|
+| PhysPreset               | ❌                | ❌                |                                                                                                                              |
+| PhysCollmap              | ❌                | ❌                |                                                                                                                              |
+| XAnimParts               | ❌                | ❌                |                                                                                                                              |
+| XModel                   | ❌                | ❌                |                                                                                                                              |
+| Material                 | ❌                | ❌                |                                                                                                                              |
+| MaterialPixelShader      | ❌                | ❌                |                                                                                                                              |
+| MaterialTechniqueSet     | ❌                | ❌                |                                                                                                                              |
+| GfxImage                 | ❌                | ❌                |                                                                                                                                  |
+| snd_alias_list_t         | ❌                | ❌                |                                                                                                                              |
+| SndVfCurve               | ✅                | ✅                |                                                                                                                              |
+| LoadedSound              | ❌                | ❌                |                                                                                                                              |
+| clipMap_t                | ❌                | ❌                |                                                                                                                              |
+| ComWorld                 | ❌                | ❌                |                                                                                                                              |
+| GameWorldSp              | ❌                | ❌                |                                                                                                                              |
+| GameWorldMp              | ❌                | ❌                |                                                                                                                              |
+| MapEnts                  | ⁉️               | ⁉️               | Entity text only; loading preserves compiled data from a preloaded zone.                                                     |
+| FxWorld                  | ❌                | ❌                |                                                                                                                              |
+| GfxWorld                 | ❌                | ❌                |                                                                                                                              |
+| GfxLightDef              | ❌                | ❌                |                                                                                                                              |
+| Font_s                   | ❌                | ❌                |                                                                                                                              |
+| MenuList                 | ❌                | ❌                |                                                                                                                              |
+| menuDef_t                | ❌                | ❌                |                                                                                                                              |
+| LocalizeEntry            | ✅                | ✅                |                                                                                                                              |
+| WeaponCompleteDef        | ❌                | ❌                |                                                                                                                              |
+| SndDriverGlobals         | ❌                | ❌                |                                                                                                                              |
+| FxEffectDef              | ❌                | ❌                |                                                                                                                              |
+| FxImpactTable            | ❌                | ❌                |                                                                                                                              |
+| SurfaceFxTable           | ❌                | ❌                |                                                                                                                              |
+| RawFile                  | ✅                | ✅                |                                                                                                                              |
+| StringTable              | ✅                | ✅                |                                                                                                                              |
+| LeaderboardDef           | ❌                | ❌                |                                                                                                                              |
+| StructuredDataDefSet     | ❌                | ❌                |                                                                                                                              |
+| TracerDef                | ❌                | ❌                |                                                                                                                              |
+| LaserDef                 | ❌                | ❌                |                                                                                                                              |
+| VehicleDef               | ❌                | ❌                |                                                                                                                              |
+| AddonMapEnts             | ⁉️               | ❌                | Entity text only.                                                                                                            |
+| ShellShockParams         | ❌                | ❌                |                                                                                                                              |
+| AudioVolumeSetting       | ❌                | ❌                |                                                                                                                              |
+| RadVerbPreset            | ❌                | ❌                |                                                                                                                              |
+| FogDef                   | ❌                | ❌                |                                                                                                                              |
+
 ## QOS (007: Quantum of Solace)
 
 | Asset Type           | Dumping Support | Loading Support | Notes                                                                        |

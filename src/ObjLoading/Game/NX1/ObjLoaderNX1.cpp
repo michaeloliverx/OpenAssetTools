@@ -2,8 +2,13 @@
 
 #include "Asset/GlobalAssetPoolsLoader.h"
 #include "Game/NX1/AssetMarkerNX1.h"
+#include "Game/NX1/Maps/MapEntsLoaderNX1.h"
 #include "Game/NX1/NX1.h"
 #include "Image/ImageStreamPostProcessorNX1.h"
+#include "Localize/LoaderLocalizeNX1.h"
+#include "RawFile/LoaderRawFileNX1.h"
+#include "Sound/LoaderSoundCurveNX1.h"
+#include "StringTable/LoaderStringTableNX1.h"
 
 using namespace NX1;
 
@@ -110,7 +115,16 @@ namespace
         collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetFog>>(zone));
     }
 
-    void ConfigureLoaders(AssetCreatorCollection& collection, Zone& zone, ISearchPath& searchPath, IGdtQueryable& gdt) {}
+    void ConfigureLoaders(AssetCreatorCollection& collection, Zone& zone, ISearchPath& searchPath, IGdtQueryable& gdt)
+    {
+        auto& memory = zone.Memory();
+
+        collection.AddAssetCreator(sound_curve::CreateLoaderNX1(memory, searchPath));
+        collection.AddAssetCreator(map_ents::CreateLoaderNX1(memory, searchPath));
+        collection.AddAssetCreator(localize::CreateLoaderNX1(memory, searchPath, zone));
+        collection.AddAssetCreator(raw_file::CreateLoaderNX1(memory, searchPath));
+        collection.AddAssetCreator(string_table::CreateLoaderNX1(memory, searchPath));
+    }
 } // namespace
 
 void ObjLoader::ConfigureCreatorCollection(AssetCreatorCollection& collection, Zone& zone, ISearchPath& searchPath, IGdtQueryable& gdt) const
