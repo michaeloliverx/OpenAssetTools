@@ -90,7 +90,7 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | ComWorld                  | ❌              | ❌              |                                                                              |
 | GameWorldSp               | ❌              | ❌              |                                                                              |
 | GameWorldMp               | ❌              | ❌              |                                                                              |
-| MapEnts                   | ⁉️               | ❌              | Entity string can be exported. Binary data currently not.                    |
+| MapEnts                   | ⁉️              | ⁉️              | Entity text only; `--load` preserves existing triggers and stages.           |
 | FxWorld                   | ❌              | ❌              |                                                                              |
 | GfxWorld                  | ❌              | ❌              |                                                                              |
 | GfxLightDef               | ✅              | ✅              |                                                                              |
@@ -108,6 +108,47 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | TracerDef                 | ✅              | ✅              |                                                                              |
 | VehicleDef                | ✅              | ✅              |                                                                              |
 | AddonMapEnts              | ⁉️               | ❌              | MapEnts String can be exported. Binary data currently not.                   |
+
+## IW4 Xbox 360 (Call of Duty: Modern Warfare 2)
+
+| Asset Type                | Dumping Support | Loading Support | Notes                                                                        |
+|---------------------------|-----------------|-----------------|------------------------------------------------------------------------------|
+| PhysPreset                | ❌               | ❌               |                                                                              |
+| PhysCollmap               | ❌               | ❌               |                                                                              |
+| XAnimParts                | ❌               | ❌               |                                                                              |
+| XModel                    | ❌               | ❌               |                                                                              |
+| Material                  | ❌               | ❌               |                                                                              |
+| MaterialPixelShader       | ❌               | ❌               |                                                                              |
+| MaterialVertexShader      | ❌               | ❌               |                                                                              |
+| MaterialVertexDeclaration | ❌               | ❌               |                                                                              |
+| MaterialTechniqueSet      | ❌               | ❌               |                                                                              |
+| GfxImage                  | ❌               | ❌               |                                                                              |
+| snd_alias_list_t          | ❌               | ❌               |                                                                              |
+| SndCurve                  | ✅               | ✅               |                                                                              |
+| LoadedSound               | ❌               | ❌               |                                                                              |
+| clipMap_t                 | ❌               | ❌               |                                                                              |
+| ComWorld                  | ❌               | ❌               |                                                                              |
+| GameWorldSp               | ❌               | ❌               |                                                                              |
+| GameWorldMp               | ❌               | ❌               |                                                                              |
+| MapEnts                   | ⁉️              | ⁉️              | Entity text only; `--load` preserves existing triggers and stages.           |
+| FxWorld                   | ❌               | ❌               |                                                                              |
+| GfxWorld                  | ❌               | ❌               |                                                                              |
+| GfxLightDef               | ❌               | ❌               |                                                                              |
+| Font_s                    | ❌               | ❌               |                                                                              |
+| MenuList                  | ❌               | ❌               |                                                                              |
+| menuDef_t                 | ❌               | ❌               |                                                                              |
+| LocalizeEntry             | ✅               | ✅               |                                                                              |
+| WeaponCompleteDef         | ❌               | ❌               |                                                                              |
+| SndDriverGlobals          | ❌               | ❌               |                                                                              |
+| FxEffectDef               | ❌               | ❌               |                                                                              |
+| FxImpactTable             | ❌               | ❌               |                                                                              |
+| RawFile                   | ✅               | ✅               |                                                                              |
+| StringTable               | ✅               | ✅               |                                                                              |
+| LeaderboardDef            | ❌               | ❌               |                                                                              |
+| StructuredDataDefSet      | ❌               | ❌               |                                                                              |
+| TracerDef                 | ❌               | ❌               |                                                                              |
+| VehicleDef                | ❌               | ❌               |                                                                              |
+| AddonMapEnts              | ⁉️              | ❌               | Entity string can be exported. Binary data currently not.                    |
 
 ## IW5 (Call of Duty: Modern Warfare 3)
 

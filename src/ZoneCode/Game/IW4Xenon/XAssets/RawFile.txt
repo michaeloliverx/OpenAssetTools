@@ -4,4 +4,6 @@
 use RawFile;
 set block XFILE_BLOCK_TEMP;
 set string name;
-set count buffer compressedLen + (compressedLen == 0) * (len + 1);
+set condition data::compressedBuffer compressedLen > 0;
+set count data::compressedBuffer compressedLen;
+set count data::buffer len + 1;

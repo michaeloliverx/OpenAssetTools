@@ -355,7 +355,7 @@ namespace IW4Xenon
         EndianSwap(v.name);
         EndianSwap(v.compressedLen);
         EndianSwap(v.len);
-        EndianSwap(v.buffer);
+        EndianSwap(v.data, operation);
     }
 
     static inline void EndianSwap(IW4Xenon::StringTableCell& v, [[maybe_unused]] const EndianOperation operation)

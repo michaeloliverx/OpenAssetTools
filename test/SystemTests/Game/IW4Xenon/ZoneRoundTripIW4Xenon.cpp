@@ -48,7 +48,7 @@ namespace
         Zone zone("assets", 0, GameId::IW4Xenon, GamePlatform::XBOX);
         IW4Xenon::RawFile rawFile{};
         rawFile.name = "test.txt";
-        rawFile.buffer = "zone round trip";
+        rawFile.data.buffer = "zone round trip";
         rawFile.len = 15;
         zone.m_pools.AddAsset(IW4Xenon::ASSET_TYPE_RAWFILE, rawFile.name, &rawFile, {}, {}, {});
 
@@ -64,7 +64,7 @@ namespace
         const auto* loadedRawFile = loaded->m_pools.GetAsset<IW4Xenon::AssetRawFile>(rawFile.name);
         REQUIRE(loadedRawFile);
         REQUIRE(loadedRawFile->Asset()->len == rawFile.len);
-        REQUIRE(std::string(loadedRawFile->Asset()->buffer) == rawFile.buffer);
+        REQUIRE(std::string(loadedRawFile->Asset()->data.buffer) == rawFile.data.buffer);
         const auto* loadedPhysPreset = loaded->m_pools.GetAsset<IW4Xenon::AssetPhysPreset>(physPreset.name);
         REQUIRE(loadedPhysPreset);
         REQUIRE(loadedPhysPreset->Asset()->type == physPreset.type);

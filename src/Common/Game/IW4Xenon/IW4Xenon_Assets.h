@@ -1694,7 +1694,7 @@ namespace IW4Xenon
         const char* name;
         int compressedLen;
         int len;
-        const char* buffer;
+        RawFileBuffer data;
     };
 
     struct StringTableCell
