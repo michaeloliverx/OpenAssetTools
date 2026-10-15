@@ -1,5 +1,10 @@
 #include "ObjCompilerNX1.h"
 
+#include "Game/NX1/Image/LoaderImageNX1.h"
+#include "Utils/Logging/Log.h"
+
+#include <charconv>
+
 using namespace NX1;
 
 void ObjCompiler::ConfigureCreatorCollection(AssetCreatorCollection& collection,
@@ -11,4 +16,19 @@ void ObjCompiler::ConfigureCreatorCollection(AssetCreatorCollection& collection,
                                              IOutputPath& outDir,
                                              IOutputPath& cacheDir) const
 {
+    const auto& properties = zoneDefinition.m_zone_definition.m_properties.m_properties;
+    const auto imageFile = properties.find("imagefile");
+    if (imageFile == properties.end())
+        return;
+
+    unsigned index = 0u;
+    const auto& value = imageFile->second;
+    const auto [end, error] = std::from_chars(value.data(), value.data() + value.size(), index);
+    if (properties.count("imagefile") != 1u || error != std::errc() || end != value.data() + value.size() || index > 20u)
+    {
+        con::error("NX1 requires a single >imagefile,<index> directive with an index from 0 to 20");
+        return;
+    }
+
+    collection.AddAssetCreator(image::CreateLoaderNX1(zone.Memory(), searchPath, zone, outDir, index));
 }
