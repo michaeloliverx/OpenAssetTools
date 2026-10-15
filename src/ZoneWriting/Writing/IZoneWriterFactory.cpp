@@ -3,6 +3,7 @@
 #include "Game/IW3/ZoneWriterFactoryIW3.h"
 #include "Game/IW3Xenon/ZoneWriterFactoryIW3Xenon.h"
 #include "Game/IW4/ZoneWriterFactoryIW4.h"
+#include "Game/IW4Xenon/ZoneWriterFactoryIW4Xenon.h"
 #include "Game/IW5/ZoneWriterFactoryIW5.h"
 #include "Game/QOS/ZoneWriterFactoryQOS.h"
 #include "Game/T4/ZoneWriterFactoryT4.h"
@@ -18,6 +19,7 @@ const IZoneWriterFactory* IZoneWriterFactory::GetZoneWriterFactoryForGame(GameId
         new IW3::ZoneWriterFactory(),
         new IW3Xenon::ZoneWriterFactory(),
         new IW4::ZoneWriterFactory(),
+        new IW4Xenon::ZoneWriterFactory(),
         new IW5::ZoneWriterFactory(),
         new QOS::ZoneWriterFactory(),
         new T4::ZoneWriterFactory(),

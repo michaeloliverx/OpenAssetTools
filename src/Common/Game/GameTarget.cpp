@@ -15,6 +15,9 @@ namespace game_target
         if (game == GameId::IW3 && platform == GamePlatform::XBOX)
             return GameId::IW3Xenon;
 
+        if (game == GameId::IW4 && platform == GamePlatform::XBOX)
+            return GameId::IW4Xenon;
+
         if (game == GameId::T4 && platform == GamePlatform::XBOX)
             return GameId::T4Xenon;
 
@@ -25,6 +28,9 @@ namespace game_target
     {
         if (game == GameId::IW3Xenon)
             return GameId::IW3;
+
+        if (game == GameId::IW4Xenon)
+            return GameId::IW4;
 
         if (game == GameId::T4Xenon)
             return GameId::T4;

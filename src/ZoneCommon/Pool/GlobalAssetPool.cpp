@@ -200,6 +200,7 @@ GameGlobalAssetPools* GameGlobalAssetPools::GetGlobalPoolsForGame(GameId gameId)
         new GameGlobalAssetPools(GameId::IW3),
         new GameGlobalAssetPools(GameId::IW3Xenon),
         new GameGlobalAssetPools(GameId::IW4),
+        new GameGlobalAssetPools(GameId::IW4Xenon),
         new GameGlobalAssetPools(GameId::IW5),
         new GameGlobalAssetPools(GameId::QOS),
         new GameGlobalAssetPools(GameId::T4),

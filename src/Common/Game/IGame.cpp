@@ -3,6 +3,7 @@
 #include "IW3/GameIW3.h"
 #include "IW3Xenon/GameIW3Xenon.h"
 #include "IW4/GameIW4.h"
+#include "IW4Xenon/GameIW4Xenon.h"
 #include "IW5/GameIW5.h"
 #include "QOS/GameQOS.h"
 #include "T4/GameT4.h"
@@ -19,6 +20,7 @@ IGame* IGame::GetGameById(GameId gameId)
         new IW3::Game(),
         new IW3Xenon::Game(),
         new IW4::Game(),
+        new IW4Xenon::Game(),
         new IW5::Game(),
         new QOS::Game(),
         new T4::Game(),

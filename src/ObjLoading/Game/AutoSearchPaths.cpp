@@ -4,6 +4,7 @@
 #include "IW3Xenon/AutoSearchPathsIW3Xenon.h"
 #include "IW4/AutoSearchPathsIW4.h"
 #include "IW4/InfoString/InfoStringToStructConverter.h"
+#include "IW4Xenon/AutoSearchPathsIW4Xenon.h"
 #include "IW5/AutoSearchPathsIW5.h"
 #include "QOS/AutoSearchPathsQOS.h"
 #include "T4/AutoSearchPathsT4.h"
@@ -79,6 +80,7 @@ AutoSearchPaths* AutoSearchPaths::GetForGame(GameId gameId)
         new AutoSearchPathsIW3(),
         new AutoSearchPathsIW3Xenon(),
         new AutoSearchPathsIW4(),
+        new AutoSearchPathsIW4Xenon(),
         new AutoSearchPathsIW5(),
         new AutoSearchPathsQOS(),
         new AutoSearchPathsT4(),

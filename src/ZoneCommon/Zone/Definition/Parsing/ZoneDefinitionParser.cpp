@@ -15,7 +15,8 @@ ZoneDefinitionParser::ZoneDefinitionParser(
     if (maybeGame)
     {
         const auto publicGame = game_target::GetPublicGameId(*maybeGame);
-        (void)m_state->SetPlatform(*maybeGame == GameId::IW3Xenon || *maybeGame == GameId::T4Xenon ? GamePlatform::XBOX : GamePlatform::PC);
+        (void)m_state->SetPlatform(*maybeGame == GameId::IW3Xenon || *maybeGame == GameId::T4Xenon || *maybeGame == GameId::IW4Xenon ? GamePlatform::XBOX
+                                                                                                                                     : GamePlatform::PC);
         (void)m_state->SetGame(publicGame);
     }
 }

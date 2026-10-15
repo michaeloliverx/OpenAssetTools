@@ -124,7 +124,7 @@ namespace test::zone::definition::zone_definition_stream
     TEST_CASE("ZoneDefinitionInputStream: Unsupported game and platform combinations are rejected", "[zonedefinition]")
     {
         std::istringstream inputData(R"sampledata(
->game,IW4
+>game,IW5
 >platform,xbox360
 )sampledata");
 

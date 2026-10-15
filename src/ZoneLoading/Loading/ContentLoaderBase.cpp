@@ -54,7 +54,7 @@ void ContentLoaderBase::LoadXStringArray(const bool atStreamStart, const size_t 
         value = endianness::FromBigEndian(value);
         pointer = reinterpret_cast<std::remove_reference_t<decltype(pointer)>>(static_cast<std::uintptr_t>(value));
     };
-    const auto isBigEndian = m_zone.m_game_id == GameId::IW3Xenon || m_zone.m_game_id == GameId::T4Xenon;
+    const auto isBigEndian = m_zone.m_game_id == GameId::IW3Xenon || m_zone.m_game_id == GameId::T4Xenon || m_zone.m_game_id == GameId::IW4Xenon;
 
 #ifdef ARCH_x86
     if (atStreamStart)

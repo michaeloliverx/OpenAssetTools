@@ -105,42 +105,6 @@ namespace
                 };
             }
         }
-        else if (endianness::FromBigEndian(header.m_version) == ZoneConstants::ZONE_VERSION_XENON
-                 || endianness::FromBigEndian(header.m_version) == ZoneConstants::ZONE_VERSION_XENON_ALPHA)
-        {
-            if (!memcmp(header.m_magic, ZoneConstants::MAGIC_UNSIGNED, std::char_traits<char>::length(ZoneConstants::MAGIC_UNSIGNED)))
-            {
-                return ZoneLoaderInspectionResultIW4{
-                    .m_generic_result =
-                        ZoneLoaderInspectionResult{
-                                                   .m_game_id = GameId::IW4,
-                                                   .m_endianness = GameEndianness::BE,
-                                                   .m_word_size = GameWordSize::ARCH_32,
-                                                   .m_platform = GamePlatform::XBOX,
-                                                   .m_is_official = false,
-                                                   .m_is_signed = false,
-                                                   .m_is_encrypted = false,
-                                                   },
-                    .m_is_iw4x = false,
-                };
-            }
-            if (!memcmp(header.m_magic, ZoneConstants::MAGIC_SIGNED_INFINITY_WARD, std::char_traits<char>::length(ZoneConstants::MAGIC_SIGNED_INFINITY_WARD)))
-            {
-                return ZoneLoaderInspectionResultIW4{
-                    .m_generic_result =
-                        ZoneLoaderInspectionResult{
-                                                   .m_game_id = GameId::IW4,
-                                                   .m_endianness = GameEndianness::BE,
-                                                   .m_word_size = GameWordSize::ARCH_32,
-                                                   .m_platform = GamePlatform::XBOX,
-                                                   .m_is_official = true,
-                                                   .m_is_signed = true,
-                                                   .m_is_encrypted = false,
-                                                   },
-                    .m_is_iw4x = false,
-                };
-            }
-        }
 
         return std::nullopt;
     }
