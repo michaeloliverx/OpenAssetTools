@@ -27,6 +27,7 @@ public:
     [[nodiscard]] ZoneMemory& Memory() const;
 
     std::string m_name;
+    std::string m_source_path;
     zone_priority_t m_priority;
     GameLanguage m_language;
     GameId m_game_id;
@@ -37,6 +38,7 @@ public:
     std::vector<XAssetStreamFile> m_xfile_image_stream_files;
     std::size_t m_xfile_image_stream_read_index = 0u;
     std::unordered_map<std::string, std::vector<XAssetStreamFilesForImage>> m_xfile_image_stream_files_by_name;
+    std::vector<unsigned char> m_xfile_image_stream_data;
 
 private:
     std::unique_ptr<ZoneMemory> m_memory;

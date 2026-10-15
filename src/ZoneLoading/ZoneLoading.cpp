@@ -47,5 +47,6 @@ std::expected<std::unique_ptr<Zone>, std::string> ZoneLoading::LoadZone(const st
     if (!loadedZone)
         return std::unexpected("Loading zone failed."s);
 
+    loadedZone->m_source_path = fs::absolute(path).string();
     return std::move(loadedZone);
 }
