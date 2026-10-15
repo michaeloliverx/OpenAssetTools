@@ -1,4 +1,4 @@
-#options GAME(IW3, IW3Xenon, IW4, IW5, T4, T5, T6)
+#options GAME(IW3, IW3Xenon, IW4, IW5, T4, T4Xenon, T5, T6)
 
 #filename "Game/" + GAME + "/XAnim/XAnimDumper" + GAME + ".cpp"
 
@@ -21,6 +21,13 @@
 #define HAS_DELTA_QUAT_3D
 #elif GAME == "T4"
 #define FEATURE_T4
+#elif GAME == "T4Xenon"
+#define FEATURE_T4
+#define HAS_XENON_QUATS
+#define PART_TYPE_HALF_QUAT PART_TYPE_SIMPLE_QUAT
+#define PART_TYPE_FULL_QUAT PART_TYPE_NORMAL_QUAT
+#define PART_TYPE_HALF_QUAT_NO_SIZE PART_TYPE_SIMPLE_QUAT_NO_SIZE
+#define PART_TYPE_FULL_QUAT_NO_SIZE PART_TYPE_NORMAL_QUAT_NO_SIZE
 #elif GAME == "T5"
 #define FEATURE_T5
 #elif GAME == "T6"

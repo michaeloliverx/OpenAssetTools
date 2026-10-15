@@ -189,34 +189,54 @@ namespace T4Xenon
         int tempDefaultToCylinder;
     };
 
+    union vec3_t
+    {
+        struct
+        {
+            float x;
+            float y;
+            float z;
+        };
+
+        float v[3];
+    };
+
     struct XAnimNotifyInfo
     {
         ScriptString name;
         float time;
     };
 
+    typedef unsigned char ByteVec[3];
+    typedef unsigned short UShortVec[3];
+
     union XAnimDynamicFrames
     {
-        unsigned __int8 (*_1)[3];
-        unsigned __int16 (*_2)[3];
+        ByteVec* _1;
+        UShortVec* _2;
     };
 
     union XAnimDynamicIndicesTrans
     {
-        unsigned __int8 _1[1];
-        unsigned __int16 _2[1];
+        uint8_t _1[1];
+        uint16_t _2[1];
+    };
+
+    struct type_align(4) XQuat2
+    {
+        int16_t value[2];
     };
 
     union XAnimDynamicIndicesQuat
     {
-        unsigned __int8 _1[1];
-        unsigned __int16 _2[1];
+        uint8_t _1[1];
+        uint16_t _2[1];
     };
 
-    struct __declspec(align(4)) XAnimPartTransFrames
+    struct type_align32(4) XAnimPartTransFrames
     {
-        float mins[3];
-        float size[3];
+        vec3_t mins;
+        vec3_t size;
         XAnimDynamicFrames frames;
         XAnimDynamicIndicesTrans indices;
     };
@@ -224,31 +244,31 @@ namespace T4Xenon
     union XAnimPartTransData
     {
         XAnimPartTransFrames frames;
-        float frame0[3];
+        vec3_t frame0;
     };
 
     struct XAnimPartTrans
     {
-        unsigned __int16 size;
-        unsigned __int8 smallTrans;
+        uint16_t size;
+        uint8_t smallTrans;
         XAnimPartTransData u;
     };
 
-    struct __declspec(align(4)) XAnimDeltaPartQuatDataFrames
+    struct type_align32(4) XAnimDeltaPartQuatDataFrames
     {
-        __int16 (*frames)[2];
+        XQuat2* frames;
         XAnimDynamicIndicesQuat indices;
     };
 
     union XAnimDeltaPartQuatData
     {
         XAnimDeltaPartQuatDataFrames frames;
-        __int16 frame0[2];
+        XQuat2 frame0;
     };
 
     struct XAnimDeltaPartQuat
     {
-        unsigned __int16 size;
+        uint16_t size;
         XAnimDeltaPartQuatData u;
     };
 
@@ -260,8 +280,8 @@ namespace T4Xenon
 
     union XAnimIndices
     {
-        unsigned __int8* _1;
-        unsigned __int16* _2;
+        uint8_t* _1;
+        uint16_t* _2;
         void* data;
     };
 
@@ -286,44 +306,32 @@ namespace T4Xenon
     struct XAnimParts
     {
         const char* name;
-        unsigned __int16 dataByteCount;
-        unsigned __int16 dataShortCount;
-        unsigned __int16 dataIntCount;
-        unsigned __int16 randomDataByteCount;
-        unsigned __int16 randomDataIntCount;
-        unsigned __int16 numframes;
+        uint16_t dataByteCount;
+        uint16_t dataShortCount;
+        uint16_t dataIntCount;
+        uint16_t randomDataByteCount;
+        uint16_t randomDataIntCount;
+        uint16_t numframes;
         bool bLoop;
         bool bDelta;
-        unsigned __int8 boneCount[PART_TYPE_COUNT];
-        unsigned __int8 notifyCount;
-        unsigned __int8 assetType;
+        uint8_t boneCount[PART_TYPE_COUNT];
+        uint8_t notifyCount;
+        uint8_t assetType;
         bool pad;
         unsigned int randomDataShortCount;
         unsigned int indexCount;
         float framerate;
         float frequency;
         ScriptString* names;
-        unsigned __int8* dataByte;
-        __int16* dataShort;
+        uint8_t* dataByte;
+        int16_t* dataShort;
         int* dataInt;
-        __int16* randomDataShort;
-        unsigned __int8* randomDataByte;
+        int16_t* randomDataShort;
+        uint8_t* randomDataByte;
         int* randomDataInt;
         XAnimIndices indices;
         XAnimNotifyInfo* notify;
         XAnimDeltaPart* deltaPart;
-    };
-
-    union vec3_t
-    {
-        struct
-        {
-            float x;
-            float y;
-            float z;
-        };
-
-        float v[3];
     };
 
     union vec4_t

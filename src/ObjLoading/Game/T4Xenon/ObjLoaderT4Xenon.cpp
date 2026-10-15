@@ -3,6 +3,7 @@
 #include "Asset/GlobalAssetPoolsLoader.h"
 #include "Game/T4Xenon/AssetMarkerT4Xenon.h"
 #include "Game/T4Xenon/T4Xenon.h"
+#include "Game/T4Xenon/XAnim/XAnimLoaderT4Xenon.h"
 #include "Game/T4Xenon/XModel/LoaderXModelT4Xenon.h"
 #include "Image/LoaderImageT4Xenon.h"
 #include "Localize/AssetLoaderLocalizeT4Xenon.h"
@@ -27,6 +28,7 @@ namespace
 
         collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetPhysPreset>>(memory));
         collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetPhysConstraints>>(memory));
+        collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetXAnim>>(memory));
         collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetXModel>>(memory));
         collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetMaterial>>(memory));
         collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetImage>>(memory));
@@ -44,6 +46,7 @@ namespace
     {
         collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetPhysPreset>>(zone));
         collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetPhysConstraints>>(zone));
+        collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetXAnim>>(zone));
         collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetXModel>>(zone));
         collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetMaterial>>(zone));
         collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetTechniqueSet>>(zone));
@@ -63,6 +66,7 @@ namespace
     {
         auto& memory = zone.Memory();
 
+        collection.AddAssetCreator(xanim::CreateLoaderT4Xenon(memory, searchPath, zone));
         collection.AddAssetCreator(xmodel::CreateLoaderT4Xenon(memory, searchPath, zone));
         collection.AddAssetCreator(image::CreateLoaderT4Xenon(memory, searchPath));
         collection.AddAssetCreator(menu::CreateMenuListLoaderT4Xenon(memory, searchPath));

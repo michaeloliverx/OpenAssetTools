@@ -230,7 +230,7 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | PhysPreset           | ✅              | ✅              |                                                                              |
 | PhysConstraints      | ❌              | ❌              |                                                                              |
 | DestructibleDef      | ❌              | ❌              |                                                                              |
-| XAnimParts           | ❌              | ❌              |                                                                              |
+| XAnimParts           | ✅              | ✅              | T4 PC-compatible version-17 files in `xanim/`.                                |
 | XModel               | ✅              | ✅              | Model data can be exported to `XMODEL_EXPORT/XMODEL_BIN`, `OBJ`, `GLB/GLTF`. |
 | Material             | ❌              | ❌              |                                                                              |
 | MaterialPixelShader  | ❌              | ❌              |                                                                              |

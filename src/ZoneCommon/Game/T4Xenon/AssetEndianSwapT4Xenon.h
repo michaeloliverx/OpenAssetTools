@@ -105,7 +105,17 @@ namespace T4Xenon
         EndianSwap(v.canFloat);
     }
 
+    static inline void EndianSwap(T4Xenon::vec3_t& v, [[maybe_unused]] const EndianOperation operation = EndianOperation::Decode)
+    {
+        EndianSwap(v.v);
+    }
+
     // ---- XAnimParts
+
+    static inline void EndianSwap(T4Xenon::XQuat2& v, [[maybe_unused]] const EndianOperation operation)
+    {
+        EndianSwap(v.value);
+    }
 
     static inline void EndianSwap(T4Xenon::XAnimNotifyInfo& v, [[maybe_unused]] const EndianOperation operation)
     {
@@ -131,12 +141,8 @@ namespace T4Xenon
     {
         assert(loadedSize == offsetof(T4Xenon::XAnimPartTransFrames, indices));
 
-        EndianSwap(v.mins[0]);
-        EndianSwap(v.mins[1]);
-        EndianSwap(v.mins[2]);
-        EndianSwap(v.size[0]);
-        EndianSwap(v.size[1]);
-        EndianSwap(v.size[2]);
+        EndianSwap(v.mins, operation);
+        EndianSwap(v.size, operation);
         EndianSwap(v.frames._1);
     }
 
@@ -197,11 +203,6 @@ namespace T4Xenon
     }
 
     // ---- XModel
-
-    static inline void EndianSwap(T4Xenon::vec3_t& v, [[maybe_unused]] const EndianOperation operation = EndianOperation::Decode)
-    {
-        EndianSwap(v.v);
-    }
 
     static inline void EndianSwap(T4Xenon::vec4_t& v, [[maybe_unused]] const EndianOperation operation = EndianOperation::Decode)
     {
