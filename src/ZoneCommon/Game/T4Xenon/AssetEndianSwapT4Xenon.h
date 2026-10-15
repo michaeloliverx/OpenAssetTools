@@ -2033,7 +2033,7 @@ namespace T4Xenon
             break;
 
         case T4Xenon::VAL_STRING:
-            EndianSwap(v.internals.string);
+            EndianSwap(v.internals.stringVal);
             break;
 
         default:
@@ -2181,7 +2181,7 @@ namespace T4Xenon
             EndianSwap(v.columnInfo[i].alignment);
         }
 
-        EndianSwap(v.doubleClick);
+        EndianSwap(v.onDoubleClick);
         EndianSwap(v.notselectable);
         EndianSwap(v.noScrollBars);
         EndianSwap(v.usePaging);

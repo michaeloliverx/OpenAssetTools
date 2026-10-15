@@ -4,6 +4,7 @@
 #include "Parsing/Simple/SimpleLexer.h"
 
 #include <algorithm>
+#include <cctype>
 #include <cmath>
 #include <cstdlib>
 #include <sstream>
@@ -125,6 +126,9 @@ namespace menu
         (void)std::strtof(token.c_str(), &numericEnd);
         if (numericEnd == token.c_str() + token.size())
             return false;
+
+        if (std::isdigit(static_cast<unsigned char>(token.front())))
+            return true;
 
         const auto hasAlNumCharacter = std::ranges::any_of(token,
                                                            [](const char& c)

@@ -7,6 +7,7 @@
 #include "Image/LoaderImageT4Xenon.h"
 #include "Localize/AssetLoaderLocalizeT4Xenon.h"
 #include "Maps/MapEntsLoaderT4Xenon.h"
+#include "Menu/LoaderMenuListT4Xenon.h"
 #include "PhysPreset/GdtLoaderPhysPresetT4Xenon.h"
 #include "PhysPreset/RawLoaderPhysPresetT4Xenon.h"
 #include "RawFile/AssetLoaderRawFileT4Xenon.h"
@@ -29,6 +30,10 @@ namespace
         collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetXModel>>(memory));
         collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetMaterial>>(memory));
         collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetImage>>(memory));
+        collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetSound>>(memory));
+        collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetLoadedSound>>(memory));
+        collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetMenuList>>(memory));
+        collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetMenu>>(memory));
         collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetMapEnts>>(memory));
         collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetLocalize>>(memory));
         collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetRawFile>>(memory));
@@ -44,6 +49,10 @@ namespace
         collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetTechniqueSet>>(zone));
         collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetPixelShader>>(zone));
         collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetImage>>(zone));
+        collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetSound>>(zone));
+        collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetLoadedSound>>(zone));
+        collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetMenuList>>(zone));
+        collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetMenu>>(zone));
         collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetMapEnts>>(zone));
         collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetLocalize>>(zone));
         collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetRawFile>>(zone));
@@ -56,6 +65,7 @@ namespace
 
         collection.AddAssetCreator(xmodel::CreateLoaderT4Xenon(memory, searchPath, zone));
         collection.AddAssetCreator(image::CreateLoaderT4Xenon(memory, searchPath));
+        collection.AddAssetCreator(menu::CreateMenuListLoaderT4Xenon(memory, searchPath));
         collection.AddAssetCreator(localize::CreateLoaderT4Xenon(memory, searchPath, zone));
         collection.AddAssetCreator(map_ents::CreateLoaderT4Xenon(memory, searchPath));
         collection.AddAssetCreator(phys_preset::CreateRawLoaderT4Xenon(memory, searchPath, zone));

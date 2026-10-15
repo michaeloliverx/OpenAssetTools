@@ -185,19 +185,19 @@ namespace test::zone::game::t4xenon::asset_endian_swap
         T4Xenon::expressionEntry entry{};
         entry.type = T4Xenon::EET_OPERAND;
         entry.data.operand.dataType = T4Xenon::VAL_STRING;
-        entry.data.operand.internals.string = reinterpret_cast<const char*>(0x12345678u);
+        entry.data.operand.internals.stringVal = reinterpret_cast<const char*>(0x12345678u);
 
         EndianSwap(entry, EndianOperation::Encode);
 
         REQUIRE(entry.type == endianness::ToBigEndian(static_cast<int>(T4Xenon::EET_OPERAND)));
         REQUIRE(entry.data.operand.dataType == static_cast<T4Xenon::expDataType>(endianness::ToBigEndian(static_cast<int>(T4Xenon::VAL_STRING))));
-        REQUIRE(reinterpret_cast<uintptr_t>(entry.data.operand.internals.string) == endianness::ToBigEndian(0x12345678u));
+        REQUIRE(reinterpret_cast<uintptr_t>(entry.data.operand.internals.stringVal) == endianness::ToBigEndian(0x12345678u));
 
         EndianSwap(entry, EndianOperation::Decode);
 
         REQUIRE(entry.type == T4Xenon::EET_OPERAND);
         REQUIRE(entry.data.operand.dataType == T4Xenon::VAL_STRING);
-        REQUIRE(reinterpret_cast<uintptr_t>(entry.data.operand.internals.string) == 0x12345678u);
+        REQUIRE(reinterpret_cast<uintptr_t>(entry.data.operand.internals.stringVal) == 0x12345678u);
     }
 #endif
 } // namespace test::zone::game::t4xenon::asset_endian_swap

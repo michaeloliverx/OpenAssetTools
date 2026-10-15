@@ -16,6 +16,31 @@ using namespace T4;
 
 namespace
 {
+    TEST_CASE("MenuDumperT4: Quotes numeric-prefix script arguments inside expressions", "[t4][menu][assetdumper]")
+    {
+        menuDef_t menu{};
+        menu.window.name = "numeric_prefix";
+        menu.onOpen = R"(statsetusingtable ( 2402 , tableLookup ( "mp/statstable.csv" , 4 , "30cal" , 1 ) );)";
+
+        Zone zone("MockZone", 0, GameId::T4, GamePlatform::PC);
+        zone.m_pools.AddAsset(std::make_unique<XAssetInfo<menuDef_t>>(ASSET_TYPE_MENU, menu.window.name, &menu));
+        MockSearchPath searchPath;
+        MockOutputPath outputPath;
+        AssetDumpingContext context(zone, "", outputPath, searchPath, std::nullopt);
+        menu::MenuDumperT4().Dump(context);
+
+        const auto* file = outputPath.GetMockedFile("ui_mp/numeric_prefix.menu");
+        REQUIRE(file);
+        REQUIRE(file->AsString().find(R"(tableLookup ( "mp/statstable.csv" , 4 , "30cal" , 1 ))") != std::string::npos);
+        std::istringstream stream(file->AsString());
+        menu::MenuAssetZoneState zoneState;
+        menu::MenuFileReader reader(stream, "ui_mp/numeric_prefix.menu", menu::FeatureLevel::T4, searchPath);
+        reader.IncludeZoneState(zoneState);
+        const auto parsed = reader.ReadMenuFile();
+        REQUIRE(parsed);
+        REQUIRE(parsed->m_menus.size() == 1u);
+    }
+
     expressionEntry Operator(const operationEnum operation)
     {
         expressionEntry entry{};
