@@ -500,7 +500,7 @@ namespace T4Xenon
 
     static inline void EndianSwap(T4Xenon::GfxStateBits& v, [[maybe_unused]] const EndianOperation operation)
     {
-        EndianSwap(v.loadBits);
+        EndianSwap(v.loadBits.raw);
     }
 
     static inline void EndianSwap(T4Xenon::MaterialTextureDef& v, [[maybe_unused]] const EndianOperation operation)

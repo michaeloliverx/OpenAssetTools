@@ -164,7 +164,7 @@ namespace
         Zone zone("materials", 0, GameId::T4Xenon, GamePlatform::XBOX);
         T4Xenon::MaterialConstantDef constant{};
         constant.nameHash = 0x12345678;
-        constant.literal[0] = 12.5f;
+        constant.literal.v[0] = 12.5f;
         T4Xenon::Material materials[2]{};
         for (auto i = 0u; i < 2; i++)
         {
@@ -182,7 +182,7 @@ namespace
         REQUIRE(second);
         REQUIRE(first->Asset()->constantTable == second->Asset()->constantTable);
         REQUIRE(first->Asset()->constantTable->nameHash == constant.nameHash);
-        REQUIRE(first->Asset()->constantTable->literal[0] == constant.literal[0]);
+        REQUIRE(first->Asset()->constantTable->literal.v[0] == constant.literal.v[0]);
     }
 } // namespace
 

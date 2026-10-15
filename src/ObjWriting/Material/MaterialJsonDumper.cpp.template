@@ -1,4 +1,4 @@
-#options GAME (IW3, IW3Xenon, IW4, IW5, T4, T5, T6)
+#options GAME (IW3, IW3Xenon, IW4, IW5, T4, T4Xenon, T5, T6)
 
 #filename "Game/" + GAME + "/Material/MaterialJsonDumper" + GAME + ".cpp"
 
@@ -8,7 +8,8 @@
 #define GAME_LOWER "iw3"
 #elif GAME == "IW3Xenon"
 #define FEATURE_IW3
-#define FEATURE_IW3_XENON
+#define FEATURE_XENON
+#define PC_NAMESPACE IW3
 #define HAS_WATER
 #define GAME_LOWER "iw3"
 #elif GAME == "IW4"
@@ -21,6 +22,12 @@
 #define GAME_LOWER "iw5"
 #elif GAME == "T4"
 #define FEATURE_T4
+#define HAS_WATER
+#define GAME_LOWER "t4"
+#elif GAME == "T4Xenon"
+#define FEATURE_T4
+#define FEATURE_XENON
+#define PC_NAMESPACE T4
 #define HAS_WATER
 #define GAME_LOWER "t4"
 #elif GAME == "T5"
@@ -54,7 +61,7 @@
 #include <cassert>
 #include <iomanip>
 #include <nlohmann/json.hpp>
-#ifdef FEATURE_IW3_XENON
+#ifdef FEATURE_XENON
 #include <vector>
 #endif
 
@@ -136,7 +143,7 @@ namespace
             jWater.codeConstant[2] = water.codeConstant[2];
             jWater.codeConstant[3] = water.codeConstant[3];
 
-#ifdef FEATURE_IW3_XENON
+#ifdef FEATURE_XENON
             if (water.H0X && water.H0Y)
             {
                 const auto count = water.M * water.N;
@@ -349,8 +356,8 @@ namespace
             jMaterial.contents = material.info.contents;
 #endif
 
-#ifdef FEATURE_IW3_XENON
-            jMaterial.stateBitsEntry.assign(std::extent_v<decltype(IW3::Material::stateBitsEntry)>, -1);
+#ifdef FEATURE_XENON
+            jMaterial.stateBitsEntry.assign(std::extent_v<decltype(PC_NAMESPACE::Material::stateBitsEntry)>, -1);
             for (auto i = 0u; i < std::extent_v<decltype(Material::stateBitsEntry)>; i++)
                 jMaterial.stateBitsEntry[Common::GetPcMaterialTechniqueIndex(i)] = material.stateBitsEntry[i];
 #else

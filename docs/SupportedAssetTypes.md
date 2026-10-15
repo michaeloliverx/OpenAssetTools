@@ -44,7 +44,7 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | PhysPreset           | ✅              | ✅              | IW3 PC-compatible raw files and GDT entries.                                  |
 | XAnimParts           | ✅              | ✅              | IW3 PC-compatible version-17 files in `xanim/`.                               |
 | XModel               | ✅              | ✅              | Model data can be exported to `XMODEL_EXPORT/XMODEL_BIN`, `OBJ`, `GLB/GLTF`. |
-| Material             | ✅              | ✅              | IW3 material JSON, including water. Requires native technique sets.          |
+| Material             | ✅              | ✅              | IW3 PC-compatible material JSON, including water.                            |
 | MaterialPixelShader  | ✅              | ✅              | Native `.xpu` microcode.                                                     |
 | MaterialTechniqueSet | ❌              | ❌              |                                                                              |
 | GfxImage             | ✅              | ✅              | DDS/IWI, 2D and cube textures.                                               |
@@ -232,7 +232,7 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | DestructibleDef      | ❌              | ❌              |                                                                              |
 | XAnimParts           | ✅              | ✅              | T4 PC-compatible version-17 files in `xanim/`.                                |
 | XModel               | ✅              | ✅              | Model data can be exported to `XMODEL_EXPORT/XMODEL_BIN`, `OBJ`, `GLB/GLTF`. |
-| Material             | ❌              | ❌              |                                                                              |
+| Material             | ✅              | ✅              | T4 PC-compatible material JSON, including water.                             |
 | MaterialPixelShader  | ✅              | ✅              | Native `.xpu` microcode in `shader_bin/`.                                    |
 | MaterialTechniqueSet | ❌              | ❌              |                                                                              |
 | GfxImage             | ✅              | ✅              | DDS/IWI, 2D and cube textures. External highmips used when available.         |

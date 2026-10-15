@@ -1,4 +1,4 @@
-#options GAME (IW3, IW3Xenon, IW4, IW5, T4, T5, T6)
+#options GAME (IW3, IW3Xenon, IW4, IW5, T4, T4Xenon, T5, T6)
 
 #filename "Game/" + GAME + "/Material/JsonMaterialLoader" + GAME + ".cpp"
 
@@ -8,7 +8,8 @@
 #define GAME_LOWER "iw3"
 #elif GAME == "IW3Xenon"
 #define FEATURE_IW3
-#define FEATURE_IW3_XENON
+#define FEATURE_XENON
+#define PC_NAMESPACE IW3
 #define HAS_WATER
 #define GAME_LOWER "iw3"
 #elif GAME == "IW4"
@@ -21,6 +22,12 @@
 #define GAME_LOWER "iw5"
 #elif GAME == "T4"
 #define FEATURE_T4
+#define HAS_WATER
+#define GAME_LOWER "t4"
+#elif GAME == "T4Xenon"
+#define FEATURE_T4
+#define FEATURE_XENON
+#define PC_NAMESPACE T4
 #define HAS_WATER
 #define GAME_LOWER "t4"
 #elif GAME == "T5"
@@ -52,7 +59,7 @@
 #include <format>
 #include <iostream>
 #include <nlohmann/json.hpp>
-#ifdef FEATURE_IW3_XENON
+#ifdef FEATURE_XENON
 #include <limits>
 #include <vector>
 #endif
@@ -156,7 +163,7 @@ namespace
             water.codeConstant[2] = jWater.codeConstant[2];
             water.codeConstant[3] = jWater.codeConstant[3];
 
-#ifdef FEATURE_IW3_XENON
+#ifdef FEATURE_XENON
             if (water.M < 0 || water.N < 0
                 || static_cast<uint64_t>(water.M) * water.N > std::numeric_limits<int>::max() / sizeof(complex_s))
             {
@@ -167,7 +174,7 @@ namespace
             const auto expectedH0Size = water.M * water.N * sizeof(complex_s);
             if (expectedH0Size > 0)
             {
-#ifdef FEATURE_IW3_XENON
+#ifdef FEATURE_XENON
                 std::vector<complex_s> h0(water.M * water.N);
                 const auto h0Size = base64::DecodeBase64(jWater.h0.data(), jWater.h0.size(), h0.data(), expectedH0Size);
 #else
@@ -179,7 +186,7 @@ namespace
                     PrintError(material, std::format("Water h0 size {} does not match expected {}", h0Size, expectedH0Size));
                     return false;
                 }
-#ifdef FEATURE_IW3_XENON
+#ifdef FEATURE_XENON
                 water.H0X = m_memory.Alloc<float>(h0.size());
                 water.H0Y = m_memory.Alloc<float>(h0.size());
                 for (auto i = 0uz; i < h0.size(); ++i)
@@ -462,10 +469,10 @@ namespace
             material.info.contents = jMaterial.contents;
 #endif
 
-#ifdef FEATURE_IW3_XENON
-            if (jMaterial.stateBitsEntry.size() != std::extent_v<decltype(IW3::Material::stateBitsEntry)>)
+#ifdef FEATURE_XENON
+            if (jMaterial.stateBitsEntry.size() != std::extent_v<decltype(PC_NAMESPACE::Material::stateBitsEntry)>)
             {
-                PrintError(material, std::format("StateBitsEntry size is not {}", std::extent_v<decltype(IW3::Material::stateBitsEntry)>));
+                PrintError(material, std::format("StateBitsEntry size is not {}", std::extent_v<decltype(PC_NAMESPACE::Material::stateBitsEntry)>));
                 return false;
             }
 #else
@@ -476,7 +483,7 @@ namespace
             }
 #endif
             for (auto i = 0u; i < std::extent_v<decltype(Material::stateBitsEntry)>; i++)
-#ifdef FEATURE_IW3_XENON
+#ifdef FEATURE_XENON
                 material.stateBitsEntry[i] = jMaterial.stateBitsEntry[Common::GetPcMaterialTechniqueIndex(i)];
 #else
                 material.stateBitsEntry[i] = jMaterial.stateBitsEntry[i];

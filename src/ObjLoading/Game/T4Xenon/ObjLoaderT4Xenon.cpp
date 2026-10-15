@@ -10,6 +10,7 @@
 #include "Image/LoaderImageT4Xenon.h"
 #include "Localize/AssetLoaderLocalizeT4Xenon.h"
 #include "Maps/MapEntsLoaderT4Xenon.h"
+#include "Material/LoaderMaterialT4Xenon.h"
 #include "Menu/LoaderMenuListT4Xenon.h"
 #include "PhysPreset/GdtLoaderPhysPresetT4Xenon.h"
 #include "PhysPreset/RawLoaderPhysPresetT4Xenon.h"
@@ -37,6 +38,7 @@ namespace
         collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetXAnim>>(memory));
         collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetXModel>>(memory));
         collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetMaterial>>(memory));
+        collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetTechniqueSet>>(memory));
         collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetPixelShader>>(memory));
         collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetImage>>(memory));
         collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetSound>>(memory));
@@ -83,6 +85,7 @@ namespace
         collection.AddAssetCreator(xmodel::CreateLoaderT4Xenon(memory, searchPath, zone));
         collection.AddAssetCreator(techset::CreatePixelShaderLoaderT4Xenon(memory, searchPath));
         collection.AddAssetCreator(image::CreateLoaderT4Xenon(memory, searchPath));
+        collection.AddAssetCreator(material::CreateLoaderT4Xenon(memory, searchPath));
         collection.AddAssetCreator(font::CreateLoaderT4Xenon(memory, searchPath));
         collection.AddAssetCreator(menu::CreateMenuListLoaderT4Xenon(memory, searchPath));
         collection.AddAssetCreator(localize::CreateLoaderT4Xenon(memory, searchPath, zone));
