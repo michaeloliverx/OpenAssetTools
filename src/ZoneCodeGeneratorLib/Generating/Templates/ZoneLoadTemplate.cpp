@@ -1210,11 +1210,10 @@ namespace
                       "arrayPointerCount")
                 if (m_env.m_endianness == std::endian::big && member->m_member->m_type_declaration->m_type->GetSize() > 1)
                 {
-                    const auto defType = member->m_member->m_type_declaration->m_type->GetType();
                     LINE("for (size_t index = 0; index < arrayPointerCount; index++)")
                     LINE("{")
                     m_intendation++;
-                    if (defType == DataDefinitionType::STRUCT || defType == DataDefinitionType::UNION)
+                    if (member->m_type)
                     {
                         LINEF("EndianSwap({0}[index], EndianOperation::Decode);", MakeMemberAccess(info, member, modifier))
                     }
@@ -1245,8 +1244,7 @@ namespace
 
         void PrintEndianSwapLoadedValue(const MemberInformation* member, const std::string& expression) const
         {
-            const auto* definition = member->m_member->m_type_declaration->m_type;
-            if (definition->GetType() == DataDefinitionType::STRUCT || definition->GetType() == DataDefinitionType::UNION)
+            if (member->m_type)
             {
                 LINEF("EndianSwap({0}, EndianOperation::Decode);", expression)
             }
@@ -1427,8 +1425,7 @@ namespace
                       MakeMemberAccess(info, member, modifier))
                 if (m_env.m_endianness == std::endian::big && member->m_member->m_type_declaration->m_type->GetSize() > 1)
                 {
-                    const auto defType = member->m_member->m_type_declaration->m_type->GetType();
-                    if (defType == DataDefinitionType::STRUCT || defType == DataDefinitionType::UNION)
+                    if (member->m_type)
                     {
                         LINEF("EndianSwap(*{0}, EndianOperation::Decode);", MakeMemberAccess(info, member, modifier))
                     }
