@@ -233,7 +233,7 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | XAnimParts           | ✅              | ✅              | T4 PC-compatible version-17 files in `xanim/`.                                |
 | XModel               | ✅              | ✅              | Model data can be exported to `XMODEL_EXPORT/XMODEL_BIN`, `OBJ`, `GLB/GLTF`. |
 | Material             | ❌              | ❌              |                                                                              |
-| MaterialPixelShader  | ❌              | ❌              |                                                                              |
+| MaterialPixelShader  | ✅              | ✅              | Native `.xpu` microcode in `shader_bin/`.                                    |
 | MaterialTechniqueSet | ❌              | ❌              |                                                                              |
 | GfxImage             | ✅              | ✅              | DDS/IWI, 2D and cube textures. External highmips used when available.         |
 | snd_alias_list_t     | ❌              | ❌              |                                                                              |

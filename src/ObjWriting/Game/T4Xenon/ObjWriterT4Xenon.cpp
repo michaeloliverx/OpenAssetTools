@@ -11,6 +11,7 @@
 #include "PhysPreset/PhysPresetInfoStringDumperT4Xenon.h"
 #include "RawFile/RawFileDumperT4Xenon.h"
 #include "StringTable/StringTableDumperT4Xenon.h"
+#include "Techset/PixelShaderDumperT4Xenon.h"
 #include "Weapon/WeaponDumperT4Xenon.h"
 
 using namespace T4Xenon;
@@ -20,6 +21,7 @@ void ObjWriter::RegisterAssetDumpers(AssetDumpingContext& context)
     RegisterAssetDumper(std::make_unique<phys_preset::InfoStringDumperT4Xenon>());
     RegisterAssetDumper(std::make_unique<xanim::DumperT4Xenon>());
     RegisterAssetDumper(std::make_unique<xmodel::DumperT4Xenon>());
+    RegisterAssetDumper(std::make_unique<techset::PixelShaderDumperT4Xenon>());
     RegisterAssetDumper(std::make_unique<image::DumperT4Xenon>());
     RegisterAssetDumper(std::make_unique<map_ents::DumperT4Xenon>());
     RegisterAssetDumper(std::make_unique<font::JsonDumperT4Xenon>());
