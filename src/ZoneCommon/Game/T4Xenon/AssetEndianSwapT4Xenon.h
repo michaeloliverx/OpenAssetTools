@@ -105,6 +105,11 @@ namespace T4Xenon
         EndianSwap(v.canFloat);
     }
 
+    static inline void EndianSwap(T4Xenon::vec2_t& v, [[maybe_unused]] const EndianOperation operation)
+    {
+        EndianSwap(v.v);
+    }
+
     static inline void EndianSwap(T4Xenon::vec3_t& v, [[maybe_unused]] const EndianOperation operation = EndianOperation::Decode)
     {
         EndianSwap(v.v);
@@ -2264,9 +2269,114 @@ namespace T4Xenon
         EndianSwap(v.name);
     }
 
-    static inline void EndianSwap(T4Xenon::flameTable& v, [[maybe_unused]] const EndianOperation operation)
+    static inline void EndianSwap(T4Xenon::FlameTable& v, [[maybe_unused]] const EndianOperation operation)
     {
-        EndianSwap(v.flameVars);
+        EndianSwap(v.flameVar_streamChunkGravityStart);
+        EndianSwap(v.flameVar_streamChunkGravityEnd);
+        EndianSwap(v.flameVar_streamChunkMaxSize);
+        EndianSwap(v.flameVar_streamChunkStartSize);
+        EndianSwap(v.flameVar_streamChunkEndSize);
+        EndianSwap(v.flameVar_streamChunkStartSizeRand);
+        EndianSwap(v.flameVar_streamChunkEndSizeRand);
+        EndianSwap(v.flameVar_streamChunkDistScalar);
+        EndianSwap(v.flameVar_streamChunkDistSwayScale);
+        EndianSwap(v.flameVar_streamChunkDistSwayVelMax);
+        EndianSwap(v.flameVar_streamChunkSpeed);
+        EndianSwap(v.flameVar_streamChunkDecel);
+        EndianSwap(v.flameVar_streamChunkVelocityAddScale);
+        EndianSwap(v.flameVar_streamChunkDuration);
+        EndianSwap(v.flameVar_streamChunkDurationScaleMaxVel);
+        EndianSwap(v.flameVar_streamChunkDurationVelScalar);
+        EndianSwap(v.flameVar_streamChunkSizeSpeedScale);
+        EndianSwap(v.flameVar_streamChunkSizeAgeScale);
+        EndianSwap(v.flameVar_streamChunkSpawnFireIntervalStart);
+        EndianSwap(v.flameVar_streamChunkSpawnFireIntervalEnd);
+        EndianSwap(v.flameVar_streamChunkSpawnFireMinLifeFrac);
+        EndianSwap(v.flameVar_streamChunkSpawnFireMaxLifeFrac);
+        EndianSwap(v.flameVar_streamChunkFireMinLifeFrac);
+        EndianSwap(v.flameVar_streamChunkFireMinLifeFracStart);
+        EndianSwap(v.flameVar_streamChunkFireMinLifeFracEnd);
+        EndianSwap(v.flameVar_streamChunkDripsMinLifeFrac);
+        EndianSwap(v.flameVar_streamChunkDripsMinLifeFracStart);
+        EndianSwap(v.flameVar_streamChunkDripsMinLifeFracEnd);
+        EndianSwap(v.flameVar_streamChunkRotationRange);
+        EndianSwap(v.flameVar_streamSizeRandSinWave);
+        EndianSwap(v.flameVar_streamSizeRandCosWave);
+        EndianSwap(v.flameVar_streamDripsChunkInterval);
+        EndianSwap(v.flameVar_streamDripsChunkMinFrac);
+        EndianSwap(v.flameVar_streamDripsChunkRandFrac);
+        EndianSwap(v.flameVar_streamSmokeChunkInterval);
+        EndianSwap(v.flameVar_streamSmokeChunkMinFrac);
+        EndianSwap(v.flameVar_streamSmokeChunkRandFrac);
+        EndianSwap(v.flameVar_streamChunkCullDistSizeFrac);
+        EndianSwap(v.flameVar_streamChunkCullMinLife);
+        EndianSwap(v.flameVar_streamChunkCullMaxLife);
+        EndianSwap(v.flameVar_streamFuelSizeStart);
+        EndianSwap(v.flameVar_streamFuelSizeEnd);
+        EndianSwap(v.flameVar_streamFuelLength);
+        EndianSwap(v.flameVar_streamFuelNumSegments);
+        EndianSwap(v.flameVar_streamFuelAnimLoopTime);
+        EndianSwap(v.flameVar_streamFlameSizeStart);
+        EndianSwap(v.flameVar_streamFlameSizeEnd);
+        EndianSwap(v.flameVar_streamFlameLength);
+        EndianSwap(v.flameVar_streamFlameNumSegments);
+        EndianSwap(v.flameVar_streamFlameAnimLoopTime);
+        EndianSwap(v.flameVar_streamPrimaryLightRadius);
+        EndianSwap(v.flameVar_streamPrimaryLightRadiusFlutter);
+        EndianSwap(v.flameVar_streamPrimaryLightR);
+        EndianSwap(v.flameVar_streamPrimaryLightG);
+        EndianSwap(v.flameVar_streamPrimaryLightB);
+        EndianSwap(v.flameVar_streamPrimaryLightFlutterR);
+        EndianSwap(v.flameVar_streamPrimaryLightFlutterG);
+        EndianSwap(v.flameVar_streamPrimaryLightFlutterB);
+        EndianSwap(v.flameVar_fireLife);
+        EndianSwap(v.flameVar_fireLifeRand);
+        EndianSwap(v.flameVar_fireSpeedScale);
+        EndianSwap(v.flameVar_fireSpeedScaleRand);
+        EndianSwap(v.flameVar_fireVelocityAddZ);
+        EndianSwap(v.flameVar_fireVelocityAddZRand);
+        EndianSwap(v.flameVar_fireVelocityAddSideways);
+        EndianSwap(v.flameVar_fireGravity);
+        EndianSwap(v.flameVar_fireGravityEnd);
+        EndianSwap(v.flameVar_fireMaxRotVel);
+        EndianSwap(v.flameVar_fireFriction);
+        EndianSwap(v.flameVar_fireEndSizeAdd);
+        EndianSwap(v.flameVar_fireStartSizeScale);
+        EndianSwap(v.flameVar_fireEndSizeScale);
+        EndianSwap(v.flameVar_dripsLife);
+        EndianSwap(v.flameVar_dripsLifeRand);
+        EndianSwap(v.flameVar_dripsSpeedScale);
+        EndianSwap(v.flameVar_dripsSpeedScaleRand);
+        EndianSwap(v.flameVar_dripsVelocityAddZ);
+        EndianSwap(v.flameVar_dripsVelocityAddZRand);
+        EndianSwap(v.flameVar_dripsVelocityAddSideways);
+        EndianSwap(v.flameVar_dripsGravity);
+        EndianSwap(v.flameVar_dripsGravityEnd);
+        EndianSwap(v.flameVar_dripsMaxRotVel);
+        EndianSwap(v.flameVar_dripsFriction);
+        EndianSwap(v.flameVar_dripsEndSizeAdd);
+        EndianSwap(v.flameVar_dripsStartSizeScale);
+        EndianSwap(v.flameVar_dripsEndSizeScale);
+        EndianSwap(v.flameVar_smokeLife);
+        EndianSwap(v.flameVar_smokeLifeRand);
+        EndianSwap(v.flameVar_smokeSpeedScale);
+        EndianSwap(v.flameVar_smokeVelocityAddZ);
+        EndianSwap(v.flameVar_smokeGravity);
+        EndianSwap(v.flameVar_smokeGravityEnd);
+        EndianSwap(v.flameVar_smokeMaxRotation);
+        EndianSwap(v.flameVar_smokeMaxRotVel);
+        EndianSwap(v.flameVar_smokeFriction);
+        EndianSwap(v.flameVar_smokeEndSizeAdd);
+        EndianSwap(v.flameVar_smokeStartSizeAdd);
+        EndianSwap(v.flameVar_smokeOriginSizeOfsZScale);
+        EndianSwap(v.flameVar_smokeOriginOfsZ);
+        EndianSwap(v.flameVar_smokeFadein);
+        EndianSwap(v.flameVar_smokeFadeout);
+        EndianSwap(v.flameVar_smokeMaxAlpha);
+        EndianSwap(v.flameVar_smokeBrightness);
+        EndianSwap(v.flameVar_smokeOriginOffset);
+        EndianSwap(v.flameVar_collisionSpeedScale);
+        EndianSwap(v.flameVar_collisionVolumeScale);
         EndianSwap(v.name);
         EndianSwap(v.fire);
         EndianSwap(v.smoke);
@@ -2374,9 +2484,9 @@ namespace T4Xenon
         EndianSwap(v.standMountedWeapdef);
         EndianSwap(v.crouchMountedWeapdef);
         EndianSwap(v.proneMountedWeapdef);
-        EndianSwap(v.StandMountedIndex);
-        EndianSwap(v.CrouchMountedIndex);
-        EndianSwap(v.ProneMountedIndex);
+        EndianSwap(v.standMountedIndex);
+        EndianSwap(v.crouchMountedIndex);
+        EndianSwap(v.proneMountedIndex);
         EndianSwap(v.viewShellEjectEffect);
         EndianSwap(v.worldShellEjectEffect);
         EndianSwap(v.viewLastShotEjectEffect);

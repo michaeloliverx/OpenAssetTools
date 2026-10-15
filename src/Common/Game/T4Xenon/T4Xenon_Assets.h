@@ -189,6 +189,17 @@ namespace T4Xenon
         int tempDefaultToCylinder;
     };
 
+    union vec2_t
+    {
+        float v[2];
+
+        struct
+        {
+            float x;
+            float y;
+        };
+    };
+
     union vec3_t
     {
         struct
@@ -3149,13 +3160,54 @@ namespace T4Xenon
         const char* name;
     };
 
+    enum materialSurfType_t
+    {
+        SURF_TYPE_DEFAULT,
+        SURF_TYPE_BARK,
+        SURF_TYPE_BRICK,
+        SURF_TYPE_CARPET,
+        SURF_TYPE_CLOTH,
+        SURF_TYPE_CONCRETE,
+        SURF_TYPE_DIRT,
+        SURF_TYPE_FLESH,
+        SURF_TYPE_FOLIAGE,
+        SURF_TYPE_GLASS,
+        SURF_TYPE_GRASS,
+        SURF_TYPE_GRAVEL,
+        SURF_TYPE_ICE,
+        SURF_TYPE_METAL,
+        SURF_TYPE_MUD,
+        SURF_TYPE_PAPER,
+        SURF_TYPE_PLASTER,
+        SURF_TYPE_ROCK,
+        SURF_TYPE_SAND,
+        SURF_TYPE_SNOW,
+        SURF_TYPE_WATER,
+        SURF_TYPE_WOOD,
+        SURF_TYPE_ASPHALT,
+        SURF_TYPE_CERAMIC,
+        SURF_TYPE_PLASTIC,
+        SURF_TYPE_RUBBER,
+        SURF_TYPE_CUSHION,
+        SURF_TYPE_FRUIT,
+        SURF_TYPE_PAINTED_METAL,
+        SURF_TYPE_PLAYER,
+        SURF_TYPE_TALL_GRASS,
+
+        SURF_TYPE_NUM
+    };
+
     enum weapType_t
     {
         WEAPTYPE_BULLET = 0x0,
         WEAPTYPE_GRENADE = 0x1,
         WEAPTYPE_PROJECTILE = 0x2,
         WEAPTYPE_BINOCULARS = 0x3,
-        WEAPTYPE_NUM = 0x4,
+        WEAPTYPE_GAS = 0x4,
+        WEAPTYPE_BOMB = 0x5,
+        WEAPTYPE_MINE = 0x6,
+
+        WEAPTYPE_NUM,
     };
 
     enum weapClass_t
@@ -3169,8 +3221,10 @@ namespace T4Xenon
         WEAPCLASS_ROCKETLAUNCHER = 0x6,
         WEAPCLASS_TURRET = 0x7,
         WEAPCLASS_NON_PLAYER = 0x8,
-        WEAPCLASS_ITEM = 0x9,
-        WEAPCLASS_NUM = 0xA,
+        WEAPCLASS_GAS = 0x9,
+        WEAPCLASS_ITEM = 0xA,
+
+        WEAPCLASS_NUM,
     };
 
     enum PenetrateType
@@ -3179,7 +3233,8 @@ namespace T4Xenon
         PENETRATE_TYPE_SMALL = 0x1,
         PENETRATE_TYPE_MEDIUM = 0x2,
         PENETRATE_TYPE_LARGE = 0x3,
-        PENETRATE_TYPE_COUNT = 0x4,
+
+        PENETRATE_TYPE_NUM,
     };
 
     enum ImpactType
@@ -3191,9 +3246,13 @@ namespace T4Xenon
         IMPACT_TYPE_SHOTGUN = 0x4,
         IMPACT_TYPE_GRENADE_BOUNCE = 0x5,
         IMPACT_TYPE_GRENADE_EXPLODE = 0x6,
-        IMPACT_TYPE_ROCKET_EXPLODE = 0x7,
-        IMPACT_TYPE_PROJECTILE_DUD = 0x8,
-        IMPACT_TYPE_COUNT = 0x9,
+        IMPACT_TYPE_RIFLE_GRENADE = 0x7,
+        IMPACT_TYPE_ROCKET_EXPLODE = 0x8,
+        IMPACT_TYPE_PROJECTILE_DUD = 0x9,
+        IMPACT_TYPE_MORTAR_SHELL = 0xA,
+        IMPACT_TYPE_TANK_SHELL = 0xB,
+
+        IMPACT_TYPE_NUM,
     };
 
     enum weapInventoryType_t
@@ -3202,7 +3261,8 @@ namespace T4Xenon
         WEAPINVENTORY_OFFHAND = 0x1,
         WEAPINVENTORY_ITEM = 0x2,
         WEAPINVENTORY_ALTMODE = 0x3,
-        WEAPINVENTORYCOUNT = 0x4,
+
+        WEAPINVENTORY_NUM,
     };
 
     enum weapFireType_t
@@ -3212,7 +3272,8 @@ namespace T4Xenon
         WEAPON_FIRETYPE_BURSTFIRE2 = 0x2,
         WEAPON_FIRETYPE_BURSTFIRE3 = 0x3,
         WEAPON_FIRETYPE_BURSTFIRE4 = 0x4,
-        WEAPON_FIRETYPECOUNT = 0x5,
+
+        WEAPON_FIRETYPE_NUM,
     };
 
     enum OffhandClass
@@ -3221,7 +3282,8 @@ namespace T4Xenon
         OFFHAND_CLASS_FRAG_GRENADE = 0x1,
         OFFHAND_CLASS_SMOKE_GRENADE = 0x2,
         OFFHAND_CLASS_FLASH_GRENADE = 0x3,
-        OFFHAND_CLASS_COUNT = 0x4,
+
+        OFFHAND_CLASS_NUM,
     };
 
     enum weapStance_t
@@ -3229,7 +3291,8 @@ namespace T4Xenon
         WEAPSTANCE_STAND = 0x0,
         WEAPSTANCE_DUCK = 0x1,
         WEAPSTANCE_PRONE = 0x2,
-        WEAPSTANCE_NUM = 0x3,
+
+        WEAPSTANCE_NUM,
     };
 
     enum activeReticleType_t
@@ -3237,7 +3300,8 @@ namespace T4Xenon
         VEH_ACTIVE_RETICLE_NONE = 0x0,
         VEH_ACTIVE_RETICLE_PIP_ON_A_STICK = 0x1,
         VEH_ACTIVE_RETICLE_BOUNCING_DIAMOND = 0x2,
-        VEH_ACTIVE_RETICLE_COUNT = 0x3,
+
+        VEH_ACTIVE_RETICLE_NUM,
     };
 
     enum weaponIconRatioType_t
@@ -3245,7 +3309,20 @@ namespace T4Xenon
         WEAPON_ICON_RATIO_1TO1 = 0x0,
         WEAPON_ICON_RATIO_2TO1 = 0x1,
         WEAPON_ICON_RATIO_4TO1 = 0x2,
-        WEAPON_ICON_RATIO_COUNT = 0x3,
+
+        WEAPON_ICON_RATIO_NUM,
+    };
+
+    enum weapClipType_t
+    {
+        WEAPON_CLIPTYPE_BOTTOM = 0x0,
+        WEAPON_CLIPTYPE_TOP = 0x1,
+        WEAPON_CLIPTYPE_LEFT = 0x2,
+        WEAPON_CLIPTYPE_DP28 = 0x3,
+        WEAPON_CLIPTYPE_PTRS = 0x4,
+        WEAPON_CLIPTYPE_LMG = 0x5,
+
+        WEAPON_CLIPTYPE_NUM,
     };
 
     enum ammoCounterClipType_t
@@ -3257,22 +3334,25 @@ namespace T4Xenon
         AMMO_COUNTER_CLIP_ROCKET = 0x4,
         AMMO_COUNTER_CLIP_BELTFED = 0x5,
         AMMO_COUNTER_CLIP_ALTWEAPON = 0x6,
-        AMMO_COUNTER_CLIP_COUNT = 0x7,
+
+        AMMO_COUNTER_CLIP_NUM,
     };
 
     enum weapOverlayReticle_t
     {
         WEAPOVERLAYRETICLE_NONE = 0x0,
         WEAPOVERLAYRETICLE_CROSSHAIR = 0x1,
-        WEAPOVERLAYRETICLE_NUM = 0x2,
+
+        WEAPOVERLAYRETICLE_NUM,
     };
 
-    enum WeapOverlayInteface_t
+    enum WeapOverlayInterface_t
     {
         WEAPOVERLAYINTERFACE_NONE = 0x0,
         WEAPOVERLAYINTERFACE_JAVELIN = 0x1,
         WEAPOVERLAYINTERFACE_TURRETSCOPE = 0x2,
-        WEAPOVERLAYINTERFACECOUNT = 0x3,
+
+        WEAPOVERLAYINTERFACE_NUM,
     };
 
     enum weapProjExposion_t
@@ -3284,7 +3364,10 @@ namespace T4Xenon
         WEAPPROJEXP_DUD = 0x4,
         WEAPPROJEXP_SMOKE = 0x5,
         WEAPPROJEXP_HEAVY = 0x6,
-        WEAPPROJEXP_NUM = 0x7,
+        WEAPPROJEXP_FIRE = 0x7,
+        WEAPPROJEXP_NAPALMBLOB = 0x8,
+
+        WEAPPROJEXP_NUM,
     };
 
     enum WeapStickinessType
@@ -3293,7 +3376,8 @@ namespace T4Xenon
         WEAPSTICKINESS_ALL = 0x1,
         WEAPSTICKINESS_GROUND = 0x2,
         WEAPSTICKINESS_GROUND_WITH_YAW = 0x3,
-        WEAPSTICKINESS_COUNT = 0x4,
+
+        WEAPSTICKINESS_NUM,
     };
 
     enum guidedMissileType_t
@@ -3302,7 +3386,50 @@ namespace T4Xenon
         MISSILE_GUIDANCE_SIDEWINDER = 0x1,
         MISSILE_GUIDANCE_HELLFIRE = 0x2,
         MISSILE_GUIDANCE_JAVELIN = 0x3,
-        MISSILE_GUIDANCE_COUNT = 0x4,
+        MISSILE_GUIDANCE_BALLISTIC = 0x4,
+
+        MISSILE_GUIDANCE_NUM,
+    };
+
+    enum WeaponAnimSlot
+    {
+        WEAP_ANIM_ROOT = 0x0,
+        WEAP_ANIM_IDLE = 0x1,
+        WEAP_ANIM_EMPTY_IDLE = 0x2,
+        WEAP_ANIM_FIRE = 0x3,
+        WEAP_ANIM_HOLD_FIRE = 0x4,
+        WEAP_ANIM_LASTSHOT = 0x5,
+        WEAP_ANIM_RECHAMBER = 0x6,
+        WEAP_ANIM_MELEE = 0x7,
+        WEAP_ANIM_MELEE_CHARGE = 0x8,
+        WEAP_ANIM_RELOAD = 0x9,
+        WEAP_ANIM_RELOAD_EMPTY = 0xA,
+        WEAP_ANIM_RELOAD_START = 0xB,
+        WEAP_ANIM_RELOAD_END = 0xC,
+        WEAP_ANIM_RAISE = 0xD,
+        WEAP_ANIM_FIRST_RAISE = 0xE,
+        WEAP_ANIM_DROP = 0xF,
+        WEAP_ANIM_ALT_RAISE = 0x10,
+        WEAP_ANIM_ALT_DROP = 0x11,
+        WEAP_ANIM_QUICK_RAISE = 0x12,
+        WEAP_ANIM_QUICK_DROP = 0x13,
+        WEAP_ANIM_EMPTY_RAISE = 0x14,
+        WEAP_ANIM_EMPTY_DROP = 0x15,
+        WEAP_ANIM_SPRINT_IN = 0x16,
+        WEAP_ANIM_SPRINT_LOOP = 0x17,
+        WEAP_ANIM_SPRINT_OUT = 0x18,
+        WEAP_ANIM_DEPLOY = 0x19,
+        WEAP_ANIM_BREAKDOWN = 0x1A,
+        WEAP_ANIM_DETONATE = 0x1B,
+        WEAP_ANIM_NIGHTVISION_WEAR = 0x1C,
+        WEAP_ANIM_NIGHTVISION_REMOVE = 0x1D,
+        WEAP_ANIM_ADS_FIRE = 0x1E,
+        WEAP_ANIM_ADS_LASTSHOT = 0x1F,
+        WEAP_ANIM_ADS_RECHAMBER = 0x20,
+        WEAP_ANIM_ADS_UP = 0x21,
+        WEAP_ANIM_ADS_DOWN = 0x22,
+
+        NUM_WEAP_ANIMS,
     };
 
     struct snd_alias_list_name
@@ -3316,9 +3443,114 @@ namespace T4Xenon
         snd_alias_list_t* sound;
     };
 
-    struct flameTable
+    struct FlameTable
     {
-        float flameVars[106];
+        float flameVar_streamChunkGravityStart;
+        float flameVar_streamChunkGravityEnd;
+        float flameVar_streamChunkMaxSize;
+        float flameVar_streamChunkStartSize;
+        float flameVar_streamChunkEndSize;
+        float flameVar_streamChunkStartSizeRand;
+        float flameVar_streamChunkEndSizeRand;
+        float flameVar_streamChunkDistScalar;
+        float flameVar_streamChunkDistSwayScale;
+        float flameVar_streamChunkDistSwayVelMax;
+        float flameVar_streamChunkSpeed;
+        float flameVar_streamChunkDecel;
+        float flameVar_streamChunkVelocityAddScale;
+        float flameVar_streamChunkDuration;
+        float flameVar_streamChunkDurationScaleMaxVel;
+        float flameVar_streamChunkDurationVelScalar;
+        float flameVar_streamChunkSizeSpeedScale;
+        float flameVar_streamChunkSizeAgeScale;
+        float flameVar_streamChunkSpawnFireIntervalStart;
+        float flameVar_streamChunkSpawnFireIntervalEnd;
+        float flameVar_streamChunkSpawnFireMinLifeFrac;
+        float flameVar_streamChunkSpawnFireMaxLifeFrac;
+        float flameVar_streamChunkFireMinLifeFrac;
+        float flameVar_streamChunkFireMinLifeFracStart;
+        float flameVar_streamChunkFireMinLifeFracEnd;
+        float flameVar_streamChunkDripsMinLifeFrac;
+        float flameVar_streamChunkDripsMinLifeFracStart;
+        float flameVar_streamChunkDripsMinLifeFracEnd;
+        float flameVar_streamChunkRotationRange;
+        float flameVar_streamSizeRandSinWave;
+        float flameVar_streamSizeRandCosWave;
+        float flameVar_streamDripsChunkInterval;
+        float flameVar_streamDripsChunkMinFrac;
+        float flameVar_streamDripsChunkRandFrac;
+        float flameVar_streamSmokeChunkInterval;
+        float flameVar_streamSmokeChunkMinFrac;
+        float flameVar_streamSmokeChunkRandFrac;
+        float flameVar_streamChunkCullDistSizeFrac;
+        float flameVar_streamChunkCullMinLife;
+        float flameVar_streamChunkCullMaxLife;
+        float flameVar_streamFuelSizeStart;
+        float flameVar_streamFuelSizeEnd;
+        float flameVar_streamFuelLength;
+        float flameVar_streamFuelNumSegments;
+        float flameVar_streamFuelAnimLoopTime;
+        float flameVar_streamFlameSizeStart;
+        float flameVar_streamFlameSizeEnd;
+        float flameVar_streamFlameLength;
+        float flameVar_streamFlameNumSegments;
+        float flameVar_streamFlameAnimLoopTime;
+        float flameVar_streamPrimaryLightRadius;
+        float flameVar_streamPrimaryLightRadiusFlutter;
+        float flameVar_streamPrimaryLightR;
+        float flameVar_streamPrimaryLightG;
+        float flameVar_streamPrimaryLightB;
+        float flameVar_streamPrimaryLightFlutterR;
+        float flameVar_streamPrimaryLightFlutterG;
+        float flameVar_streamPrimaryLightFlutterB;
+        float flameVar_fireLife;
+        float flameVar_fireLifeRand;
+        float flameVar_fireSpeedScale;
+        float flameVar_fireSpeedScaleRand;
+        float flameVar_fireVelocityAddZ;
+        float flameVar_fireVelocityAddZRand;
+        float flameVar_fireVelocityAddSideways;
+        float flameVar_fireGravity;
+        float flameVar_fireGravityEnd;
+        float flameVar_fireMaxRotVel;
+        float flameVar_fireFriction;
+        float flameVar_fireEndSizeAdd;
+        float flameVar_fireStartSizeScale;
+        float flameVar_fireEndSizeScale;
+        float flameVar_dripsLife;
+        float flameVar_dripsLifeRand;
+        float flameVar_dripsSpeedScale;
+        float flameVar_dripsSpeedScaleRand;
+        float flameVar_dripsVelocityAddZ;
+        float flameVar_dripsVelocityAddZRand;
+        float flameVar_dripsVelocityAddSideways;
+        float flameVar_dripsGravity;
+        float flameVar_dripsGravityEnd;
+        float flameVar_dripsMaxRotVel;
+        float flameVar_dripsFriction;
+        float flameVar_dripsEndSizeAdd;
+        float flameVar_dripsStartSizeScale;
+        float flameVar_dripsEndSizeScale;
+        float flameVar_smokeLife;
+        float flameVar_smokeLifeRand;
+        float flameVar_smokeSpeedScale;
+        float flameVar_smokeVelocityAddZ;
+        float flameVar_smokeGravity;
+        float flameVar_smokeGravityEnd;
+        float flameVar_smokeMaxRotation;
+        float flameVar_smokeMaxRotVel;
+        float flameVar_smokeFriction;
+        float flameVar_smokeEndSizeAdd;
+        float flameVar_smokeStartSizeAdd;
+        float flameVar_smokeOriginSizeOfsZScale;
+        float flameVar_smokeOriginOfsZ;
+        float flameVar_smokeFadein;
+        float flameVar_smokeFadeout;
+        float flameVar_smokeMaxAlpha;
+        float flameVar_smokeBrightness;
+        float flameVar_smokeOriginOffset;
+        float flameVar_collisionSpeedScale;
+        float flameVar_collisionVolumeScale;
         const char* name;
         Material* fire;
         Material* smoke;
@@ -3341,11 +3573,11 @@ namespace T4Xenon
         const char* szOverlayName;
         XModel* gunXModel[16];
         XModel* handXModel;
-        const char* szXAnims[35];
+        const char* szXAnims[NUM_WEAP_ANIMS];
         const char* szModeName;
-        unsigned __int16 hideTags[8];
-        unsigned __int16 notetrackSoundMapKeys[20];
-        unsigned __int16 notetrackSoundMapValues[20];
+        uint16_t hideTags[8];
+        uint16_t notetrackSoundMapKeys[20];
+        uint16_t notetrackSoundMapValues[20];
         int playerAnimType;
         weapType_t weapType;
         weapClass_t weapClass;
@@ -3353,7 +3585,7 @@ namespace T4Xenon
         ImpactType impactType;
         weapInventoryType_t inventoryType;
         weapFireType_t fireType;
-        int clipType;
+        weapClipType_t clipType;
         int overheatWeapon;
         float overheatRate;
         float cooldownRate;
@@ -3426,9 +3658,9 @@ namespace T4Xenon
         const char* standMountedWeapdef;
         const char* crouchMountedWeapdef;
         const char* proneMountedWeapdef;
-        int StandMountedIndex;
-        int CrouchMountedIndex;
-        int ProneMountedIndex;
+        int standMountedIndex;
+        int crouchMountedIndex;
+        int proneMountedIndex;
         FxEffectDef* viewShellEjectEffect;
         FxEffectDef* worldShellEjectEffect;
         FxEffectDef* viewLastShotEjectEffect;
@@ -3555,7 +3787,7 @@ namespace T4Xenon
         Material* overlayMaterial;
         Material* overlayMaterialLowRes;
         weapOverlayReticle_t overlayReticle;
-        WeapOverlayInteface_t overlayInterface;
+        WeapOverlayInterface_t overlayInterface;
         float overlayWidth;
         float overlayHeight;
         float fAdsBobFactor;
@@ -3658,8 +3890,8 @@ namespace T4Xenon
         int holdButtonToThrow;
         int freezeMovementWhenFiring;
         float lowAmmoWarningThreshold;
-        float parallelBounce[31];
-        float perpendicularBounce[31];
+        float parallelBounce[SURF_TYPE_NUM];
+        float perpendicularBounce[SURF_TYPE_NUM];
         FxEffectDef* projTrailEffect;
         float vProjectileColor[3];
         guidedMissileType_t guidedMissileType;
@@ -3709,10 +3941,10 @@ namespace T4Xenon
         float maxDist;
         const char* aiVsAiAccuracyGraphName;
         const char* aiVsPlayerAccuracyGraphName;
-        float (*aiVsAiAccuracyGraphKnots)[2];
-        float (*aiVsPlayerAccuracyGraphKnots)[2];
-        float (*originalAiVsAiAccuracyGraphKnots)[2];
-        float (*originalAiVsPlayerAccuracyGraphKnots)[2];
+        vec2_t* aiVsAiAccuracyGraphKnots;
+        vec2_t* aiVsPlayerAccuracyGraphKnots;
+        vec2_t* originalAiVsAiAccuracyGraphKnots;
+        vec2_t* originalAiVsPlayerAccuracyGraphKnots;
         int aiVsAiAccuracyGraphKnotCount;
         int aiVsPlayerAccuracyGraphKnotCount;
         int originalAiVsAiAccuracyGraphKnotCount;
@@ -3748,7 +3980,7 @@ namespace T4Xenon
         float destabilizationRateTime;
         float destabilizationCurvatureMax;
         int destabilizeDistance;
-        float locationDamageMultipliers[19];
+        float locationDamageMultipliers[HITLOC_COUNT];
         const char* fireRumble;
         const char* meleeImpactRumble;
         float adsDofStart;
@@ -3757,8 +3989,8 @@ namespace T4Xenon
         float hipDofEnd;
         const char* flameTableFirstPerson;
         const char* flameTableThirdPerson;
-        flameTable* flameTableFirstPersonPtr;
-        flameTable* flameTableThirdPersonPtr;
+        FlameTable* flameTableFirstPersonPtr;
+        FlameTable* flameTableThirdPersonPtr;
         FxEffectDef* tagFx_preparationEffect;
         FxEffectDef* tagFlash_preparationEffect;
     };

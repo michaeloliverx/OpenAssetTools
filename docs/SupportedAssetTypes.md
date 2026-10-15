@@ -250,7 +250,7 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | MenuList             | ✅              | ✅              | The output is decompiled. The result will not be the same as the input.      |
 | menuDef_t            | ✅              | ✅              | See menulist.                                                                |
 | LocalizeEntry        | ✅              | ✅              |                                                                              |
-| WeaponDef            | ❌              | ❌              |                                                                              |
+| WeaponDef            | ✅              | ✅              | T4 PC-compatible weapon files and GDTs, accuracy graphs, and flame tables.     |
 | FxEffectDef          | ❌              | ❌              |                                                                              |
 | FxImpactTable        | ❌              | ❌              |                                                                              |
 | RawFile              | ✅              | ✅              |                                                                              |

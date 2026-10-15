@@ -10,6 +10,7 @@
 #include "PhysPreset/PhysPresetInfoStringDumperT4Xenon.h"
 #include "RawFile/RawFileDumperT4Xenon.h"
 #include "StringTable/StringTableDumperT4Xenon.h"
+#include "Weapon/WeaponDumperT4Xenon.h"
 
 using namespace T4Xenon;
 
@@ -25,4 +26,5 @@ void ObjWriter::RegisterAssetDumpers(AssetDumpingContext& context)
     RegisterAssetDumper(std::make_unique<localize::DumperT4Xenon>());
     RegisterAssetDumper(std::make_unique<raw_file::DumperT4Xenon>());
     RegisterAssetDumper(std::make_unique<string_table::DumperT4Xenon>());
+    RegisterAssetDumper(std::make_unique<weapon::DumperT4Xenon>());
 }

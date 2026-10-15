@@ -3,6 +3,7 @@
 // clang-format off: Order of includes matters here
 
 #include "Game/IAsset.h"
+#include "Game/T4/T4.h"
 
 #include "T4Xenon_Assets.h"
 
@@ -10,6 +11,12 @@
 
 namespace T4Xenon
 {
+    using T4::csParseFieldType_t;
+    using T4::cspField_t;
+    using T4::weapFieldType_t;
+    using enum T4::csParseFieldType_t;
+    using enum T4::weapFieldType_t;
+
     enum SubAssetType
     {
         SUB_ASSET_TYPE_TECHNIQUE,
@@ -68,7 +75,7 @@ namespace T4Xenon
 
     struct AccuracyGraph
     {
-        float (*graphKnots)[2];
+        vec2_t* graphKnots;
         int graphKnotCount;
     };
 
@@ -107,7 +114,7 @@ namespace T4Xenon
     using SubAssetVertexDecl = SubAsset<SUB_ASSET_TYPE_VERTEX_DECL, MaterialVertexDeclaration>;
     using SubAssetVertexShader = SubAsset<SUB_ASSET_TYPE_VERTEX_SHADER, MaterialVertexShader>;
     using SubAssetAccuracyGraph = SubAsset<SUB_ASSET_TYPE_ACCURACY_GRAPH, AccuracyGraph>;
-    using SubAssetFlameTable = SubAsset<SUB_ASSET_TYPE_FLAME_TABLE, flameTable>;
+    using SubAssetFlameTable = SubAsset<SUB_ASSET_TYPE_FLAME_TABLE, FlameTable>;
 } // namespace T4Xenon
 
 DEFINE_ASSET_NAME_ACCESSOR(T4Xenon::AssetPhysPreset, name);

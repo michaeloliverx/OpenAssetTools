@@ -3,6 +3,7 @@
 #include "Asset/GlobalAssetPoolsLoader.h"
 #include "Game/T4Xenon/AssetMarkerT4Xenon.h"
 #include "Game/T4Xenon/T4Xenon.h"
+#include "Game/T4Xenon/Weapon/AccuracyGraphLoaderT4Xenon.h"
 #include "Game/T4Xenon/XAnim/XAnimLoaderT4Xenon.h"
 #include "Game/T4Xenon/XModel/LoaderXModelT4Xenon.h"
 #include "Image/LoaderImageT4Xenon.h"
@@ -13,6 +14,9 @@
 #include "PhysPreset/RawLoaderPhysPresetT4Xenon.h"
 #include "RawFile/AssetLoaderRawFileT4Xenon.h"
 #include "StringTable/LoaderStringTableT4Xenon.h"
+#include "Weapon/FlameTableLoaderT4Xenon.h"
+#include "Weapon/WeaponGdtLoaderT4Xenon.h"
+#include "Weapon/WeaponRawLoaderT4Xenon.h"
 
 using namespace T4Xenon;
 
@@ -38,6 +42,8 @@ namespace
         collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetMenu>>(memory));
         collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetMapEnts>>(memory));
         collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetLocalize>>(memory));
+        collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetWeapon>>(memory));
+        collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetFx>>(memory));
         collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetRawFile>>(memory));
         collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetStringTable>>(memory));
     }
@@ -58,6 +64,8 @@ namespace
         collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetMenu>>(zone));
         collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetMapEnts>>(zone));
         collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetLocalize>>(zone));
+        collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetWeapon>>(zone));
+        collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetFx>>(zone));
         collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetRawFile>>(zone));
         collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetStringTable>>(zone));
     }
@@ -76,6 +84,11 @@ namespace
         collection.AddAssetCreator(phys_preset::CreateGdtLoaderT4Xenon(memory, gdt, zone));
         collection.AddAssetCreator(raw_file::CreateLoaderT4Xenon(memory, searchPath));
         collection.AddAssetCreator(string_table::CreateLoaderT4Xenon(memory, searchPath));
+        collection.AddAssetCreator(weapon::CreateRawLoaderT4Xenon(memory, searchPath, zone));
+        collection.AddAssetCreator(weapon::CreateGdtLoaderT4Xenon(memory, searchPath, gdt, zone));
+
+        collection.AddSubAssetCreator(weapon::CreateAccuracyGraphLoaderT4Xenon(memory, searchPath));
+        collection.AddSubAssetCreator(weapon::CreateFlameTableLoaderT4Xenon(memory, searchPath, zone));
     }
 } // namespace
 
