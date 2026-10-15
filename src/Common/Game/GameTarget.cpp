@@ -9,6 +9,9 @@ namespace game_target
         if (game == GameId::COUNT || GetPublicGameId(game) != game)
             return std::nullopt;
 
+        if (game == GameId::NX1)
+            return platform == GamePlatform::XBOX ? std::make_optional(GameId::NX1) : std::nullopt;
+
         if (platform == GamePlatform::PC)
             return game;
 

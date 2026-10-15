@@ -1,0 +1,40 @@
+// =========================================
+// snd_alias_list_t
+// =========================================
+use snd_alias_list_t;
+set block XFILE_BLOCK_TEMP;
+set string aliasName;
+set reusable head;
+set count head count;
+
+// snd_alias_t
+use snd_alias_t;
+set string aliasName;
+set string subtitle;
+set string secondaryAliasName;
+set string chainAliasName;
+set string mixerGroup;
+set block soundFile XFILE_BLOCK_TEMP;
+set reusable soundFile;
+set count soundFile 1;
+set reusable speakerMap;
+set reusable duckMap;
+
+// SoundFile
+use SoundFile;
+set block XFILE_BLOCK_VIRTUAL;
+set condition SoundFile::ref::loadSnd type == SAT_LOADED || type == SAT_VOICED;
+
+// SpeakerMap
+use SpeakerMap;
+set string SpeakerMap::name;
+
+// SndDuckMap
+use SndDuckMap;
+set string SndDuckMap::name;
+
+// StreamedSound
+use StreamedSound;
+set condition StreamedSound::filename::info::raw StreamedSound::filename::fileIndex == 0;
+set string StreamedSound::filename::info::raw::dir;
+set string StreamedSound::filename::info::raw::name;

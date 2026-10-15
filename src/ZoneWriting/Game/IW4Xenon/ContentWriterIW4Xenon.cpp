@@ -111,7 +111,8 @@ void ContentWriter::WriteXAsset(const bool atStreamStart)
         WRITE_ASSET(ASSET_TYPE_PHYSPRESET, PhysPreset, physPreset)
         WRITE_ASSET(ASSET_TYPE_PHYSCOLLMAP, PhysCollmap, physCollmap)
         WRITE_ASSET(ASSET_TYPE_XANIMPARTS, XAnimParts, parts)
-        // XModelSurfs are only safe when nested beneath an XModelLodInfo.
+        // The engine reads the active XModelLodInfo's numsurfs; standalone surfaces can crash it.
+        // WRITE_ASSET(ASSET_TYPE_XMODEL_SURFS, XModelSurfs, modelSurfs)
         WRITE_ASSET(ASSET_TYPE_XMODEL, XModel, model)
         WRITE_ASSET(ASSET_TYPE_MATERIAL, Material, material)
         WRITE_ASSET(ASSET_TYPE_PIXELSHADER, MaterialPixelShader, pixelShader)

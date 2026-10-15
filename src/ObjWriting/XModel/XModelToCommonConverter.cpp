@@ -5,6 +5,7 @@
 #include "Game/IW4/XModel/XModelToCommonConverterIW4.h"
 #include "Game/IW4Xenon/XModel/XModelToCommonConverterIW4Xenon.h"
 #include "Game/IW5/XModel/XModelToCommonConverterIW5.h"
+#include "Game/NX1/XModel/XModelToCommonConverterNX1.h"
 #include "Game/QOS/XModel/XModelToCommonConverterQOS.h"
 #include "Game/T4/XModel/XModelToCommonConverterT4.h"
 #include "Game/T4Xenon/XModel/XModelToCommonConverterT4Xenon.h"
@@ -28,6 +29,7 @@ namespace xmodel
             new ToCommonConverterT4Xenon(),
             new ToCommonConverterT5(),
             new ToCommonConverterT6(),
+            new ToCommonConverterNX1(),
         };
         static_assert(std::extent_v<decltype(toCommonConverters)> == static_cast<unsigned>(GameId::COUNT));
         assert(static_cast<unsigned>(gameId) < static_cast<unsigned>(GameId::COUNT));

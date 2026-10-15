@@ -1,0 +1,6 @@
+// =========================================
+// FogDef
+// =========================================
+use FogDef;
+set block XFILE_BLOCK_TEMP;
+set string mp_name;

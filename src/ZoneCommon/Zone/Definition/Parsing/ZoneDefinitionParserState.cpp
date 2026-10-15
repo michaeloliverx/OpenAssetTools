@@ -31,6 +31,8 @@ namespace
 bool ZoneDefinitionParserState::SetGame(const GameId gameId)
 {
     m_definition->m_game = gameId;
+    if (gameId == GameId::NX1 && !m_explicit_platform)
+        m_definition->m_platform = GamePlatform::XBOX;
     return UpdateResolvedGame(*m_definition, m_game);
 }
 

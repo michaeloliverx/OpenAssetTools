@@ -5,6 +5,7 @@
 #include "Game/IW4/ZoneLoaderFactoryIW4.h"
 #include "Game/IW4Xenon/ZoneLoaderFactoryIW4Xenon.h"
 #include "Game/IW5/ZoneLoaderFactoryIW5.h"
+#include "Game/NX1/ZoneLoaderFactoryNX1.h"
 #include "Game/QOS/ZoneLoaderFactoryQOS.h"
 #include "Game/T4/ZoneLoaderFactoryT4.h"
 #include "Game/T4Xenon/ZoneLoaderFactoryT4Xenon.h"
@@ -26,6 +27,7 @@ const IZoneLoaderFactory* IZoneLoaderFactory::GetZoneLoaderFactoryForGame(GameId
         new T4Xenon::ZoneLoaderFactory(),
         new T5::ZoneLoaderFactory(),
         new T6::ZoneLoaderFactory(),
+        new NX1::ZoneLoaderFactory(),
     };
     static_assert(std::extent_v<decltype(zoneCreators)> == static_cast<unsigned>(GameId::COUNT));
 

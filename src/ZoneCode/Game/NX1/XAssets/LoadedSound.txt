@@ -1,0 +1,23 @@
+// =========================================
+// LoadedSound
+// =========================================
+use LoadedSound;
+set block XFILE_BLOCK_TEMP;
+set string p_name;
+set condition streamFilename::info::raw streamFilename::fileIndex == 0;
+set string streamFilename::info::raw::dir;
+set string streamFilename::info::raw::name;
+
+// PlatSound
+use PlatSound;
+
+// XMA2DataAligned::p_audioData
+set block data::p_audioData XFILE_BLOCK_LARGE;
+set allocalign data::p_audioData 2048;
+set reusable data::p_audioData;
+set count data::p_audioData data::audioBytes;
+
+// XA2SeekTable::p_seekData
+set block seekTable::p_seekData XFILE_BLOCK_VIRTUAL;
+set reusable seekTable::p_seekData;
+set count seekTable::p_seekData seekTable::seekBytes / 4;

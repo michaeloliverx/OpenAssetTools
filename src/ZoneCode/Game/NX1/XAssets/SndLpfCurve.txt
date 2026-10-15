@@ -1,0 +1,6 @@
+// =========================================
+// SndLpfCurve
+// =========================================
+use SndLpfCurve;
+set block XFILE_BLOCK_TEMP;
+set string filename;

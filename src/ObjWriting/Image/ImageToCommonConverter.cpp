@@ -5,6 +5,7 @@
 #include "Game/IW4/Image/ImageToCommonConverterIW4.h"
 #include "Game/IW4Xenon/Image/ImageToCommonConverterIW4Xenon.h"
 #include "Game/IW5/Image/ImageToCommonConverterIW5.h"
+#include "Game/NX1/Image/ImageToCommonConverterNX1.h"
 #include "Game/QOS/Image/ImageToCommonConverterQOS.h"
 #include "Game/T4/Image/ImageToCommonConverterT4.h"
 #include "Game/T4Xenon/Image/ImageToCommonConverterT4Xenon.h"
@@ -28,6 +29,7 @@ namespace image
             new ToCommonConverterT4Xenon(),
             new ToCommonConverterT5(),
             new ToCommonConverterT6(),
+            new ToCommonConverterNX1(),
         };
         static_assert(std::extent_v<decltype(toCommonConverters)> == static_cast<unsigned>(GameId::COUNT));
         assert(static_cast<unsigned>(gameId) < static_cast<unsigned>(GameId::COUNT));

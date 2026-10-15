@@ -5,6 +5,7 @@
 #include "IW4/CommonAssetIW4.h"
 #include "IW4Xenon/CommonAssetIW4Xenon.h"
 #include "IW5/CommonAssetIW5.h"
+#include "NX1/CommonAssetNX1.h"
 #include "QOS/CommonAssetQOS.h"
 #include "T4/CommonAssetT4.h"
 #include "T4Xenon/CommonAssetT4Xenon.h"
@@ -26,6 +27,7 @@ ICommonAssetTypeMapper* ICommonAssetTypeMapper::GetCommonAssetMapperByGame(GameI
         new T4Xenon::CommonAssetTypeMapper(),
         new T5::CommonAssetTypeMapper(),
         new T6::CommonAssetTypeMapper(),
+        new NX1::CommonAssetTypeMapper(),
     };
     static_assert(std::extent_v<decltype(assetTypeMappers)> == static_cast<unsigned>(GameId::COUNT));
 

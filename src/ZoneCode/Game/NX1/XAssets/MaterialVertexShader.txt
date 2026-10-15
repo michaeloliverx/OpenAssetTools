@@ -1,0 +1,20 @@
+// =========================================
+// MaterialVertexShader
+// =========================================
+use MaterialVertexShader;
+set block XFILE_BLOCK_TEMP;
+set string name;
+
+// GfxVertexShaderLoadDef
+use GfxVertexShaderLoadDef;
+reorder:
+    physicalPart
+    cachedPart;
+set allocalign GfxVertexShaderLoadDef::cachedPart 4;
+set count GfxVertexShaderLoadDef::cachedPart cachedPartSize;
+set allocalign GfxVertexShaderLoadDef::physicalPart 32;
+set block GfxVertexShaderLoadDef::physicalPart XFILE_BLOCK_PHYSICAL;
+set count GfxVertexShaderLoadDef::physicalPart physicalPartSize;
+
+// MaterialVertexShaderProgram
+set condition MaterialVertexShaderProgram::vs never;

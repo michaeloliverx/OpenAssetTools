@@ -57,6 +57,8 @@ void ContentLoader::LoadXAsset(const bool atStreamStart) const
         LOAD_ASSET(ASSET_TYPE_PHYSPRESET, PhysPreset, physPreset)
         LOAD_ASSET(ASSET_TYPE_PHYSCOLLMAP, PhysCollmap, physCollmap)
         LOAD_ASSET(ASSET_TYPE_XANIMPARTS, XAnimParts, parts)
+        // The engine reads the active XModelLodInfo's numsurfs; standalone surfaces can crash it.
+        // LOAD_ASSET(ASSET_TYPE_XMODEL_SURFS, XModelSurfs, modelSurfs)
         LOAD_ASSET(ASSET_TYPE_XMODEL, XModel, model)
         LOAD_ASSET(ASSET_TYPE_MATERIAL, Material, material)
         LOAD_ASSET(ASSET_TYPE_PIXELSHADER, MaterialPixelShader, pixelShader)

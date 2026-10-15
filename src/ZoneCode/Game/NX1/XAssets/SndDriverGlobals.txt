@@ -1,0 +1,34 @@
+// =========================================
+// SndDriverGlobals
+// =========================================
+use SndDriverGlobals;
+set block XFILE_BLOCK_TEMP;
+set string p_name;
+
+set allocalign ReverbPresetList::p_reverbPresets 4;
+set count ReverbPresetList::p_reverbPresets numReverbPresets;
+set allocalign ReverbPresetList::pp_reverbPresetNames 4;
+set count ReverbPresetList::pp_reverbPresetNames numReverbPresets;
+set string ReverbPresetList::pp_reverbPresetNames;
+
+set allocalign ADSRSettingList::p_adsrSettings 4;
+set count ADSRSettingList::p_adsrSettings numSettings;
+
+set allocalign WeaponAreaMappingList::p_weaponAreaMappings 4;
+set count WeaponAreaMappingList::p_weaponAreaMappings 0x4000;
+set allocalign WeaponAreaMappingList::p_areaMappingNames 4;
+set count WeaponAreaMappingList::p_areaMappingNames numAreas;
+set allocalign WeaponAreaMappingList::p_weaponMappingNames 4;
+set count WeaponAreaMappingList::p_weaponMappingNames numWeapons;
+set allocalign WeaponAreaMappingList::p_reverbNames 4;
+set count WeaponAreaMappingList::p_reverbNames numReverbNames;
+
+set allocalign SOcclusionTable::p_entries 4;
+set count SOcclusionTable::p_entries numEntries;
+
+set allocalign OcclusionTableList::p_occlusionTables 4;
+set count OcclusionTableList::p_occlusionTables numOcclusionTables;
+
+set allocalign SndEntChannelInfoList::p_entChannelList 4;
+set count SndEntChannelInfoList::p_entChannelList numEntChannels;
+set string snd_entchannel_info_t::name;

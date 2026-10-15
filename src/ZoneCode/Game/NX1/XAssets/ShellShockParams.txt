@@ -1,0 +1,11 @@
+// =========================================
+// ShellShockParams
+// =========================================
+use ShellShockParams;
+set block XFILE_BLOCK_TEMP;
+set string p_name;
+set string volumeSettingName;
+set string soundLoop;
+set string soundEnd;
+set string soundEndAbort;
+set string soundRoomtype;

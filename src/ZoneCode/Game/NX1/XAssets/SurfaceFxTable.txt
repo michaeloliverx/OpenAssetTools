@@ -1,0 +1,8 @@
+// =========================================
+// SurfaceFxTable
+// =========================================
+use SurfaceFxTable;
+set block XFILE_BLOCK_TEMP;
+set string name;
+set allocalign table 4;
+set count table 6;
