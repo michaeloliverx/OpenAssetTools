@@ -2,6 +2,7 @@
 
 #include "Asset/GlobalAssetPoolsLoader.h"
 #include "Game/T4Xenon/AssetMarkerT4Xenon.h"
+#include "Game/T4Xenon/Font/FontLoaderT4Xenon.h"
 #include "Game/T4Xenon/T4Xenon.h"
 #include "Game/T4Xenon/Weapon/AccuracyGraphLoaderT4Xenon.h"
 #include "Game/T4Xenon/XAnim/XAnimLoaderT4Xenon.h"
@@ -38,6 +39,7 @@ namespace
         collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetImage>>(memory));
         collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetSound>>(memory));
         collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetLoadedSound>>(memory));
+        collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetFont>>(memory));
         collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetMenuList>>(memory));
         collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetMenu>>(memory));
         collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetMapEnts>>(memory));
@@ -60,6 +62,7 @@ namespace
         collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetImage>>(zone));
         collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetSound>>(zone));
         collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetLoadedSound>>(zone));
+        collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetFont>>(zone));
         collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetMenuList>>(zone));
         collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetMenu>>(zone));
         collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetMapEnts>>(zone));
@@ -77,6 +80,7 @@ namespace
         collection.AddAssetCreator(xanim::CreateLoaderT4Xenon(memory, searchPath, zone));
         collection.AddAssetCreator(xmodel::CreateLoaderT4Xenon(memory, searchPath, zone));
         collection.AddAssetCreator(image::CreateLoaderT4Xenon(memory, searchPath));
+        collection.AddAssetCreator(font::CreateLoaderT4Xenon(memory, searchPath));
         collection.AddAssetCreator(menu::CreateMenuListLoaderT4Xenon(memory, searchPath));
         collection.AddAssetCreator(localize::CreateLoaderT4Xenon(memory, searchPath, zone));
         collection.AddAssetCreator(map_ents::CreateLoaderT4Xenon(memory, searchPath));

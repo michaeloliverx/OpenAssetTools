@@ -1,4 +1,4 @@
-#options GAME (IW3, IW3Xenon, IW4, IW5, T4, T5, T6)
+#options GAME (IW3, IW3Xenon, IW4, IW5, T4, T4Xenon, T5, T6)
 
 #filename "Game/" + GAME + "/Font/FontLoader" + GAME + ".cpp"
 
@@ -11,6 +11,8 @@
 #elif GAME == "IW5"
 #define GAME_LOWER "iw5"
 #elif GAME == "T4"
+#define GAME_LOWER "t4"
+#elif GAME == "T4Xenon"
 #define GAME_LOWER "t4"
 #elif GAME == "T5"
 #define GAME_LOWER "t5"

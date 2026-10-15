@@ -1,5 +1,6 @@
 #include "ObjWriterT4Xenon.h"
 
+#include "Game/T4Xenon/Font/FontDumperT4Xenon.h"
 #include "Game/T4Xenon/Image/ImageDumperT4Xenon.h"
 #include "Game/T4Xenon/Maps/MapEntsDumperT4Xenon.h"
 #include "Game/T4Xenon/XAnim/XAnimDumperT4Xenon.h"
@@ -21,6 +22,7 @@ void ObjWriter::RegisterAssetDumpers(AssetDumpingContext& context)
     RegisterAssetDumper(std::make_unique<xmodel::DumperT4Xenon>());
     RegisterAssetDumper(std::make_unique<image::DumperT4Xenon>());
     RegisterAssetDumper(std::make_unique<map_ents::DumperT4Xenon>());
+    RegisterAssetDumper(std::make_unique<font::JsonDumperT4Xenon>());
     RegisterAssetDumper(std::make_unique<menu::MenuListDumperT4Xenon>());
     RegisterAssetDumper(std::make_unique<menu::MenuDumperT4Xenon>());
     RegisterAssetDumper(std::make_unique<localize::DumperT4Xenon>());
