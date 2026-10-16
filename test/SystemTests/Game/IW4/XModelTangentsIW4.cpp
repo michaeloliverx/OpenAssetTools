@@ -1,4 +1,5 @@
 #include "Game/IW4/CommonIW4.h"
+#include "Game/IW4Xenon/CommonIW4Xenon.h"
 #include "Gdt/GdtLookup.h"
 #include "IObjLoader.h"
 #include "SearchPath/MockSearchPath.h"
@@ -14,8 +15,9 @@
 
 namespace
 {
-    TEST_CASE("IW4 model loading preserves tangent axes and mirrored UV handedness", "[iw4][system][xmodel]")
+    TEST_CASE("IW4 model loaders preserve tangent axes and mirrored UV handedness", "[iw4][iw4xenon][system][xmodel]")
     {
+        const auto game = GENERATE(GameId::IW4, GameId::IW4Xenon);
         const auto mirrored = GENERATE(false, true);
         XModelCommon common;
         common.m_name = "triangle";
@@ -43,23 +45,36 @@ namespace
         searchPath.AddFileData("triangle.glb", modelData.str());
         searchPath.AddFileData("xmodel/triangle.json", metadata.dump());
         searchPath.AddFileData("partclassification.csv", "");
-        Zone zone("tangents", 0, GameId::IW4, GamePlatform::PC);
+        const auto xenon = game == GameId::IW4Xenon;
+        Zone zone("tangents", 0, game, xenon ? GamePlatform::XBOX : GamePlatform::PC);
         AssetCreatorCollection creators(zone);
         GdtLookup gdt;
-        IObjLoader::GetObjLoaderForGame(GameId::IW4)->ConfigureCreatorCollection(creators, zone, searchPath, gdt);
+        IObjLoader::GetObjLoaderForGame(game)->ConfigureCreatorCollection(creators, zone, searchPath, gdt);
         IgnoredAssetLookup ignored;
-        ignored.m_ignored_asset_lookup.emplace("material", IW4::ASSET_TYPE_MATERIAL);
+        ignored.m_ignored_asset_lookup.emplace("material", xenon ? static_cast<asset_type_t>(IW4Xenon::ASSET_TYPE_MATERIAL) : IW4::ASSET_TYPE_MATERIAL);
         AssetCreationContext context(zone, &creators, &ignored);
-        REQUIRE(creators.CreateAsset(IW4::ASSET_TYPE_XMODEL, "triangle", context).HasBeenSuccessful());
+        const auto type = xenon ? static_cast<asset_type_t>(IW4Xenon::ASSET_TYPE_XMODEL) : IW4::ASSET_TYPE_XMODEL;
+        REQUIRE(creators.CreateAsset(type, "triangle", context).HasBeenSuccessful());
         for (auto i = 0u; i < 3u; ++i)
         {
             float tangent[3];
-            const auto& vertex = zone.m_pools.GetAsset<IW4::AssetXModel>("triangle")->Asset()->lodInfo[0].modelSurfs->surfs[0].verts0[i];
-            IW4::Common::Vec3UnpackUnitVec(vertex.tangent, tangent);
+            float sign;
+            if (xenon)
+            {
+                const auto& vertex = zone.m_pools.GetAsset<IW4Xenon::AssetXModel>("triangle")->Asset()->lodInfo[0].modelSurfs->surfs[0].verts0[i];
+                IW4Xenon::Common::Vec3UnpackUnitVec(vertex.tangent, tangent);
+                sign = vertex.binormalSign;
+            }
+            else
+            {
+                const auto& vertex = zone.m_pools.GetAsset<IW4::AssetXModel>("triangle")->Asset()->lodInfo[0].modelSurfs->surfs[0].verts0[i];
+                IW4::Common::Vec3UnpackUnitVec(vertex.tangent, tangent);
+                sign = vertex.binormalSign;
+            }
             CHECK_THAT(tangent[0], Catch::Matchers::WithinAbs(1.0f, 0.01f));
             CHECK_THAT(tangent[1], Catch::Matchers::WithinAbs(0.0f, 0.01f));
             CHECK_THAT(tangent[2], Catch::Matchers::WithinAbs(0.0f, 0.01f));
-            CHECK(vertex.binormalSign == (mirrored ? -1.0f : 1.0f));
+            CHECK(sign == (mirrored ? -1.0f : 1.0f));
         }
     }
 } // namespace

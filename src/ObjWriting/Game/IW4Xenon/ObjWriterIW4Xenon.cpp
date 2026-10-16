@@ -11,6 +11,7 @@
 #include "Sound/SndCurveDumperIW4Xenon.h"
 #include "StringTable/StringTableDumperIW4Xenon.h"
 #include "XAnim/XAnimDumperIW4Xenon.h"
+#include "XModel/XModelDumperIW4Xenon.h"
 
 using namespace IW4Xenon;
 
@@ -20,6 +21,7 @@ void ObjWriter::RegisterAssetDumpers(AssetDumpingContext& context)
     RegisterAssetDumper(std::make_unique<light_def::DumperIW4Xenon>());
     RegisterAssetDumper(std::make_unique<material::JsonDumperIW4Xenon>());
     RegisterAssetDumper(std::make_unique<xanim::DumperIW4Xenon>());
+    RegisterAssetDumper(std::make_unique<xmodel::DumperIW4Xenon>());
     RegisterAssetDumper(std::make_unique<image::DumperIW4Xenon>());
     RegisterAssetDumper(std::make_unique<sound_curve::DumperIW4Xenon>());
     RegisterAssetDumper(std::make_unique<map_ents::DumperIW4Xenon>());

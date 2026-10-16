@@ -14,6 +14,7 @@
 #include "Sound/LoaderSoundCurveIW4Xenon.h"
 #include "StringTable/LoaderStringTableIW4Xenon.h"
 #include "XAnim/XAnimLoaderIW4Xenon.h"
+#include "XModel/LoaderXModelIW4Xenon.h"
 
 using namespace IW4Xenon;
 
@@ -115,6 +116,7 @@ namespace
         collection.AddAssetCreator(light_def::CreateLoaderIW4Xenon(memory, searchPath));
         collection.AddAssetCreator(material::CreateLoaderIW4Xenon(memory, searchPath));
         collection.AddAssetCreator(xanim::CreateLoaderIW4Xenon(memory, searchPath, zone));
+        collection.AddAssetCreator(xmodel::CreateLoaderIW4Xenon(memory, searchPath, zone));
         collection.AddAssetCreator(sound_curve::CreateLoaderIW4Xenon(memory, searchPath));
         collection.AddAssetCreator(map_ents::CreateLoaderIW4Xenon(memory, searchPath));
         collection.AddAssetCreator(localize::CreateLoaderIW4Xenon(memory, searchPath, zone));
