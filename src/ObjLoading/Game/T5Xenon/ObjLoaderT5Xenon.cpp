@@ -3,6 +3,10 @@
 #include "Asset/GlobalAssetPoolsLoader.h"
 #include "Game/T5Xenon/AssetMarkerT5Xenon.h"
 #include "Game/T5Xenon/T5Xenon.h"
+#include "Localize/LoaderLocalizeT5Xenon.h"
+#include "Maps/MapEntsLoaderT5Xenon.h"
+#include "RawFile/LoaderRawFileT5Xenon.h"
+#include "StringTable/LoaderStringTableT5Xenon.h"
 
 using namespace T5Xenon;
 
@@ -91,7 +95,14 @@ namespace
         collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetClipMapSp>>(zone));
     }
 
-    void ConfigureLoaders(AssetCreatorCollection& collection, Zone& zone, ISearchPath& searchPath, IGdtQueryable& gdt) {}
+    void ConfigureLoaders(AssetCreatorCollection& collection, Zone& zone, ISearchPath& searchPath, IGdtQueryable& gdt)
+    {
+        auto& memory = zone.Memory();
+        collection.AddAssetCreator(map_ents::CreateLoaderT5Xenon(memory, searchPath));
+        collection.AddAssetCreator(localize::CreateLoaderT5Xenon(memory, searchPath, zone));
+        collection.AddAssetCreator(raw_file::CreateLoaderT5Xenon(memory, searchPath));
+        collection.AddAssetCreator(string_table::CreateLoaderT5Xenon(memory, searchPath));
+    }
 } // namespace
 
 void ObjLoader::ConfigureCreatorCollection(AssetCreatorCollection& collection, Zone& zone, ISearchPath& searchPath, IGdtQueryable& gdt) const
