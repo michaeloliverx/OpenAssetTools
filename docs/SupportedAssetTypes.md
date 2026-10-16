@@ -276,6 +276,43 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | Cutscene             | ❌              | ❌              |                                                                              |
 | CustomCamera         | ❌              | ❌              |                                                                              |
 
+## QoS Xbox 360 (007: Quantum of Solace)
+
+| Asset Type           | Dumping Support | Loading Support | Notes |
+|----------------------|-----------------|-----------------|-------|
+| PhysPreset           | ❌               | ❌               |  |
+| PhysConstraints      | ❌               | ❌               |  |
+| DestructibleDef      | ❌               | ❌               |  |
+| XAnimParts           | ❌               | ❌               |  |
+| XModel               | ❌               | ❌               |  |
+| Material             | ❌               | ❌               |  |
+| MaterialPixelShader  | ❌               | ❌               |  |
+| MaterialTechniqueSet | ❌               | ❌               |  |
+| GfxImage             | ❌               | ❌               |  |
+| snd_alias_list_t     | ❌               | ❌               |  |
+| SndCurve             | ❌               | ❌               |  |
+| clipMap_t            | ❌               | ❌               |  |
+| ComWorld             | ❌               | ❌               |  |
+| GameWorldSp          | ❌               | ❌               |  |
+| GameWorldMp          | ❌               | ❌               |  |
+| MapEnts              | ❌               | ❌               |  |
+| GfxWorld             | ❌               | ❌               |  |
+| GfxLightDef          | ❌               | ❌               |  |
+| Font_s               | ❌               | ❌               |  |
+| MenuList             | ❌               | ❌               |  |
+| menuDef_t            | ❌               | ❌               |  |
+| LocalizeEntry        | ❌               | ❌               |  |
+| WeaponDef            | ❌               | ❌               |  |
+| SndDriverGlobals     | ❌               | ❌               |  |
+| FxEffectDef          | ❌               | ❌               |  |
+| FxImpactTable        | ❌               | ❌               |  |
+| RawFile              | ❌               | ❌               |  |
+| StringTable          | ❌               | ❌               |  |
+| XmlTree              | ❌               | ❌               |  |
+| SceneAnimation       | ❌               | ❌               |  |
+| Cutscene             | ❌               | ❌               |  |
+| CustomCamera         | ❌               | ❌               |  |
+
 ## T4 (Call of Duty: World at War)
 
 | Asset Type           | Dumping Support | Loading Support | Notes                                                                        |

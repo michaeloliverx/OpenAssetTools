@@ -17,6 +17,7 @@ namespace
         case GameId::T4Xenon:
         case GameId::IW4Xenon:
         case GameId::T5Xenon:
+        case GameId::QOSXenon:
         case GameId::NX1:
             return true;
 

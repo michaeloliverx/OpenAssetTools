@@ -1,0 +1,13 @@
+// ComWorld
+use ComWorld;
+set block XFILE_BLOCK_TEMP;
+set string name;
+set count primaryLights primaryLightCount;
+set count unknownCells unknownCellCount;
+
+// ComPrimaryLight
+set string ComPrimaryLight::defName;
+
+// ComWorldUnknownCell
+set count ComWorldUnknownCell::data 0x1400;
+set allocalign ComWorldUnknownCell::data 4;

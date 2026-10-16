@@ -7,6 +7,7 @@
 #include "IW5/GameIW5.h"
 #include "NX1/GameNX1.h"
 #include "QOS/GameQOS.h"
+#include "QOSXenon/GameQOSXenon.h"
 #include "T4/GameT4.h"
 #include "T4Xenon/GameT4Xenon.h"
 #include "T5/GameT5.h"
@@ -31,6 +32,7 @@ IGame* IGame::GetGameById(GameId gameId)
         new T6::Game(),
         new NX1::Game(),
         new T5Xenon::Game(),
+        new QOSXenon::Game(),
     };
     static_assert(std::extent_v<decltype(games)> == static_cast<unsigned>(GameId::COUNT));
 
