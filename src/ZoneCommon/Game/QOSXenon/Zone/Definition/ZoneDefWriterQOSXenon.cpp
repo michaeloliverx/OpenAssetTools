@@ -4,21 +4,30 @@
 
 using namespace QOSXenon;
 
-void ZoneDefWriter::WriteMetaData(ZoneDefinitionOutputStream& stream, const Zone& zone) const
-{
-    (void)stream;
-    (void)zone;
-}
+void ZoneDefWriter::WriteMetaData(ZoneDefinitionOutputStream& stream, const Zone& zone) const {}
 
 void ZoneDefWriter::WriteContent(ZoneDefinitionOutputStream& stream, const Zone& zone, const ZoneDefFilter& filter) const
 {
     const auto* game = IGame::GetGameById(zone.m_game_id);
+
+    // Localized strings are all collected in one string file. So only add this to the zone file.
+    const auto localizePoolAssets = zone.m_pools.PoolAssets<AssetLocalize>();
+    if (localizePoolAssets.begin() != localizePoolAssets.end())
+        stream.WriteEntry(*game->GetAssetTypeName(ASSET_TYPE_LOCALIZE_ENTRY), zone.m_name);
 
     for (const auto& asset : zone.m_pools)
     {
         if (!filter.ShouldWriteAsset(*asset))
             continue;
 
-        stream.WriteEntry(*game->GetAssetTypeName(asset->m_type), asset->m_name);
+        switch (asset->m_type)
+        {
+        case ASSET_TYPE_LOCALIZE_ENTRY:
+            break;
+
+        default:
+            stream.WriteEntry(*game->GetAssetTypeName(asset->m_type), asset->m_name);
+            break;
+        }
     }
 }

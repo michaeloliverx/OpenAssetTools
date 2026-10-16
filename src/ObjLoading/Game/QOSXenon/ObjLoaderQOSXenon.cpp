@@ -3,6 +3,11 @@
 #include "Asset/GlobalAssetPoolsLoader.h"
 #include "Game/QOSXenon/AssetMarkerQOSXenon.h"
 #include "Game/QOSXenon/QOSXenon.h"
+#include "Localize/AssetLoaderLocalizeQOSXenon.h"
+#include "Maps/MapEntsLoaderQOSXenon.h"
+#include "RawFile/AssetLoaderRawFileQOSXenon.h"
+#include "Sound/LoaderSoundCurveQOSXenon.h"
+#include "StringTable/AssetLoaderStringTableQOSXenon.h"
 
 using namespace QOSXenon;
 
@@ -96,9 +101,13 @@ namespace
 
     void ConfigureLoaders(AssetCreatorCollection& collection, Zone& zone, ISearchPath& searchPath)
     {
-        (void)collection;
-        (void)zone;
-        (void)searchPath;
+        auto& memory = zone.Memory();
+
+        collection.AddAssetCreator(localize::CreateLoaderQOSXenon(memory, searchPath, zone));
+        collection.AddAssetCreator(map_ents::CreateLoaderQOSXenon(memory, searchPath));
+        collection.AddAssetCreator(raw_file::CreateLoaderQOSXenon(memory, searchPath));
+        collection.AddAssetCreator(sound_curve::CreateLoaderQOSXenon(memory, searchPath));
+        collection.AddAssetCreator(string_table::CreateLoaderQOSXenon(memory, searchPath));
     }
 } // namespace
 
