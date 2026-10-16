@@ -21,7 +21,15 @@ namespace
             highMipPath = std::format("highmip/{}/{}.hi", imageName.starts_with('~') ? "h0" : "h1", imageName);
             file = searchPath.Open(highMipPath);
             if (!file.IsOpen())
-                return nullptr;
+            {
+                if (imageName.empty())
+                    return nullptr;
+
+                highMipPath = std::format("highmip/{}/{}.hi", static_cast<unsigned char>(imageName.front()) & 3u, imageName);
+                file = searchPath.Open(highMipPath);
+                if (!file.IsOpen())
+                    return nullptr;
+            }
         }
 
         image::xenon::XenonTextureHeader header{};
