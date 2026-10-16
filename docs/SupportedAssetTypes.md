@@ -122,7 +122,7 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | MaterialVertexShader      | ❌               | ❌               |                                                                              |
 | MaterialVertexDeclaration | ❌               | ❌               |                                                                              |
 | MaterialTechniqueSet      | ❌               | ❌               |                                                                              |
-| GfxImage                  | ✅              | ✅              | 2D and cube textures; loading requires `>imagefile,<index>`.                 |
+| GfxImage                  | ✅              | ✅              | Loading requires `>imagefile,0` for appended fastfile streams or `>imagefile,1` through `>imagefile,20` for external imagefiles.                 |
 | snd_alias_list_t          | ❌               | ❌               |                                                                              |
 | SndCurve                  | ✅               | ✅               |                                                                              |
 | LoadedSound               | ❌               | ❌               |                                                                              |

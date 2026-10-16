@@ -24,10 +24,9 @@ void ObjCompiler::ConfigureCreatorCollection(AssetCreatorCollection& collection,
     unsigned index = 0u;
     const auto& value = imageFile->second;
     const auto [end, error] = std::from_chars(value.data(), value.data() + value.size(), index);
-    // Retail keeps 21 imagefile handles; slot zero refers to the source fastfile.
-    if (properties.count("imagefile") != 1u || error != std::errc() || end != value.data() + value.size() || index < 1u || index > 20u)
+    if (properties.count("imagefile") != 1u || error != std::errc() || end != value.data() + value.size() || index > 20u)
     {
-        con::error("IW4 Xenon requires a single >imagefile,<index> directive with an index from 1 to 20");
+        con::error("IW4 Xenon requires a single >imagefile,<index> directive with an index from 0 to 20");
         return;
     }
 

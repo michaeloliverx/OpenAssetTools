@@ -5,6 +5,7 @@
 #include "Utils/Logging/Log.h"
 
 #include <format>
+#include <fstream>
 #include <vector>
 #include <zlib.h>
 
@@ -19,7 +20,19 @@ namespace
         ISearchPath& searchPath, const Zone& sourceZone, const XAssetStreamFile& record, unsigned char* destination, const size_t size, std::string& error)
     {
         const auto fileName = record.fileIndex ? std::format("imagefile{}.pak", record.fileIndex) : std::format("{}.ff", sourceZone.m_name);
-        const auto file = searchPath.Open(fileName);
+        SearchPathOpenFile file;
+        if (record.fileIndex == 0u && !sourceZone.m_source_path.empty())
+        {
+            auto input = std::make_unique<std::ifstream>(sourceZone.m_source_path, std::ios::binary | std::ios::ate);
+            if (input->is_open())
+            {
+                const auto length = input->tellg();
+                input->seekg(0);
+                file = SearchPathOpenFile(std::move(input), static_cast<int64_t>(length));
+            }
+        }
+        else
+            file = searchPath.Open(fileName);
         if (!file.IsOpen())
         {
             error = std::format("Could not open {}", fileName);

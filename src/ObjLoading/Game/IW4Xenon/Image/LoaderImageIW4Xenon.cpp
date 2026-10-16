@@ -85,25 +85,38 @@ namespace
                 con::error("Failed to compress Xbox 360 image \"{}\"", assetName);
                 return AssetCreationResult::Failure();
             }
+            if (m_image_file_index == 0u)
+            {
+                if (m_zone.m_xfile_image_stream_data.size() > std::numeric_limits<unsigned>::max())
+                    return AssetCreationResult::Failure();
+                m_offset = static_cast<unsigned>(m_zone.m_xfile_image_stream_data.size());
+            }
             if (compressedSize > std::numeric_limits<unsigned>::max() - m_offset)
             {
                 con::error("Imagefile exceeds the maximum stream offset for image \"{}\"", assetName);
                 return AssetCreationResult::Failure();
             }
 
-            const auto fileName = std::format("imagefile{}.pak", m_image_file_index);
-            if (!m_output)
-                m_output = m_out_dir.Open(fileName);
-            if (!m_output)
+            if (m_image_file_index == 0u)
             {
-                con::error("Could not open imagefile \"{}\"", fileName);
-                return AssetCreationResult::Failure();
+                m_zone.m_xfile_image_stream_data.insert(m_zone.m_xfile_image_stream_data.end(), compressed.begin(), compressed.begin() + compressedSize);
             }
-            m_output->write(reinterpret_cast<const char*>(compressed.data()), static_cast<std::streamsize>(compressedSize));
-            if (!*m_output)
+            else
             {
-                con::error("Could not write image \"{}\" to {}", assetName, fileName);
-                return AssetCreationResult::Failure();
+                const auto fileName = std::format("imagefile{}.pak", m_image_file_index);
+                if (!m_output)
+                    m_output = m_out_dir.Open(fileName);
+                if (!m_output)
+                {
+                    con::error("Could not open imagefile \"{}\"", fileName);
+                    return AssetCreationResult::Failure();
+                }
+                m_output->write(reinterpret_cast<const char*>(compressed.data()), static_cast<std::streamsize>(compressedSize));
+                if (!*m_output)
+                {
+                    con::error("Could not write image \"{}\" to {}", assetName, fileName);
+                    return AssetCreationResult::Failure();
+                }
             }
 
             auto* image = m_memory.Alloc<GfxImage>();

@@ -10,7 +10,6 @@
 #include "Writing/IWritingStep.h"
 #include "Writing/Processor/OutputProcessorDeflate.h"
 #include "Writing/Steps/StepAddOutputProcessor.h"
-#include "Writing/Steps/StepPatchZoneImageHeaderSizes.h"
 #include "Writing/Steps/StepRemoveOutputProcessor.h"
 #include "Writing/Steps/StepWriteByte.h"
 #include "Writing/Steps/StepWriteTimestamp.h"
@@ -20,12 +19,14 @@
 #include "Writing/Steps/StepWriteZoneHeader.h"
 #include "Writing/Steps/StepWriteZoneImageHeaders.h"
 #include "Writing/Steps/StepWriteZoneSizes.h"
+#include "Writing/WritingException.h"
 
 #include <algorithm>
 #include <array>
 #include <cassert>
 #include <cstdint>
 #include <cstring>
+#include <limits>
 #include <memory>
 #include <string>
 #include <typeindex>
@@ -75,7 +76,7 @@ namespace
             XAssetStreamFilesForImage records{};
             const auto name = XAssetInfoGeneric::NormalizeAssetName(image.name);
             const auto* info = zone.m_pools.GetAssetOrAssetReference(AssetImage::EnumEntry, name);
-            const auto* source = info && info->m_zone ? info->m_zone : &zone;
+            const auto* source = zone.m_xfile_image_stream_files_by_name.contains(name) ? &zone : info && info->m_zone ? info->m_zone : &zone;
             const auto found = source->m_xfile_image_stream_files_by_name.find(name);
             if (found != source->m_xfile_image_stream_files_by_name.end() && !found->second.empty())
             {
@@ -86,6 +87,75 @@ namespace
         }
         return files;
     }
+
+    class StepWriteImageStreams final : public IWritingStep
+    {
+    public:
+        StepWriteImageStreams(const Zone& zone, const StepWriteZoneContentToMemory& content, std::shared_ptr<XFileSizePatch> patch)
+            : m_zone(zone),
+              m_content(content),
+              m_patch(std::move(patch))
+        {
+        }
+
+        void PerformStep(ZoneWriter* zoneWriter, IWritingStream* stream) override
+        {
+            stream->Flush();
+            const auto zoneEnd = stream->Pos();
+            const auto& data = m_zone.m_xfile_image_stream_data;
+            if (zoneEnd < 0 || static_cast<uint64_t>(zoneEnd) + data.size() > std::numeric_limits<uint32_t>::max())
+                throw WritingException("IW4 Xenon fastfile exceeds the image stream offset limit");
+
+            auto files = CollectImageStreamFilesToWrite(m_zone, *m_content.GetData());
+            const auto writeStream = [&](XAssetStreamFile& file)
+            {
+                if (file.fileIndex == 0u && file.offsetEnd != 0u)
+                {
+                    if (file.offsetEnd <= file.offset || file.offsetEnd > data.size())
+                        throw WritingException("IW4 Xenon image stream data was not copied from the source fastfile");
+                    const auto length = file.offsetEnd - file.offset;
+                    const auto start = stream->Pos();
+                    stream->Write(data.data() + file.offset, length);
+                    file.offset = static_cast<uint32_t>(start);
+                    file.offsetEnd = file.offset + length;
+                }
+            };
+
+            for (size_t index = 0; index < files.size(); index += XAssetStreamFilesForImage{}.size())
+                writeStream(files[index]);
+            const auto loadEnd = stream->Pos();
+            for (size_t index = 0; index < files.size(); ++index)
+                if (index % XAssetStreamFilesForImage{}.size() != 0u)
+                    writeStream(files[index]);
+            const auto fileEnd = stream->Pos();
+
+            for (auto& file : files)
+            {
+                file.fileIndex = endianness::ToBigEndian(file.fileIndex);
+                file.offset = endianness::ToBigEndian(file.offset);
+                file.offsetEnd = endianness::ToBigEndian(file.offsetEnd);
+            }
+
+            if (!stream->SetPos(m_patch->m_offset - static_cast<int64_t>(files.size() * sizeof(XAssetStreamFile))))
+                throw WritingException("Could not seek to IW4 Xenon image stream records");
+            if (!files.empty())
+                stream->Write(files.data(), files.size() * sizeof(XAssetStreamFile));
+
+            // The first size ends the zone payload; the second includes images needed at load time.
+            const auto xfileSize = endianness::ToBigEndian(static_cast<uint32_t>(zoneEnd));
+            const auto xfileLoadSize = endianness::ToBigEndian(static_cast<uint32_t>(loadEnd));
+            stream->Write(&xfileSize, sizeof(xfileSize));
+            stream->Write(&xfileLoadSize, sizeof(xfileLoadSize));
+            stream->Flush();
+            if (!stream->SetPos(fileEnd))
+                throw WritingException("Could not restore IW4 Xenon fastfile output position");
+        }
+
+    private:
+        const Zone& m_zone;
+        const StepWriteZoneContentToMemory& m_content;
+        std::shared_ptr<XFileSizePatch> m_patch;
+    };
 
     constexpr size_t CALLBACK_SOUND_FILE_SIZE = 0x10u;
     constexpr size_t CALLBACK_SOUND_FILE_ALIGNMENT = 4u;
@@ -319,7 +389,7 @@ std::unique_ptr<ZoneWriter> ZoneWriterFactory::CreateWriter(const Zone& zone) co
     writer->AddWritingStep(std::make_unique<StepWriteXBlockSizes>(zone, GameEndianness::BE));
     writer->AddWritingStep(std::make_unique<StepWriteZoneContentToFile>(contentInMemoryPtr));
     writer->AddWritingStep(std::make_unique<StepRemoveOutputProcessor>(deflateProcessorPtr));
-    writer->AddWritingStep(std::make_unique<StepPatchZoneImageHeaderSizes>(std::move(xfileSizePatch), GameEndianness::BE));
+    writer->AddWritingStep(std::make_unique<StepWriteImageStreams>(zone, *contentInMemoryPtr, std::move(xfileSizePatch)));
 
     return writer;
 }
