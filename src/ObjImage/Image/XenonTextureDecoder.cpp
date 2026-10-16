@@ -783,7 +783,10 @@ namespace image::xenon
         const auto maxTextureLevel = static_cast<std::uint32_t>(texture->GetMipMapCount());
         const auto storedLevelCount = std::min(levelCount, maxTextureLevel);
         const auto baseRegionSizeRequired = static_cast<std::uint64_t>(baseLayout.arraySliceStrideBytes) * faceCount;
-        if (baseRegionSizeRequired > sourceData.size())
+        // Small block-compressed shared tails fit in one GPU page, even when the tiled surface stride is larger.
+        const auto smallSharedTail = packedLevel == 0u && mipRegionStart == 0u && faceCount == 1u && config.width <= 16u && config.height <= 16u
+                                     && formatInfo->blockWidth == 4u && formatInfo->blockHeight == 4u && sourceData.size() >= GPU_TEXTURE_ALIGNMENT;
+        if (baseRegionSizeRequired > sourceData.size() && !smallSharedTail)
         {
             SetError(error, "Image base data is smaller than expected.");
             return nullptr;
