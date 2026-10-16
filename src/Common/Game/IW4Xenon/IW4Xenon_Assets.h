@@ -377,6 +377,31 @@ namespace IW4Xenon
         XAnimDeltaPartQuat* quat;
     };
 
+    enum XAnimPartType
+    {
+        PART_TYPE_NO_QUAT = 0x0,
+        PART_TYPE_SIMPLE_QUAT = 0x1,
+        PART_TYPE_NORMAL_QUAT = 0x2,
+        PART_TYPE_PRECISION_QUAT = 0x3,
+        PART_TYPE_SIMPLE_QUAT_NO_SIZE = 0x4,
+        PART_TYPE_NORMAL_QUAT_NO_SIZE = 0x5,
+        PART_TYPE_PRECISION_QUAT_NO_SIZE = 0x6,
+        PART_TYPE_SMALL_TRANS = 0x7,
+        PART_TYPE_TRANS = 0x8,
+        PART_TYPE_TRANS_NO_SIZE = 0x9,
+        PART_TYPE_NO_TRANS = 0xA,
+        PART_TYPE_ALL = 0xB,
+
+        PART_TYPE_COUNT
+    };
+
+    enum XAnimFlags
+    {
+        ANIM_LOOP = 0x1,
+        ANIM_DELTA = 0x2,
+        ANIM_DELTA_3D = 0x4,
+    };
+
     struct XAnimParts
     {
         const char* name;
@@ -387,7 +412,7 @@ namespace IW4Xenon
         uint16_t randomDataIntCount;
         uint16_t numframes;
         unsigned char flags;
-        unsigned char boneCount[12];
+        unsigned char boneCount[PART_TYPE_COUNT];
         unsigned char notifyCount;
         unsigned char assetType;
         bool pad;
