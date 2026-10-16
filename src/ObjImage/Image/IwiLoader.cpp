@@ -200,8 +200,10 @@ namespace
         return nullptr;
     }
 
-    std::optional<IwiLoaderResult> LoadIwi8(std::istream& stream)
+    std::optional<IwiLoaderResult> LoadIwi_8_9(std::istream& stream, const IwiVersion version)
     {
+        assert(version == IwiVersion::IWI_8 || version == IwiVersion::IWI_9);
+
         iwi8::IwiHeader header{};
 
         stream.read(reinterpret_cast<char*>(&header), sizeof(header));
@@ -259,7 +261,8 @@ namespace
                 currentFileSize += sizeOfMipLevel;
 
                 if (currentMipLevel < static_cast<int>(std::extent_v<decltype(iwi8::IwiHeader::fileSizeForPicmip)>)
-                    && currentFileSize != header.fileSizeForPicmip[currentMipLevel])
+                    && currentFileSize != header.fileSizeForPicmip[currentMipLevel]
+                    && !(currentMipLevel > 0 && version == IwiVersion::IWI_9 && (header.flags & iwi8::IwiFlags::IMG_FLAG_NOPICMIP)))
                 {
                     con::error("Iwi has invalid file size for picmip {}", currentMipLevel);
                     return std::nullopt;
@@ -284,7 +287,7 @@ namespace
         };
 
         return IwiLoaderResult{
-            .m_version = IwiVersion::IWI_8,
+            .m_version = version,
             .m_meta = meta,
             .m_texture = std::move(texture),
         };
@@ -565,7 +568,10 @@ namespace image
             return LoadIwi6(stream);
 
         case 8:
-            return LoadIwi8(stream);
+            return LoadIwi_8_9(stream, IwiVersion::IWI_8);
+
+        case 9:
+            return LoadIwi_8_9(stream, IwiVersion::IWI_9);
 
         case 13:
             return LoadIwi13(stream);

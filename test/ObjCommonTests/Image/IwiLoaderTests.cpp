@@ -73,6 +73,70 @@ namespace
         return LoadIwi(stream);
     }
 
+    std::string MakeIwi_8_9(const IwiVersion version, const bool fullSizePicmips)
+    {
+        std::string data{'I', 'W', 'i', static_cast<char>(version)};
+        AppendUint32(data, iwi8::IMG_FLAG_NOPICMIP);
+        data.push_back(static_cast<char>(iwi8::IwiFormat::IMG_FORMAT_DXT1));
+        data.push_back(0);
+        AppendUint16(data, 8);
+        AppendUint16(data, 8);
+        AppendUint16(data, 1);
+        for (const auto size : {88u, 56u, 48u, 40u})
+            AppendUint32(data, fullSizePicmips ? 88u : size);
+        for (auto mip = 3; mip >= 0; --mip)
+            data.append(mip ? 8u : 32u, static_cast<char>(mip + 1));
+        return data;
+    }
+
+    TEST_CASE("IwiLoader: IWI9 supports CoD Online no-picmip size tables", "[image][iwi]")
+    {
+        for (const auto fullSizePicmips : {false, true})
+        {
+            const auto result = Load(MakeIwi_8_9(IwiVersion::IWI_9, fullSizePicmips));
+            REQUIRE(result);
+            CHECK(result->m_version == IwiVersion::IWI_9);
+            REQUIRE(result->m_texture->GetMipMapCount() == 4);
+            for (auto mip = 0; mip < 4; ++mip)
+                for (auto i = 0uz; i < result->m_texture->GetSizeOfMipLevel(mip); ++i)
+                    CHECK(result->m_texture->GetBufferForMipLevel(mip)[i] == mip + 1);
+        }
+        CHECK(Load(MakeIwi_8_9(IwiVersion::IWI_8, false)));
+        CHECK_FALSE(Load(MakeIwi_8_9(IwiVersion::IWI_8, true)));
+    }
+
+    TEST_CASE("IwiLoader: IWI9 ignores unused no-picmip size entries", "[image][iwi]")
+    {
+        auto data = MakeIwi_8_9(IwiVersion::IWI_9, true);
+        for (auto offset = 20u; offset < 32u; ++offset)
+            data[offset] = 0;
+        CHECK(Load(data));
+    }
+
+    TEST_CASE("IwiLoader: IWI9 rejects incorrect payload sizes", "[image][iwi]")
+    {
+        auto data = MakeIwi_8_9(IwiVersion::IWI_9, true);
+        SECTION("truncated")
+        {
+            data.pop_back();
+        }
+        SECTION("wrong full size")
+        {
+            ++data[16];
+        }
+        SECTION("wrong picmip size")
+        {
+            data = MakeIwi_8_9(IwiVersion::IWI_9, false);
+            data[4] = 0;
+            ++data[20];
+        }
+        SECTION("missing no-picmip flag")
+        {
+            data[4] = 0;
+        }
+        CHECK_FALSE(Load(data));
+    }
+
     TEST_CASE("IwiLoader: Can decode IWI6 wavelet luminance", "[image][iwi][wavelet]")
     {
         constexpr std::uint8_t PIXEL_VALUE = 0x40;

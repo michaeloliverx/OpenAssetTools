@@ -10,6 +10,8 @@ namespace image
         IWI_6 = 6,
         // IW4, IW5
         IWI_8 = 8,
+        // CoD Online
+        IWI_9 = 9,
         // T5
         IWI_13 = 13,
         // T6
