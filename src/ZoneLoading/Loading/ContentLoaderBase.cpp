@@ -7,6 +7,25 @@
 #include <limits>
 #include <type_traits>
 
+namespace
+{
+    bool IsBigEndianGame(const GameId game)
+    {
+        switch (game)
+        {
+        case GameId::IW3Xenon:
+        case GameId::T4Xenon:
+        case GameId::IW4Xenon:
+        case GameId::T5Xenon:
+        case GameId::NX1:
+            return true;
+
+        default:
+            return false;
+        }
+    }
+} // namespace
+
 ContentLoaderBase::ContentLoaderBase(Zone& zone, ZoneInputStream& stream)
     : varXString(nullptr),
       m_zone(zone),
@@ -54,8 +73,7 @@ void ContentLoaderBase::LoadXStringArray(const bool atStreamStart, const size_t 
         value = endianness::FromBigEndian(value);
         pointer = reinterpret_cast<std::remove_reference_t<decltype(pointer)>>(static_cast<std::uintptr_t>(value));
     };
-    const auto isBigEndian =
-        m_zone.m_game_id == GameId::IW3Xenon || m_zone.m_game_id == GameId::T4Xenon || m_zone.m_game_id == GameId::IW4Xenon || m_zone.m_game_id == GameId::NX1;
+    const auto isBigEndian = IsBigEndianGame(m_zone.m_game_id);
 
 #ifdef ARCH_x86
     if (atStreamStart)

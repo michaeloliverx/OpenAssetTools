@@ -10,6 +10,7 @@
 #include "Game/T4/ZoneWriterFactoryT4.h"
 #include "Game/T4Xenon/ZoneWriterFactoryT4Xenon.h"
 #include "Game/T5/ZoneWriterFactoryT5.h"
+#include "Game/T5Xenon/ZoneWriterFactoryT5Xenon.h"
 #include "Game/T6/ZoneWriterFactoryT6.h"
 
 #include <cassert>
@@ -28,6 +29,7 @@ const IZoneWriterFactory* IZoneWriterFactory::GetZoneWriterFactoryForGame(GameId
         new T5::ZoneWriterFactory(),
         new T6::ZoneWriterFactory(),
         new NX1::ZoneWriterFactory(),
+        new T5Xenon::ZoneWriterFactory(),
     };
     static_assert(std::extent_v<decltype(zoneCreators)> == static_cast<unsigned>(GameId::COUNT));
 

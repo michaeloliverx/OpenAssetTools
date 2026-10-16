@@ -11,6 +11,7 @@
 #include "T4/AutoSearchPathsT4.h"
 #include "T4Xenon/AutoSearchPathsT4Xenon.h"
 #include "T5/AutoSearchPathsT5.h"
+#include "T5Xenon/AutoSearchPathsT5Xenon.h"
 #include "T6/AutoSearchPathsT6.h"
 #include "Utils/StringUtils.h"
 
@@ -89,6 +90,7 @@ AutoSearchPaths* AutoSearchPaths::GetForGame(GameId gameId)
         new AutoSearchPathsT5(),
         new AutoSearchPathsT6(),
         new AutoSearchPathsNX1(),
+        new AutoSearchPathsT5Xenon(),
     };
     static_assert(std::extent_v<decltype(autoSearchPaths)> == static_cast<unsigned>(GameId::COUNT));
     assert(static_cast<unsigned>(gameId) < static_cast<unsigned>(GameId::COUNT));

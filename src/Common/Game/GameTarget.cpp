@@ -24,6 +24,9 @@ namespace game_target
         if (game == GameId::T4 && platform == GamePlatform::XBOX)
             return GameId::T4Xenon;
 
+        if (game == GameId::T5 && platform == GamePlatform::XBOX)
+            return GameId::T5Xenon;
+
         return std::nullopt;
     }
 
@@ -37,6 +40,9 @@ namespace game_target
 
         if (game == GameId::T4Xenon)
             return GameId::T4;
+
+        if (game == GameId::T5Xenon)
+            return GameId::T5;
 
         return game;
     }

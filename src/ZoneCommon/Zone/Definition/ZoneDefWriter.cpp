@@ -12,6 +12,7 @@
 #include "Game/T4/Zone/Definition/ZoneDefWriterT4.h"
 #include "Game/T4Xenon/Zone/Definition/ZoneDefWriterT4Xenon.h"
 #include "Game/T5/Zone/Definition/ZoneDefWriterT5.h"
+#include "Game/T5Xenon/Zone/Definition/ZoneDefWriterT5Xenon.h"
 #include "Game/T6/Zone/Definition/ZoneDefWriterT6.h"
 #include "Pool/XAssetInfo.h"
 
@@ -64,6 +65,7 @@ const IZoneDefWriter* IZoneDefWriter::GetZoneDefWriterForGame(GameId game)
         new T5::ZoneDefWriter(),
         new T6::ZoneDefWriter(),
         new NX1::ZoneDefWriter(),
+        new T5Xenon::ZoneDefWriter(),
     };
     static_assert(std::extent_v<decltype(zoneDefWriters)> == static_cast<unsigned>(GameId::COUNT));
 

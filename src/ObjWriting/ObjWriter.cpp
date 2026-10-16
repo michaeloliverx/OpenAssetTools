@@ -10,6 +10,7 @@
 #include "Game/T4/ObjWriterT4.h"
 #include "Game/T4Xenon/ObjWriterT4Xenon.h"
 #include "Game/T5/ObjWriterT5.h"
+#include "Game/T5Xenon/ObjWriterT5Xenon.h"
 #include "Game/T6/ObjWriterT6.h"
 #include "ObjWriting.h"
 
@@ -58,6 +59,7 @@ IObjWriter* IObjWriter::GetObjWriterForGame(GameId game)
         new T5::ObjWriter(),
         new T6::ObjWriter(),
         new NX1::ObjWriter(),
+        new T5Xenon::ObjWriter(),
     };
     static_assert(std::extent_v<decltype(objWriters)> == static_cast<unsigned>(GameId::COUNT));
 

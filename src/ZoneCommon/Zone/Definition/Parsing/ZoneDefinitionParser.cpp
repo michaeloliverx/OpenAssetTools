@@ -8,17 +8,33 @@
 #include "Sequence/SequenceZoneDefinitionInclude.h"
 #include "Sequence/SequenceZoneDefinitionMetaData.h"
 
+namespace
+{
+    GamePlatform GetDefaultPlatform(const GameId game)
+    {
+        switch (game)
+        {
+        case GameId::IW3Xenon:
+        case GameId::T4Xenon:
+        case GameId::IW4Xenon:
+        case GameId::T5Xenon:
+        case GameId::NX1:
+            return GamePlatform::XBOX;
+
+        default:
+            return GamePlatform::PC;
+        }
+    }
+} // namespace
+
 ZoneDefinitionParser::ZoneDefinitionParser(
     ZoneDefinitionLexer* lexer, std::string targetName, ISearchPath& searchPath, IParserLineStream& underlyingStream, const std::optional<GameId> maybeGame)
     : AbstractParser(lexer, std::make_unique<ZoneDefinitionParserState>(std::move(targetName), searchPath, underlyingStream))
 {
     if (maybeGame)
     {
-        const auto publicGame = game_target::GetPublicGameId(*maybeGame);
-        (void)m_state->SetPlatform(
-            *maybeGame == GameId::IW3Xenon || *maybeGame == GameId::T4Xenon || *maybeGame == GameId::IW4Xenon || *maybeGame == GameId::NX1 ? GamePlatform::XBOX
-                                                                                                                                           : GamePlatform::PC);
-        (void)m_state->SetGame(publicGame);
+        (void)m_state->SetPlatform(GetDefaultPlatform(*maybeGame));
+        (void)m_state->SetGame(game_target::GetPublicGameId(*maybeGame));
     }
 }
 

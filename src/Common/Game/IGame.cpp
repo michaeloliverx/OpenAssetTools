@@ -10,6 +10,7 @@
 #include "T4/GameT4.h"
 #include "T4Xenon/GameT4Xenon.h"
 #include "T5/GameT5.h"
+#include "T5Xenon/GameT5Xenon.h"
 #include "T6/GameT6.h"
 #include "Utils/StringUtils.h"
 
@@ -29,6 +30,7 @@ IGame* IGame::GetGameById(GameId gameId)
         new T5::Game(),
         new T6::Game(),
         new NX1::Game(),
+        new T5Xenon::Game(),
     };
     static_assert(std::extent_v<decltype(games)> == static_cast<unsigned>(GameId::COUNT));
 

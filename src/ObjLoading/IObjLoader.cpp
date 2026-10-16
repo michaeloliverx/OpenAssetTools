@@ -10,6 +10,7 @@
 #include "Game/T4/ObjLoaderT4.h"
 #include "Game/T4Xenon/ObjLoaderT4Xenon.h"
 #include "Game/T5/ObjLoaderT5.h"
+#include "Game/T5Xenon/ObjLoaderT5Xenon.h"
 #include "Game/T6/ObjLoaderT6.h"
 
 #include <cassert>
@@ -28,6 +29,7 @@ const IObjLoader* IObjLoader::GetObjLoaderForGame(GameId game)
         new T5::ObjLoader(),
         new T6::ObjLoader(),
         new NX1::ObjLoader(),
+        new T5Xenon::ObjLoader(),
     };
     static_assert(std::extent_v<decltype(zoneCreators)> == static_cast<unsigned>(GameId::COUNT));
 

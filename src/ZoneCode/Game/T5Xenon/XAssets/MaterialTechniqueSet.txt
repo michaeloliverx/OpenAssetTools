@@ -1,0 +1,50 @@
+// =========================================
+// MaterialTechniqueSet
+// =========================================
+use MaterialTechniqueSet;
+set block XFILE_BLOCK_TEMP;
+set string name;
+set reusable techniques;
+
+// MaterialTechnique
+use MaterialTechnique;
+set string name;
+set arraysize passArray passCount;
+reorder:
+    passArray
+    name;
+
+// MaterialPass
+use MaterialPass;
+set count args perPrimArgCount + perObjArgCount + stableArgCount;
+set reusable vertexDecl;
+set reusable vertexShaderArray;
+set reusable vertexShader;
+// Pixel shaders use asset aliases.
+
+// MaterialVertexDeclaration
+set condition MaterialVertexStreamRouting::decl never;
+
+// MaterialVertexShader
+use MaterialVertexShader;
+set string name;
+
+// GfxVertexShaderLoadDef
+use GfxVertexShaderLoadDef;
+reorder:
+    physicalPart
+    cachedPart;
+set allocalign physicalPart 32;
+set block physicalPart XFILE_BLOCK_PHYSICAL;
+set count physicalPart physicalPartSize;
+set allocalign cachedPart 4;
+set count cachedPart cachedPartSize;
+
+// MaterialVertexShaderProgram
+set condition MaterialVertexShaderProgram::vs never;
+
+// MaterialShaderArgument
+use MaterialShaderArgument;
+set condition u::literalConst type == MTL_ARG_LITERAL_VERTEX_CONST
+|| type == MTL_ARG_LITERAL_PIXEL_CONST;
+set reusable u::literalConst;

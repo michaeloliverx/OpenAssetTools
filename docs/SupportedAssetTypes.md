@@ -380,6 +380,45 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | Glasses              | ❌              | ❌              |                                                                              |
 | EmblemSet            | ❌              | ❌              |                                                                              |
 
+## T5 Xbox 360 (Call of Duty: Black Ops)
+
+| Asset Type           | Dumping Support | Loading Support | Notes |
+|----------------------|-----------------|-----------------|-------|
+| PhysPreset           | ❌              | ❌              |       |
+| PhysConstraints      | ❌              | ❌              |       |
+| DestructibleDef      | ❌              | ❌              |       |
+| XAnimParts           | ❌              | ❌              |       |
+| XModel               | ❌              | ❌              |       |
+| Material             | ❌              | ❌              |       |
+| MaterialPixelShader  | ❌              | ❌              |       |
+| MaterialTechniqueSet | ❌              | ❌              |       |
+| GfxImage             | ❌              | ❌              |       |
+| SndBank              | ❌              | ❌              |       |
+| SndPatch             | ❌              | ❌              |       |
+| clipMap_t            | ❌              | ❌              |       |
+| ComWorld             | ❌              | ❌              |       |
+| GameWorldSp          | ❌              | ❌              |       |
+| GameWorldMp          | ❌              | ❌              |       |
+| MapEnts              | ❌              | ❌              |       |
+| GfxWorld             | ❌              | ❌              |       |
+| GfxLightDef          | ❌              | ❌              |       |
+| Font_s               | ❌              | ❌              |       |
+| MenuList             | ❌              | ❌              |       |
+| menuDef_t            | ❌              | ❌              |       |
+| LocalizeEntry        | ❌              | ❌              |       |
+| WeaponVariantDef     | ❌              | ❌              |       |
+| SndDriverGlobals     | ❌              | ❌              |       |
+| FxEffectDef          | ❌              | ❌              |       |
+| FxImpactTable        | ❌              | ❌              |       |
+| RawFile              | ❌              | ❌              |       |
+| StringTable          | ❌              | ❌              |       |
+| PackIndex            | ❌              | ❌              |       |
+| XGlobals             | ❌              | ❌              |       |
+| ddlRoot_t            | ❌              | ❌              |       |
+| Glasses              | ❌              | ❌              |       |
+| TextureList          | ❌              | ❌              |       |
+| EmblemSet            | ❌              | ❌              |       |
+
 ## T6 (Call of Duty: Black Ops II)
 
 | Asset Type             | Dumping Support | Loading Support | Notes                                                                                                                                                          |

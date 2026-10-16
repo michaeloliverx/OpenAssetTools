@@ -24,6 +24,7 @@ enum class GameId : std::uint8_t
     T5,
     T6,
     NX1,
+    T5Xenon,
 
     COUNT
 };
@@ -56,6 +57,7 @@ static constexpr const char* GameId_Names[]{
     "T5",
     "T6",
     "NX1",
+    "T5XENON",
 };
 static_assert(std::extent_v<decltype(GameId_Names)> == static_cast<unsigned>(GameId::COUNT));
 
