@@ -113,7 +113,7 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 
 | Asset Type                | Dumping Support | Loading Support | Notes                                                                        |
 |---------------------------|-----------------|-----------------|------------------------------------------------------------------------------|
-| PhysPreset                | ❌               | ❌               |                                                                              |
+| PhysPreset                | ✅               | ✅               |                                                                              |
 | PhysCollmap               | ❌               | ❌               |                                                                              |
 | XAnimParts                | ❌               | ❌               |                                                                              |
 | XModel                    | ❌               | ❌               |                                                                              |
@@ -133,7 +133,7 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | MapEnts                   | ⁉️              | ⁉️              | Entity text only; `--load` preserves existing triggers and stages.           |
 | FxWorld                   | ❌               | ❌               |                                                                              |
 | GfxWorld                  | ❌               | ❌               |                                                                              |
-| GfxLightDef               | ❌               | ❌               |                                                                              |
+| GfxLightDef               | ✅               | ✅               |                                                                              |
 | Font_s                    | ❌               | ❌               |                                                                              |
 | MenuList                  | ❌               | ❌               |                                                                              |
 | menuDef_t                 | ❌               | ❌               |                                                                              |
