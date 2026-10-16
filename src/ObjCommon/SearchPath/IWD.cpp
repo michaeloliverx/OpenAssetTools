@@ -237,6 +237,7 @@ namespace
                 unzGetCurrentFileInfo64(m_unz_file, &info, fileNameBuffer, sizeof(fileNameBuffer), nullptr, 0, nullptr, 0);
 
                 std::string fileName(fileNameBuffer);
+                std::ranges::replace(fileName, '\\', '/');
                 fs::path path(fileName);
 
                 if (path.has_filename())

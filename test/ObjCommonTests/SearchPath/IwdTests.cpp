@@ -4,6 +4,7 @@
 
 #include <array>
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/generators/catch_generators.hpp>
 #include <cstdint>
 #include <filesystem>
 #include <fstream>
@@ -26,7 +27,8 @@ namespace
 
     TEST_CASE("Iwd: Reads a peeked entry through end of stream", "[searchpath][iwd]")
     {
-        constexpr auto ENTRY_NAME = "test.txt";
+        const auto* entryName = GENERATE("images/test.iwi", "images\\test.iwi");
+        constexpr auto ENTRY_NAME = "images/test.iwi";
         constexpr auto CONTENTS = "IWD stream test";
 
         const auto tempDirectory = oat::paths::GetTempDirectory("iwd");
@@ -35,7 +37,7 @@ namespace
 
         {
             std::ofstream stream(iwdPath, std::ios::out | std::ios::binary);
-            WriteIwd(stream, ENTRY_NAME, CONTENTS);
+            WriteIwd(stream, entryName, CONTENTS);
             stream.close();
         }
 
