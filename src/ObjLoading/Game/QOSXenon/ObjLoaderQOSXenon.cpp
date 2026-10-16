@@ -3,6 +3,7 @@
 #include "Asset/GlobalAssetPoolsLoader.h"
 #include "Game/QOSXenon/AssetMarkerQOSXenon.h"
 #include "Game/QOSXenon/QOSXenon.h"
+#include "Image/LoaderImageQOSXenon.h"
 #include "Localize/AssetLoaderLocalizeQOSXenon.h"
 #include "Maps/MapEntsLoaderQOSXenon.h"
 #include "RawFile/AssetLoaderRawFileQOSXenon.h"
@@ -103,6 +104,7 @@ namespace
     {
         auto& memory = zone.Memory();
 
+        collection.AddAssetCreator(image::CreateLoaderQOSXenon(memory, searchPath));
         collection.AddAssetCreator(localize::CreateLoaderQOSXenon(memory, searchPath, zone));
         collection.AddAssetCreator(map_ents::CreateLoaderQOSXenon(memory, searchPath));
         collection.AddAssetCreator(raw_file::CreateLoaderQOSXenon(memory, searchPath));

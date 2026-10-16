@@ -1,5 +1,6 @@
 #include "ObjWriterQOSXenon.h"
 
+#include "Image/ImageDumperQOSXenon.h"
 #include "Localize/LocalizeDumperQOSXenon.h"
 #include "Maps/MapEntsDumperQOSXenon.h"
 #include "RawFile/RawFileDumperQOSXenon.h"
@@ -10,6 +11,7 @@ using namespace QOSXenon;
 
 void ObjWriter::RegisterAssetDumpers(AssetDumpingContext& context)
 {
+    RegisterAssetDumper(std::make_unique<image::DumperQOSXenon>());
     RegisterAssetDumper(std::make_unique<localize::DumperQOSXenon>());
     RegisterAssetDumper(std::make_unique<map_ents::DumperQOSXenon>());
     RegisterAssetDumper(std::make_unique<raw_file::DumperQOSXenon>());
