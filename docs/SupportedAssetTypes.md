@@ -392,7 +392,7 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | Material             | ❌              | ❌              |       |
 | MaterialPixelShader  | ❌              | ❌              |       |
 | MaterialTechniqueSet | ❌              | ❌              |       |
-| GfxImage             | ❌              | ❌              |       |
+| GfxImage             | ⁉️               | ✅              | 2D and cube images. Some lightmap formats are unsupported. |
 | SndBank              | ❌              | ❌              |       |
 | SndPatch             | ❌              | ❌              |       |
 | clipMap_t            | ❌              | ❌              |       |

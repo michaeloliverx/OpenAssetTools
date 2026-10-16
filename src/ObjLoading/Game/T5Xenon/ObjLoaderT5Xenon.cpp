@@ -3,6 +3,7 @@
 #include "Asset/GlobalAssetPoolsLoader.h"
 #include "Game/T5Xenon/AssetMarkerT5Xenon.h"
 #include "Game/T5Xenon/T5Xenon.h"
+#include "Image/LoaderImageT5Xenon.h"
 #include "Localize/LoaderLocalizeT5Xenon.h"
 #include "Maps/MapEntsLoaderT5Xenon.h"
 #include "RawFile/LoaderRawFileT5Xenon.h"
@@ -102,6 +103,7 @@ namespace
         collection.AddAssetCreator(localize::CreateLoaderT5Xenon(memory, searchPath, zone));
         collection.AddAssetCreator(raw_file::CreateLoaderT5Xenon(memory, searchPath));
         collection.AddAssetCreator(string_table::CreateLoaderT5Xenon(memory, searchPath));
+        collection.AddAssetCreator(image::CreateLoaderT5Xenon(memory, searchPath));
     }
 } // namespace
 
