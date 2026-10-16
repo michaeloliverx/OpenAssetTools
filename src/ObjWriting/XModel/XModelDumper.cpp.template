@@ -147,7 +147,7 @@ namespace
 
 #set CONVERTER_NAME "ToCommonConverter" + GAME
 
-    void DumpXModelSurfs(const AssetDumpingContext& context, const XAssetInfo<XModel>& asset)
+    bool DumpXModelSurfs(const AssetDumpingContext& context, const XAssetInfo<XModel>& asset)
     {
         const auto& model = *asset.Asset();
 
@@ -156,8 +156,8 @@ namespace
             const auto maybeCommon = xmodel::CONVERTER_NAME().Convert(asset, currentLod);
             if (!maybeCommon)
             {
-                con::warn("Failed to convert to convert xmodel \"{}\" (lod: {})", model.name, currentLod);
-                continue;
+                con::warn("Failed to convert xmodel \"{}\" (lod: {})", model.name, currentLod);
+                return false;
             }
 
             switch (ObjWriting::Configuration.ModelOutputFormat)
@@ -189,6 +189,7 @@ namespace
                 break;
             }
         }
+        return true;
     }
     
     const char* GetExtensionForModelByConfig()
@@ -443,7 +444,7 @@ namespace xmodel
 {
     void CLASS_NAME::DumpAsset(AssetDumpingContext& context, const XAssetInfo<AssetXModel::Type>& asset)
     {
-        DumpXModelJson(context, asset);
-        DumpXModelSurfs(context, asset);
+        if (DumpXModelSurfs(context, asset))
+            DumpXModelJson(context, asset);
     }
 }

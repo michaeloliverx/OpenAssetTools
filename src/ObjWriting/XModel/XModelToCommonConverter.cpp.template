@@ -35,6 +35,7 @@
 
 #include "ObjWriting.h"
 #include "Utils/DistinctMapper.h"
+#include "Utils/Logging/Log.h"
 #include "Utils/QuatInt16.h"
 #include "XModel/XModelWriter.h"
 
@@ -630,6 +631,37 @@ namespace xmodel
         
         if (lod >= model.numLods)
             return std::nullopt;
+
+        if (model.numLods > std::extent_v<decltype(model.lodInfo)> || (model.numsurfs && !model.materialHandles)
+            || (model.numBones && (!model.boneNames || !model.baseMat))
+            || model.numRootBones > model.numBones
+            || (model.numBones > model.numRootBones && (!model.parentList || !model.quats || !model.trans)))
+        {
+            con::error("Cannot dump incomplete xmodel \"{}\"", assetInfo.m_name);
+            return std::nullopt;
+        }
+        for (auto surface = 0u; surface < model.numsurfs; ++surface)
+            if (!model.materialHandles[surface])
+            {
+                con::error("Cannot dump xmodel \"{}\": missing material {}", assetInfo.m_name, surface);
+                return std::nullopt;
+            }
+        XSurface* surfaces = nullptr;
+        unsigned surfaceCount = 0;
+        if ((model.lodInfo[lod].numsurfs && !GetSurfaces(model, lod, surfaces, surfaceCount)) || surfaceCount != model.lodInfo[lod].numsurfs
+            || model.lodInfo[lod].surfIndex + surfaceCount > model.numsurfs)
+        {
+            con::error("Cannot dump xmodel \"{}\": missing surfaces for LOD {}", assetInfo.m_name, lod);
+            return std::nullopt;
+        }
+        for (auto surface = 0u; surface < surfaceCount; ++surface)
+            if ((surfaces[surface].vertCount && !surfaces[surface].verts0)
+                || (surfaces[surface].triCount && !surfaces[surface].triIndices)
+                || (surfaces[surface].vertListCount && !surfaces[surface].vertList))
+            {
+                con::error("Cannot dump xmodel \"{}\": incomplete surface {} in LOD {}", assetInfo.m_name, surface, lod);
+                return std::nullopt;
+            }
         
         XModelCommon result;
         DistinctMapper<Material*> materialMapper(model.numsurfs);
