@@ -31,15 +31,17 @@ protected:
     static constexpr auto SHA1_HASH_SIZE = 20u;
     static constexpr auto SALSA20_IV_SIZE = 8u;
 
-    AbstractSalsa20Processor(unsigned streamCount, const std::string& zoneName, const uint8_t* salsa20Key, size_t keySize);
+    AbstractSalsa20Processor(
+        unsigned streamCount, const std::string& zoneName, const uint8_t* salsa20Key, size_t keySize, unsigned blockHashesCount = BLOCK_HASHES_COUNT);
     void InitStreams(const std::string& zoneName, const uint8_t* salsa20Key, size_t keySize);
 
     [[nodiscard]] uint8_t* GetHashBlock(unsigned streamNumber);
 
     unsigned m_stream_count;
+    unsigned m_block_hashes_count;
     std::vector<Salsa20StreamContext> m_stream_contexts;
 
-    // m_block_hashes[BLOCK_HASHES_COUNT][numStreams][SHA1_HASH_SIZE]
+    // m_block_hashes[m_block_hashes_count][m_stream_count][SHA1_HASH_SIZE]
     std::vector<uint8_t> m_block_hashes;
     std::vector<unsigned int> m_stream_block_indices;
 };

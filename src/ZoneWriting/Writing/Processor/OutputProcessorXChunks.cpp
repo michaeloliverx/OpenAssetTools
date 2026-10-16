@@ -1,5 +1,6 @@
 #include "OutputProcessorXChunks.h"
 
+#include "Utils/Endianness.h"
 #include "Writing/WritingException.h"
 #include "Zone/XChunk/XChunkException.h"
 #include "Zone/ZoneTypes.h"
@@ -43,6 +44,8 @@ void OutputProcessorXChunks::WriteChunk()
     }
 
     auto chunkSize = static_cast<xchunk_size_t>(m_input_size);
+    if (m_endianness == GameEndianness::BE)
+        chunkSize = endianness::ToBigEndian(chunkSize);
     m_base_stream->Write(&chunkSize, sizeof(chunkSize));
     m_base_stream->Write(m_input_buffer, m_input_size);
 
@@ -56,11 +59,12 @@ void OutputProcessorXChunks::WriteChunk()
     m_input_size = 0;
 }
 
-OutputProcessorXChunks::OutputProcessorXChunks(const int numStreams, const size_t xChunkSize, const size_t xChunkWriteSize)
+OutputProcessorXChunks::OutputProcessorXChunks(const int numStreams, const size_t xChunkSize, const size_t xChunkWriteSize, const GameEndianness endianness)
     : m_stream_count(numStreams),
       m_chunk_size(xChunkSize),
       m_chunk_write_size(xChunkWriteSize),
       m_vanilla_buffer_size(0),
+      m_endianness(endianness),
       m_initialized(false),
       m_current_stream(0),
       m_vanilla_buffer_offset(0),
@@ -79,8 +83,9 @@ OutputProcessorXChunks::OutputProcessorXChunks(const int numStreams, const size_
     m_output_buffer = m_buffers[1].get();
 }
 
-OutputProcessorXChunks::OutputProcessorXChunks(const int numStreams, const size_t xChunkSize, const size_t xChunkWriteSize, const size_t vanillaBufferSize)
-    : OutputProcessorXChunks(numStreams, xChunkSize, xChunkWriteSize)
+OutputProcessorXChunks::OutputProcessorXChunks(
+    const int numStreams, const size_t xChunkSize, const size_t xChunkWriteSize, const size_t vanillaBufferSize, const GameEndianness endianness)
+    : OutputProcessorXChunks(numStreams, xChunkSize, xChunkWriteSize, endianness)
 {
     m_vanilla_buffer_size = vanillaBufferSize;
 }

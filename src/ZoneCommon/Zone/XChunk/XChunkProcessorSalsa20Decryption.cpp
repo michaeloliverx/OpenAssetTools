@@ -7,11 +7,9 @@
 #include <format>
 #include <iostream>
 
-XChunkProcessorSalsa20Decryption::XChunkProcessorSalsa20Decryption(const unsigned streamCount,
-                                                                   const std::string& zoneName,
-                                                                   const uint8_t* salsa20Key,
-                                                                   const size_t keySize)
-    : AbstractSalsa20Processor(streamCount, zoneName, salsa20Key, keySize)
+XChunkProcessorSalsa20Decryption::XChunkProcessorSalsa20Decryption(
+    const unsigned streamCount, const std::string& zoneName, const uint8_t* salsa20Key, const size_t keySize, const unsigned blockHashesCount)
+    : AbstractSalsa20Processor(streamCount, zoneName, salsa20Key, keySize, blockHashesCount)
 {
 }
 
@@ -36,7 +34,7 @@ size_t XChunkProcessorSalsa20Decryption::Process(
     streamContext.m_sha1->Finish(&blockSha1Hash);
 
     // Advance index to next hash block
-    m_stream_block_indices[streamNumber] = (m_stream_block_indices[streamNumber] + 1) % BLOCK_HASHES_COUNT;
+    m_stream_block_indices[streamNumber] = (m_stream_block_indices[streamNumber] + 1) % m_block_hashes_count;
 
     auto* nextHashBlock = GetHashBlock(streamNumber);
 

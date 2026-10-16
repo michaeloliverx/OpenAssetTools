@@ -3,12 +3,16 @@
 #include <cassert>
 #include <cstring>
 
-AbstractSalsa20Processor::AbstractSalsa20Processor(const unsigned streamCount, const std::string& zoneName, const uint8_t* salsa20Key, const size_t keySize)
+AbstractSalsa20Processor::AbstractSalsa20Processor(
+    const unsigned streamCount, const std::string& zoneName, const uint8_t* salsa20Key, const size_t keySize, const unsigned blockHashesCount)
     : m_stream_count(streamCount),
+      m_block_hashes_count(blockHashesCount),
       m_stream_contexts(streamCount),
-      m_block_hashes(BLOCK_HASHES_COUNT * streamCount * SHA1_HASH_SIZE),
+      m_block_hashes(blockHashesCount * streamCount * SHA1_HASH_SIZE),
       m_stream_block_indices(streamCount)
 {
+    assert(streamCount > 0u);
+    assert(blockHashesCount > 0u);
     InitStreams(zoneName, salsa20Key, keySize);
 }
 
@@ -17,7 +21,7 @@ void AbstractSalsa20Processor::InitStreams(const std::string& zoneName, const ui
     // Original buffer must have been 32 bytes because the zoneName can at most be 31 characters be long before being cut off
     const auto zoneNameLength = std::min(zoneName.length(), 31uz);
 
-    const size_t blockHashBufferSize = BLOCK_HASHES_COUNT * m_stream_count * SHA1_HASH_SIZE;
+    const size_t blockHashBufferSize = m_block_hashes.size();
 
     assert(blockHashBufferSize % 4 == 0);
 
@@ -52,5 +56,5 @@ void AbstractSalsa20Processor::GetCapturedData(const uint8_t** pCapturedData, si
     assert(pSize != nullptr);
 
     *pCapturedData = m_block_hashes.data();
-    *pSize = BLOCK_HASHES_COUNT * m_stream_count * SHA1_HASH_SIZE;
+    *pSize = m_block_hashes.size();
 }

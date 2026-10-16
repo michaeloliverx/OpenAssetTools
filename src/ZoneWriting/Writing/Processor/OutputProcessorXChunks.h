@@ -1,4 +1,5 @@
 #pragma once
+#include "Game/IGame.h"
 #include "Writing/OutputStreamProcessor.h"
 #include "Zone/XChunk/IXChunkProcessor.h"
 
@@ -15,6 +16,7 @@ class OutputProcessorXChunks final : public OutputStreamProcessor
     size_t m_chunk_size;
     size_t m_chunk_write_size;
     size_t m_vanilla_buffer_size;
+    GameEndianness m_endianness;
 
     bool m_initialized;
     int m_current_stream;
@@ -29,8 +31,8 @@ class OutputProcessorXChunks final : public OutputStreamProcessor
     void WriteChunk();
 
 public:
-    OutputProcessorXChunks(int numStreams, size_t xChunkSize, size_t xChunkWriteSize);
-    OutputProcessorXChunks(int numStreams, size_t xChunkSize, size_t xChunkWriteSize, size_t vanillaBufferSize);
+    OutputProcessorXChunks(int numStreams, size_t xChunkSize, size_t xChunkWriteSize, GameEndianness endianness = GameEndianness::LE);
+    OutputProcessorXChunks(int numStreams, size_t xChunkSize, size_t xChunkWriteSize, size_t vanillaBufferSize, GameEndianness endianness = GameEndianness::LE);
     ~OutputProcessorXChunks() override = default;
 
     OutputProcessorXChunks(const OutputProcessorXChunks& other) = delete;

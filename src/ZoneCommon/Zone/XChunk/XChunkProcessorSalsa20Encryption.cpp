@@ -31,7 +31,7 @@ size_t XChunkProcessorSalsa20Encryption::Process(
     streamContext.m_salsa20->Process(input, output, inputLength);
 
     // Advance index to next hash block
-    m_stream_block_indices[streamNumber] = (m_stream_block_indices[streamNumber] + 1) % BLOCK_HASHES_COUNT;
+    m_stream_block_indices[streamNumber] = (m_stream_block_indices[streamNumber] + 1) % m_block_hashes_count;
 
     auto* nextHashBlock = GetHashBlock(streamNumber);
 
