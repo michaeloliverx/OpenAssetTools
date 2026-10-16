@@ -117,7 +117,7 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | PhysCollmap               | ❌               | ❌               |                                                                              |
 | XAnimParts                | ❌               | ❌               |                                                                              |
 | XModel                    | ❌               | ❌               |                                                                              |
-| Material                  | ❌               | ❌               |                                                                              |
+| Material                  | ✅               | ✅               |                                                                              |
 | MaterialPixelShader       | ❌               | ❌               |                                                                              |
 | MaterialVertexShader      | ❌               | ❌               |                                                                              |
 | MaterialVertexDeclaration | ❌               | ❌               |                                                                              |

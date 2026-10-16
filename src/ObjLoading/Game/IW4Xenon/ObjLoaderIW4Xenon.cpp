@@ -7,6 +7,7 @@
 #include "Image/ImageStreamPostProcessorIW4Xenon.h"
 #include "LightDef/LightDefLoaderIW4Xenon.h"
 #include "Localize/LoaderLocalizeIW4Xenon.h"
+#include "Material/LoaderMaterialIW4Xenon.h"
 #include "PhysPreset/GdtLoaderPhysPresetIW4Xenon.h"
 #include "PhysPreset/RawLoaderPhysPresetIW4Xenon.h"
 #include "RawFile/LoaderRawFileIW4Xenon.h"
@@ -111,6 +112,7 @@ namespace
         collection.AddAssetCreator(phys_preset::CreateRawLoaderIW4Xenon(memory, searchPath, zone));
         collection.AddAssetCreator(phys_preset::CreateGdtLoaderIW4Xenon(memory, gdt, zone));
         collection.AddAssetCreator(light_def::CreateLoaderIW4Xenon(memory, searchPath));
+        collection.AddAssetCreator(material::CreateLoaderIW4Xenon(memory, searchPath));
         collection.AddAssetCreator(sound_curve::CreateLoaderIW4Xenon(memory, searchPath));
         collection.AddAssetCreator(map_ents::CreateLoaderIW4Xenon(memory, searchPath));
         collection.AddAssetCreator(localize::CreateLoaderIW4Xenon(memory, searchPath, zone));

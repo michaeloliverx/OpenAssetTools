@@ -5,6 +5,7 @@
 #include "LightDef/LightDefDumperIW4Xenon.h"
 #include "Localize/LocalizeDumperIW4Xenon.h"
 #include "Maps/AddonMapEntsDumperIW4Xenon.h"
+#include "Material/MaterialJsonDumperIW4Xenon.h"
 #include "PhysPreset/PhysPresetInfoStringDumperIW4Xenon.h"
 #include "RawFile/RawFileDumperIW4Xenon.h"
 #include "Sound/SndCurveDumperIW4Xenon.h"
@@ -16,6 +17,7 @@ void ObjWriter::RegisterAssetDumpers(AssetDumpingContext& context)
 {
     RegisterAssetDumper(std::make_unique<phys_preset::InfoStringDumperIW4Xenon>());
     RegisterAssetDumper(std::make_unique<light_def::DumperIW4Xenon>());
+    RegisterAssetDumper(std::make_unique<material::JsonDumperIW4Xenon>());
     RegisterAssetDumper(std::make_unique<image::DumperIW4Xenon>());
     RegisterAssetDumper(std::make_unique<sound_curve::DumperIW4Xenon>());
     RegisterAssetDumper(std::make_unique<map_ents::DumperIW4Xenon>());
