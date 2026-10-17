@@ -518,10 +518,9 @@ namespace
             LINEF("m_stream->MarkFollowing({0});", MakeWrittenMemberAccess(info, member, modifier))
             if (member->m_type && !member->m_type->m_is_leaf && !computations.IsInRuntimeBlock())
             {
+                LINEF("const auto arrayPointerCount = static_cast<size_t>({0});", MakeEvaluation(modifier.GetArrayPointerCountEvaluation()))
                 LINEF("{0} = {1};", MakeTypeVarName(member->m_member->m_type_declaration->m_type), MakeMemberAccess(info, member, modifier))
-                LINEF("WriteArray_{0}(true, {1});",
-                      MakeSafeTypeName(member->m_member->m_type_declaration->m_type),
-                      MakeEvaluation(modifier.GetArrayPointerCountEvaluation()))
+                LINEF("WriteArray_{0}(true, arrayPointerCount);", MakeSafeTypeName(member->m_member->m_type_declaration->m_type))
             }
             else if (member->m_type && !member->m_type->m_has_matching_cross_platform_structure)
             {

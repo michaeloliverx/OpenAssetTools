@@ -443,10 +443,9 @@ namespace
 
         void MarkMember_ArrayPointer(const StructureInformation* info, const MemberInformation* member, const DeclarationModifierComputations& modifier) const
         {
+            LINEF("const auto arrayPointerCount = static_cast<size_t>({0});", MakeEvaluation(modifier.GetArrayPointerCountEvaluation()))
             LINEF("{0} = {1};", MakeTypeVarName(member->m_member->m_type_declaration->m_type), MakeMemberAccess(info, member, modifier))
-            LINEF("MarkArray_{0}({1});",
-                  MakeSafeTypeName(member->m_member->m_type_declaration->m_type),
-                  MakeEvaluation(modifier.GetArrayPointerCountEvaluation()))
+            LINEF("MarkArray_{0}(arrayPointerCount);", MakeSafeTypeName(member->m_member->m_type_declaration->m_type))
         }
 
         void MarkMember_PointerArray(const StructureInformation* info, const MemberInformation* member, const DeclarationModifierComputations& modifier) const
