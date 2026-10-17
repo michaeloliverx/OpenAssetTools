@@ -8,6 +8,17 @@ BaseAssetMarker::BaseAssetMarker(AssetVisitor& visitor)
 {
 }
 
+void BaseAssetMarker::Mark_String(const char* value) const
+{
+    m_visitor.Visit_String(value);
+}
+
+void BaseAssetMarker::MarkArray_String(const char* const* values, const size_t count) const
+{
+    for (size_t i = 0; i < count; ++i)
+        Mark_String(values[i]);
+}
+
 void BaseAssetMarker::Mark_ScriptString(scr_string_t& scriptString) const
 {
     const auto result = m_visitor.Visit_ScriptString(scriptString);

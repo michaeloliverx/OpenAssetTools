@@ -20,6 +20,7 @@ public:
     TypeInformation* m_type_info;
     Variable* m_member;
     bool m_is_string;
+    bool m_is_indexed_string;
     bool m_is_script_string;
     bool m_is_reusable;
     bool m_is_alias;

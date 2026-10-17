@@ -18,6 +18,9 @@ protected:
             asset = static_cast<std::add_pointer_t<typename Asset_t::Type>>((*result)->m_ptr);
     }
 
+    void Mark_String(const char* value) const;
+    void MarkArray_String(const char* const* values, size_t count) const;
+
     void Mark_ScriptString(scr_string_t& scriptString) const;
     void MarkArray_ScriptString(scr_string_t* scriptStringArray, size_t count) const;
 

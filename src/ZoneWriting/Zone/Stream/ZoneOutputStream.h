@@ -10,6 +10,7 @@
 #include <cstring>
 #include <memory>
 #include <optional>
+#include <span>
 #include <typeindex>
 #include <typeinfo>
 #include <vector>
@@ -112,6 +113,8 @@ public:
     virtual bool ReusableShouldWrite(void* pPtr, ZoneOutputOffset outputOffset, size_t size, std::type_index type) = 0;
     virtual void
         ReusableAddOffset(void* ptr, size_t size, size_t count, size_t blockSize, std::type_index type, ZoneOutputOffset aliasOffset = ZoneOutputOffset()) = 0;
+    virtual void SetIndexedXStrings(std::span<const char* const> strings) = 0;
+    virtual bool WriteXStringIndex(const char* value, ZoneOutputOffset outputOffset) = 0;
     virtual void UseOriginalPointerSlots(block_t block = 0) = 0;
 
     virtual void MarkFollowing(ZoneOutputOffset offset) = 0;

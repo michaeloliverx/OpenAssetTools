@@ -129,6 +129,16 @@ public:
 class ZoneInputStream : public IZoneStream
 {
 public:
+    void SetIndexedXStrings(const std::span<const char* const> strings)
+    {
+        m_indexed_xstrings = strings;
+    }
+
+    [[nodiscard]] std::optional<std::span<const char* const>> GetIndexedXStrings() const
+    {
+        return m_indexed_xstrings;
+    }
+
     /**
      * \brief Returns the configured bits that make up a pointer.
      */
@@ -256,4 +266,7 @@ public:
                                                    ILoadingStream& stream,
                                                    MemoryManager& memory,
                                                    std::optional<std::unique_ptr<ProgressCallback>> progressCallback);
+
+private:
+    std::optional<std::span<const char* const>> m_indexed_xstrings;
 };

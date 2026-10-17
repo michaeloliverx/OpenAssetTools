@@ -6,6 +6,7 @@ MemberInformation::MemberInformation(StructureInformation* parent, StructureInfo
       m_type_info(typeInfo),
       m_member(member),
       m_is_string(false),
+      m_is_indexed_string(false),
       m_is_script_string(false),
       m_is_reusable(false),
       m_is_alias(false),

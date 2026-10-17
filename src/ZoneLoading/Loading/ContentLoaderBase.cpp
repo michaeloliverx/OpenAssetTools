@@ -1,5 +1,6 @@
 #include "ContentLoaderBase.h"
 
+#include "Exception/InvalidXStringIndexException.h"
 #include "Utils/Endianness.h"
 
 #include <cassert>
@@ -49,6 +50,17 @@ void ContentLoaderBase::LoadXString(const bool atStreamStart) const
 
     if (atStreamStart)
         m_stream.Load<const char*>(varXString);
+
+    if (const auto strings = m_stream.GetIndexedXStrings())
+    {
+        auto index = static_cast<std::uint32_t>(reinterpret_cast<std::uintptr_t>(*varXString));
+        if (atStreamStart && IsBigEndianGame(m_zone.m_game_id))
+            index = endianness::FromBigEndian(index);
+        if (index > strings->size())
+            throw InvalidXStringIndexException(index, strings->size());
+        *varXString = index ? (*strings)[index - 1u] : nullptr;
+        return;
+    }
 
     if (*varXString != nullptr)
     {

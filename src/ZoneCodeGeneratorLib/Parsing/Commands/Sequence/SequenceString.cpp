@@ -8,7 +8,8 @@
 namespace
 {
     static constexpr auto CAPTURE_TYPE = 1;
-}
+    static constexpr auto TAG_INDEXED = 2;
+} // namespace
 
 SequenceString::SequenceString()
 {
@@ -19,6 +20,7 @@ SequenceString::SequenceString()
         create.Keyword("set"),
         create.Keyword("string"),
         create.Label(CommandsCommonMatchers::LABEL_TYPENAME).Capture(CAPTURE_TYPE),
+        create.Optional(create.Keyword("indexed").Tag(TAG_INDEXED)),
         create.Char(';'),
     });
 }
@@ -67,4 +69,5 @@ void SequenceString::ProcessMatch(CommandsParserState* state, SequenceResult<Com
         throw ParsingException(typeNameToken.GetPos(), "Invalid type for string, must be a base type");
 
     lastMember->m_is_string = true;
+    lastMember->m_is_indexed_string = result.PeekAndRemoveIfTag(TAG_INDEXED) == TAG_INDEXED;
 }

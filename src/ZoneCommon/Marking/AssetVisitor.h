@@ -22,6 +22,8 @@ public:
         return std::nullopt;
     }
 
+    virtual void Visit_String(const char* value) {}
+
     virtual void Visit_IndirectAssetRef(asset_type_t assetType, const char* assetName)
     {
         // Do nothing by default

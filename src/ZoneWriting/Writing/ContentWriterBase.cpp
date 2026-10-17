@@ -28,6 +28,9 @@ void ContentWriterBase::WriteXString(const bool atStreamStart)
 
     assert(varXStringWritten.Offset() != nullptr);
 
+    if (m_stream->WriteXStringIndex(*varXString, varXStringWritten))
+        return;
+
     if (m_stream->ReusableShouldWrite(*varXString, varXStringWritten))
     {
         m_stream->Align(1);

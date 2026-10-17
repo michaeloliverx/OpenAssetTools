@@ -496,11 +496,38 @@ namespace
             LINEF("Mark_{0}();", MakeSafeTypeName(member->m_type->m_definition))
         }
 
+        void MarkMember_String(const StructureInformation* info,
+                               const MemberInformation* member,
+                               const DeclarationModifierComputations& modifier,
+                               const MemberLoadType loadType) const
+        {
+            if (loadType == MemberLoadType::SINGLE_POINTER)
+            {
+                LINEF("Mark_String({0});", MakeMemberAccess(info, member, modifier))
+            }
+            else if (loadType == MemberLoadType::POINTER_ARRAY)
+            {
+                const auto count = modifier.IsArray() ? std::to_string(modifier.GetArraySize()) : MakeEvaluation(modifier.GetPointerArrayCountEvaluation());
+                LINEF("MarkArray_String({0}, {1});", MakeMemberAccess(info, member, modifier), count)
+            }
+            else
+            {
+                assert(false);
+            }
+        }
+
         void MarkMember_TypeCheck(const StructureInformation* info,
                                   const MemberInformation* member,
                                   const DeclarationModifierComputations& modifier,
                                   const MemberLoadType loadType) const
         {
+            if (member->m_is_indexed_string)
+            {
+                MarkMember_String(info, member, modifier, loadType);
+                if (member->m_asset_ref.empty())
+                    return;
+            }
+
             if (member->m_is_script_string)
             {
                 MarkMember_ScriptString(info, member, modifier, loadType);
@@ -740,7 +767,7 @@ namespace
             if (computations.ShouldIgnore() || computations.IsInRuntimeBlock())
                 return;
 
-            if (member->m_is_script_string || !member->m_asset_ref.empty()
+            if (member->m_is_indexed_string || member->m_is_script_string || !member->m_asset_ref.empty()
                 || member->m_type && (member->m_type->m_requires_marking || StructureComputations(member->m_type).IsAsset()))
             {
                 if (info->m_definition->GetType() == DataDefinitionType::UNION)

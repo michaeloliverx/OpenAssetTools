@@ -225,6 +225,30 @@ namespace
             return ZoneStreamFillWriteAccessor(m_zone_data.GetBufferOfSize(size), size);
         }
 
+        void SetIndexedXStrings(const std::span<const char* const> strings) override
+        {
+            m_indexed_xstrings.emplace();
+            for (size_t i = 0; i < strings.size(); ++i)
+                if (strings[i])
+                    m_indexed_xstrings->emplace(strings[i], static_cast<uint32_t>(i + 1));
+        }
+
+        bool WriteXStringIndex(const char* value, const ZoneOutputOffset outputOffset) override
+        {
+            if (!m_indexed_xstrings)
+                return false;
+            uint32_t index = 0;
+            if (value)
+            {
+                const auto found = m_indexed_xstrings->find(value);
+                if (found == m_indexed_xstrings->end())
+                    throw WritingException("String missing from indexed string table: " + std::string(value));
+                index = found->second;
+            }
+            WriteZonePointer(outputOffset.Offset(), index);
+            return true;
+        }
+
         void UseOriginalPointerSlots(const block_t block) override
         {
             m_use_original_pointer_slots = true;
@@ -385,6 +409,7 @@ namespace
         uintptr_t m_zone_ptr_insert;
 
         std::unordered_map<std::type_index, std::vector<ReusableEntry>> m_reusable_entries;
+        std::optional<std::unordered_map<std::string_view, uint32_t>> m_indexed_xstrings;
         bool m_use_original_pointer_slots = false;
         block_t m_original_pointer_slot_block = 0;
         std::unordered_map<void*, ZoneOutputOffset> m_pending_alias_offsets;
