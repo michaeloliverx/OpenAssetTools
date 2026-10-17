@@ -22,6 +22,7 @@ public:
     bool m_is_string;
     bool m_is_script_string;
     bool m_is_reusable;
+    bool m_is_alias;
     bool m_is_leaf;
     std::unique_ptr<IEvaluation> m_condition;
     std::unique_ptr<IEvaluation> m_alloc_alignment;

@@ -9,6 +9,7 @@
 #include <cstddef>
 #include <cstring>
 #include <memory>
+#include <optional>
 #include <typeindex>
 #include <typeinfo>
 #include <vector>
@@ -17,20 +18,22 @@ class ZoneOutputOffset
 {
 public:
     ZoneOutputOffset();
-    explicit ZoneOutputOffset(void* offset);
+    explicit ZoneOutputOffset(void* offset, std::optional<uintptr_t> zonePointer = std::nullopt);
 
     [[nodiscard]] ZoneOutputOffset AtOffset(size_t innerOffset) const;
     void Inc(size_t size);
     [[nodiscard]] void* Offset() const;
+    [[nodiscard]] std::optional<uintptr_t> ZonePointer() const;
 
 private:
     void* m_offset;
+    std::optional<uintptr_t> m_zone_pointer;
 };
 
 class ZoneStreamFillWriteAccessor
 {
 public:
-    ZoneStreamFillWriteAccessor(void* blockBuffer, size_t bufferSize);
+    ZoneStreamFillWriteAccessor(void* blockBuffer, size_t bufferSize, std::optional<uintptr_t> zonePointer = std::nullopt);
 
     [[nodiscard]] ZoneStreamFillWriteAccessor AtOffset(size_t offset) const;
     [[nodiscard]] ZoneOutputOffset Offset() const;
@@ -66,6 +69,7 @@ public:
 private:
     void* m_block_buffer;
     size_t m_buffer_size;
+    std::optional<uintptr_t> m_zone_pointer;
 };
 
 class ZoneOutputStream : public IZoneStream
@@ -106,7 +110,10 @@ public:
     virtual ZoneStreamFillWriteAccessor WriteWithFill(size_t size) = 0;
 
     virtual bool ReusableShouldWrite(void* pPtr, ZoneOutputOffset outputOffset, size_t size, std::type_index type) = 0;
-    virtual void ReusableAddOffset(void* ptr, size_t size, size_t count, size_t blockSize, std::type_index type) = 0;
+    virtual void
+        ReusableAddOffset(void* ptr, size_t size, size_t count, size_t blockSize, std::type_index type, ZoneOutputOffset aliasOffset = ZoneOutputOffset()) = 0;
+    virtual void UseOriginalPointerSlots(block_t block = 0) = 0;
+
     virtual void MarkFollowing(ZoneOutputOffset offset) = 0;
 
     template<typename T> bool ReusableShouldWrite(T* pPtr, const ZoneOutputOffset outputOffset)
@@ -114,19 +121,19 @@ public:
         return ReusableShouldWrite(const_cast<void*>(reinterpret_cast<const void*>(pPtr)), outputOffset, sizeof(T), std::type_index(typeid(T)));
     }
 
-    template<typename T> void ReusableAddOffset(T* ptr)
+    template<typename T> void ReusableAddOffset(T* ptr, const ZoneOutputOffset aliasOffset = ZoneOutputOffset())
     {
-        ReusableAddOffset(const_cast<void*>(reinterpret_cast<const void*>(ptr)), sizeof(T), 1, sizeof(T), std::type_index(typeid(T)));
+        ReusableAddOffset(const_cast<void*>(reinterpret_cast<const void*>(ptr)), sizeof(T), 1, sizeof(T), std::type_index(typeid(T)), aliasOffset);
     }
 
-    template<typename T> void ReusableAddOffset(T* ptr, const size_t count)
+    template<typename T> void ReusableAddOffset(T* ptr, const size_t count, const ZoneOutputOffset aliasOffset = ZoneOutputOffset())
     {
-        ReusableAddOffset(const_cast<void*>(reinterpret_cast<const void*>(ptr)), sizeof(T), count, sizeof(T), std::type_index(typeid(T)));
+        ReusableAddOffset(const_cast<void*>(reinterpret_cast<const void*>(ptr)), sizeof(T), count, sizeof(T), std::type_index(typeid(T)), aliasOffset);
     }
 
-    template<typename T> void ReusableAddOffset(T* ptr, const size_t blockSize, const size_t count)
+    template<typename T> void ReusableAddOffset(T* ptr, const size_t blockSize, const size_t count, const ZoneOutputOffset aliasOffset = ZoneOutputOffset())
     {
-        ReusableAddOffset(const_cast<void*>(reinterpret_cast<const void*>(ptr)), sizeof(T), count, blockSize, std::type_index(typeid(T)));
+        ReusableAddOffset(const_cast<void*>(reinterpret_cast<const void*>(ptr)), sizeof(T), count, blockSize, std::type_index(typeid(T)), aliasOffset);
     }
 
     template<typename T> ZoneOutputOffset Write(T* dst)

@@ -6,7 +6,8 @@
 namespace
 {
     static constexpr auto CAPTURE_TYPE = 1;
-}
+    static constexpr auto TAG_ALIAS = 2;
+} // namespace
 
 SequenceReusable::SequenceReusable()
 {
@@ -17,6 +18,7 @@ SequenceReusable::SequenceReusable()
         create.Keyword("set"),
         create.Keyword("reusable"),
         create.Label(CommandsCommonMatchers::LABEL_TYPENAME).Capture(CAPTURE_TYPE),
+        create.Optional(create.Keyword("alias").Tag(TAG_ALIAS)),
         create.Char(';'),
     });
 }
@@ -34,4 +36,5 @@ void SequenceReusable::ProcessMatch(CommandsParserState* state, SequenceResult<C
         throw ParsingException(typeNameToken.GetPos(), "Need to specify a member when trying to mark as reusable.");
 
     members.back()->m_is_reusable = true;
+    members.back()->m_is_alias = result.PeekAndRemoveIfTag(TAG_ALIAS) == TAG_ALIAS;
 }

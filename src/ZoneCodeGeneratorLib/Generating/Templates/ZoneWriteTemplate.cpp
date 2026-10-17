@@ -940,6 +940,9 @@ namespace
                 }
             }
 
+            if (member->m_is_alias)
+                LINE_MIDDLEF(", {0}", MakeWrittenMemberAccess(info, member, modifier))
+
             LINE_END(");")
 
             WriteMember_TypeCheck(info, member, modifier, writeType);

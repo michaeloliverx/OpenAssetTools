@@ -1660,7 +1660,7 @@ namespace
             LINEF("const auto zonePtrType = GetZonePointerType({0});", MakeMemberAccess(info, member, modifier))
 
             const MemberComputations computations(member);
-            if (computations.IsInTempBlock())
+            if (computations.IsInTempBlock() || member->m_is_alias)
             {
                 LINE("if (zonePtrType == ZonePointerType::FOLLOWING || zonePtrType == ZonePointerType::INSERT)")
                 LINE("{")
