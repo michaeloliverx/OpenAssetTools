@@ -693,88 +693,57 @@ namespace
             }
         }
 
-        void MarkMember_Condition_Union(const StructureInformation* info, const MemberInformation* member)
+        void MarkMember_Condition_Union(const StructureInformation* info, const MemberInformation* member, const bool needsTreatment)
         {
-            const MemberComputations computations(member);
-
-            if (computations.IsFirstUsedMember(false))
+            auto first = true;
+            for (const auto& previous : info->m_ordered_members)
             {
-                LINE("")
-                if (member->m_condition)
-                {
-                    LINEF("if ({0})", MakeEvaluation(member->m_condition.get()))
-                    LINE("{")
-                    m_intendation++;
-
-                    MarkMember_Reference(info, member, DeclarationModifierComputations(member));
-
-                    m_intendation--;
-                    LINE("}")
-                }
-                else
-                {
-                    MarkMember_Reference(info, member, DeclarationModifierComputations(member));
-                }
+                if (previous.get() == member)
+                    break;
+                if (!MemberComputations(previous.get()).ShouldIgnore() && (previous->m_condition || MemberNeedsMarking(previous.get())))
+                    first = false;
             }
-            else if (computations.IsLastUsedMember(false))
-            {
-                if (member->m_condition)
-                {
-                    LINEF("else if ({0})", MakeEvaluation(member->m_condition.get()))
-                    LINE("{")
-                    m_intendation++;
-
-                    MarkMember_Reference(info, member, DeclarationModifierComputations(member));
-
-                    m_intendation--;
-                    LINE("}")
-                }
-                else
-                {
-                    LINE("else")
-                    LINE("{")
-                    m_intendation++;
-
-                    MarkMember_Reference(info, member, DeclarationModifierComputations(member));
-
-                    m_intendation--;
-                    LINE("}")
-                }
-            }
+            LINE("")
+            if (member->m_condition)
+                LINEF("{0} ({1})", first ? "if" : "else if", MakeEvaluation(member->m_condition.get()))
+            else if (!first)
+                LINE("else")
             else
             {
-                if (member->m_condition)
-                {
-                    LINEF("else if ({0})", MakeEvaluation(member->m_condition.get()))
-                    LINE("{")
-                    m_intendation++;
-
+                if (needsTreatment)
                     MarkMember_Reference(info, member, DeclarationModifierComputations(member));
-
-                    m_intendation--;
-                    LINE("}")
-                }
-                else
-                {
-                    LINEF("#error Middle member of union must have condition ({0})", member->m_member->m_name)
-                }
+                return;
             }
+
+            LINE("{")
+            m_intendation++;
+            if (needsTreatment)
+                MarkMember_Reference(info, member, DeclarationModifierComputations(member));
+            m_intendation--;
+            LINE("}")
+        }
+
+        static bool MemberNeedsMarking(const MemberInformation* member)
+        {
+            return !MemberComputations(member).IsInRuntimeBlock()
+                   && (member->m_is_indexed_string || member->m_is_script_string || !member->m_asset_ref.empty()
+                       || member->m_type && (member->m_type->m_requires_marking || StructureComputations(member->m_type).IsAsset()));
         }
 
         void PrintMarkMemberIfNeedsTreatment(const StructureInformation* info, const MemberInformation* member)
         {
             const MemberComputations computations(member);
-            if (computations.ShouldIgnore() || computations.IsInRuntimeBlock())
+            if (computations.ShouldIgnore())
                 return;
 
-            if (member->m_is_indexed_string || member->m_is_script_string || !member->m_asset_ref.empty()
-                || member->m_type && (member->m_type->m_requires_marking || StructureComputations(member->m_type).IsAsset()))
+            const auto needsTreatment = MemberNeedsMarking(member);
+            if (info->m_definition->GetType() == DataDefinitionType::UNION)
             {
-                if (info->m_definition->GetType() == DataDefinitionType::UNION)
-                    MarkMember_Condition_Union(info, member);
-                else
-                    MarkMember_Condition_Struct(info, member);
+                if (needsTreatment || member->m_condition)
+                    MarkMember_Condition_Union(info, member, needsTreatment);
             }
+            else if (needsTreatment)
+                MarkMember_Condition_Struct(info, member);
         }
 
         void PrintMarkMethod(const StructureInformation* info)
