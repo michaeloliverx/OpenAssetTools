@@ -1043,6 +1043,25 @@ namespace
 
         void PrintLoadArrayMethod(const DataDefinition* def, const StructureInformation* info)
         {
+            const auto* dynamicMember = StructureComputations(info).GetDynamicMember();
+            if (dynamicMember && DeclarationModifierComputations(dynamicMember).IsDynamicArray())
+            {
+                LINEF("void {0}::LoadArray_{1}(const bool atStreamStart, const size_t count)", LoaderClassName(m_env.m_asset), MakeSafeTypeName(def))
+                LINE("{")
+                m_intendation++;
+                LINE("assert(atStreamStart);")
+                LINE("for (size_t index = 0; index < count; ++index)")
+                LINE("{")
+                m_intendation++;
+                LINEF("Load_{0}(true);", info->m_definition->m_name)
+                LINEF("{0} = m_stream.Alloc<{1}>(1);", MakeTypeVarName(def), def->GetFullName())
+                m_intendation--;
+                LINE("}")
+                m_intendation--;
+                LINE("}")
+                return;
+            }
+
             LINEF("void {0}::LoadArray_{1}(const bool atStreamStart, const size_t count)", LoaderClassName(m_env.m_asset), MakeSafeTypeName(def))
             LINE("{")
             m_intendation++;

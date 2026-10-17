@@ -1780,6 +1780,32 @@ namespace
 
         void PrintWriteArrayMethod(const DataDefinition* def, const StructureInformation* info)
         {
+            const auto* dynamicMember = StructureComputations(info).GetDynamicMember();
+            if (dynamicMember && DeclarationModifierComputations(dynamicMember).IsDynamicArray())
+            {
+                const auto count = MakeEvaluation(DeclarationModifierComputations(dynamicMember).GetDynamicArraySizeEvaluation());
+                LINEF("void {0}::WriteArray_{1}(const bool atStreamStart, const size_t count)", WriterClassName(m_env.m_asset), MakeSafeTypeName(def))
+                LINE("{")
+                m_intendation++;
+                LINE("assert(atStreamStart);")
+                LINE("for (size_t index = 0; index < count; ++index)")
+                LINE("{")
+                m_intendation++;
+                LINEF("const auto stride = offsetof({0}, {1}) + sizeof({2}->{1}[0]) * ({3});",
+                      def->GetFullName(),
+                      dynamicMember->m_member->m_name,
+                      MakeTypeVarName(def),
+                      count)
+                LINEF("auto* next = reinterpret_cast<{0}*>(reinterpret_cast<char*>({1}) + stride);", def->GetFullName(), MakeTypeVarName(def))
+                LINEF("Write_{0}(true);", info->m_definition->m_name)
+                LINEF("{0} = next;", MakeTypeVarName(def))
+                m_intendation--;
+                LINE("}")
+                m_intendation--;
+                LINE("}")
+                return;
+            }
+
             LINEF("void {0}::WriteArray_{1}(const bool atStreamStart, const size_t count)", WriterClassName(m_env.m_asset), MakeSafeTypeName(def))
             LINE("{")
             m_intendation++;

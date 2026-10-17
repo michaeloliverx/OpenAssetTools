@@ -339,6 +339,8 @@ namespace
 
         void PrintMarkArrayMethod(const DataDefinition* def, const StructureInformation* info)
         {
+            const auto* dynamicMember = StructureComputations(info).GetDynamicMember();
+            const auto streamed = dynamicMember && DeclarationModifierComputations(dynamicMember).IsDynamicArray();
             LINEF("void {0}::MarkArray_{1}(const size_t count)", MarkerClassName(m_env.m_asset), MakeSafeTypeName(def))
             LINE("{")
             m_intendation++;
@@ -352,8 +354,18 @@ namespace
             m_intendation++;
 
             LINEF("{0} = var;", MakeTypeVarName(info->m_definition))
+            if (streamed)
+            {
+                LINEF("const auto stride = offsetof({0}, {1}) + sizeof(var->{1}[0]) * ({2});",
+                      def->GetFullName(),
+                      dynamicMember->m_member->m_name,
+                      MakeEvaluation(DeclarationModifierComputations(dynamicMember).GetDynamicArraySizeEvaluation()))
+            }
             LINEF("Mark_{0}();", info->m_definition->m_name)
-            LINE("var++;")
+            if (streamed)
+                LINEF("var = reinterpret_cast<{0}*>(reinterpret_cast<char*>(var) + stride);", def->GetFullName())
+            else
+                LINE("var++;")
 
             m_intendation--;
             LINE("}")
