@@ -16,19 +16,19 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | Material           | ❌              | ❌              |  |
 | GfxImage           | ❌              | ❌              |  |
 | snd_alias_list_t   | ❌              | ❌              |  |
-| SndCurve           | ❌              | ❌              |  |
-| clipMap_t          | ❌              | ❌              |  |
+| SndCurve           | ✅              | ✅              |  |
+| clipMap_t          | ⁉️              | ❌              | Entity strings only. |
 | GfxWorld           | ❌              | ❌              |  |
 | GfxLightDef        | ❌              | ❌              |  |
 | Font_s             | ❌              | ❌              |  |
 | MenuList           | ❌              | ❌              |  |
 | menuDef_t          | ❌              | ❌              |  |
-| LocalizeEntry      | ❌              | ❌              |  |
+| LocalizeEntry      | ✅              | ✅              |  |
 | WeaponDef          | ❌              | ❌              |  |
 | SndDriverGlobals   | ❌              | ❌              |  |
 | EffectTemplate     | ❌              | ❌              |  |
 | FxImpactTable      | ❌              | ❌              |  |
-| RawFile            | ❌              | ❌              |  |
+| RawFile            | ✅              | ✅              |  |
 
 ## IW3 (Call of Duty 4: Modern Warfare)
 

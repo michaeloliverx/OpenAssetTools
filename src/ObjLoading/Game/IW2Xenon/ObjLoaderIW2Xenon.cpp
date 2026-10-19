@@ -3,6 +3,9 @@
 #include "Asset/GlobalAssetPoolsLoader.h"
 #include "Game/IW2Xenon/AssetMarkerIW2Xenon.h"
 #include "Game/IW2Xenon/IW2Xenon.h"
+#include "Localize/AssetLoaderLocalizeIW2Xenon.h"
+#include "RawFile/AssetLoaderRawFileIW2Xenon.h"
+#include "Sound/LoaderSoundCurveIW2Xenon.h"
 
 using namespace IW2Xenon;
 
@@ -36,6 +39,14 @@ namespace
         collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetRawFile>>(memory));
     }
 
+    void ConfigureLoaders(AssetCreatorCollection& collection, Zone& zone, ISearchPath& searchPath)
+    {
+        auto& memory = zone.Memory();
+        collection.AddAssetCreator(localize::CreateLoaderIW2Xenon(memory, searchPath, zone));
+        collection.AddAssetCreator(raw_file::CreateLoaderIW2Xenon(memory, searchPath));
+        collection.AddAssetCreator(sound_curve::CreateLoaderIW2Xenon(memory, searchPath));
+    }
+
     void ConfigureGlobalAssetPoolsLoaders(AssetCreatorCollection& collection, Zone& zone)
     {
         collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetXAnim>>(zone));
@@ -62,5 +73,6 @@ namespace
 void ObjLoader::ConfigureCreatorCollection(AssetCreatorCollection& collection, Zone& zone, ISearchPath& searchPath, IGdtQueryable& gdt) const
 {
     ConfigureDefaultCreators(collection, zone);
+    ConfigureLoaders(collection, zone, searchPath);
     ConfigureGlobalAssetPoolsLoaders(collection, zone);
 }

@@ -1,0 +1,47 @@
+#include "LocalizeDumperIW2Xenon.h"
+
+#include "Dumping/Localize/StringFileDumper.h"
+#include "Localize/LocalizeCommon.h"
+#include "Utils/Logging/Log.h"
+
+#include <format>
+
+using namespace IW2Xenon;
+
+namespace localize
+{
+    void DumperIW2Xenon::Dump(AssetDumpingContext& context)
+    {
+        auto localizeAssets = context.m_zone.m_pools.PoolAssets<AssetLocalize>();
+        if (localizeAssets.empty())
+            return;
+
+        const auto language = LocalizeCommon::GetNameOfLanguage(context.m_zone.m_language);
+        const auto assetFile = context.OpenAssetFile(std::format("{}/localizedstrings/{}.str", language, context.m_zone.m_name));
+
+        if (assetFile)
+        {
+            StringFileDumper stringFileDumper(context.m_zone, *assetFile);
+
+            stringFileDumper.SetLanguageName(language);
+            stringFileDumper.SetConfigFile(R"(C:/trees/cod3/cod3/bin/StringEd.cfg)");
+            stringFileDumper.SetNotes("");
+
+            for (const auto* localizeEntry : localizeAssets)
+            {
+                if (localizeEntry->IsReference())
+                    continue;
+
+                stringFileDumper.WriteLocalizeEntry(localizeEntry->m_name, localizeEntry->Asset()->value);
+            }
+
+            stringFileDumper.Finalize();
+        }
+        else
+        {
+            con::error("Could not create string file for dumping localized strings of zone '{}'", context.m_zone.m_name);
+        }
+
+        context.IncrementProgress();
+    }
+} // namespace localize
