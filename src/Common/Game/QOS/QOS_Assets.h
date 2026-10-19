@@ -768,7 +768,8 @@ namespace QOS
     struct MaterialTechniqueSet
     {
         const char* name;
-        char unknown[8];
+        char unknown[4];
+        MaterialTechniqueSet* remappedTechniqueSet;
         MaterialTechnique* techniques[43];
     };
 
@@ -964,23 +965,34 @@ namespace QOS
     struct SndCurve
     {
         const char* name;
-        char unknown0[68];
+        int knotCount;
+        float knots[8][2];
     };
 
     enum QosSoundFileType
     {
-        // Only the primed branch is identified so far. Other values use the inline MssSound branch.
+        QOS_SOUND_FILE_TYPE_LOADED = 1,
+        QOS_SOUND_FILE_TYPE_STREAMED = 2,
         QOS_SOUND_FILE_TYPE_PRIMED = 3,
+    };
+
+    struct AILSOUNDINFO
+    {
+        int format;
+        const void* data_ptr;
+        unsigned int data_len;
+        unsigned int rate;
+        int bits;
+        int channels;
+        unsigned int channel_mask;
+        unsigned int samples;
+        unsigned int block_size;
+        const void* initial_ptr;
     };
 
     struct QosMssSound
     {
-        // Largely matches an MSS sound info block, but only the embedded data size is confirmed.
-        int unknown0;
-        unsigned char* unknownDataPtr0;
-        unsigned int dataSize;
-        char unknown1[24];
-        unsigned char* unknownDataPtr1;
+        AILSOUNDINFO info;
         unsigned char data[1];
     };
 
@@ -1004,8 +1016,10 @@ namespace QOS
         const char* unknownString0;
         const char* unknownString1;
         QosSoundFileRef u;
-        // Scalar fields between the file reference and the type discriminator.
-        char unknown0[184];
+        unsigned int unknown0;
+        unsigned int packIndices[15];
+        unsigned int packLengths[15];
+        unsigned int packOffsets[15];
         QosSoundFileType type;
     };
 
@@ -1124,9 +1138,9 @@ namespace QOS
     struct CollisionAabbTree
     {
         float origin[3];
+        float halfSize[3];
         uint16_t materialIndex;
         uint16_t childCount;
-        float halfSize[3];
         CollisionAabbTreeIndex u;
     };
 
@@ -1154,11 +1168,19 @@ namespace QOS
         vec3_t* verts;
     };
 
+    struct GfxPlacement
+    {
+        float quat[4];
+        float origin[3];
+    };
+
     struct DynEntityDef
     {
-        char unknown0[32]; // Includes type and placement data.
+        unsigned int type;
+        GfxPlacement pose;
         XModel* xModel;
-        char unknown1[4]; // Matches IW-era brushModel/physicsBrushModel area.
+        unsigned short brushModel;
+        unsigned short physicsBrushModel;
         FxEffectDef* destroyFx;
         XModelPieces* destroyPieces;
         PhysPreset* physPreset;
@@ -1182,7 +1204,11 @@ namespace QOS
 
     struct type_align(4) DynEntityPhysConstraint
     {
-        char unknown[72];
+        unsigned int type;
+        unsigned short entityIds[2];
+        unsigned short enabled;
+        unsigned char entityCategories[2];
+        char unknown[60];
     };
 
     struct clipMap_t
@@ -1235,7 +1261,8 @@ namespace QOS
         int unknown2;
         MapEnts* mapEnts;
         cbrush_t* box_brush;
-        char unknown1[74];
+        char unknown1[72];
+        unsigned short dynEntFirstRuntimeModel;
         uint16_t dynEntCount[4];
         DynEntityDef* dynEntDefList[2];
         DynEntityClient* dynEntClientList[2];
@@ -1500,9 +1527,17 @@ namespace QOS
         int startSurfIndex;
     };
 
+    struct GfxPackedPlacement
+    {
+        float origin[3];
+        float axis[3][3];
+        float scale;
+    };
+
     struct GfxStaticModelDrawInst
     {
-        char unknown[56];
+        float cullDist;
+        GfxPackedPlacement placement;
         XModel* model;
         unsigned int unknown2;
     };
@@ -1519,7 +1554,10 @@ namespace QOS
 
     struct GfxAabbTree
     {
-        char unknown[32];
+        float mins[3];
+        float maxs[3];
+        unsigned int surfaceCount;
+        unsigned int startSurfIndex;
         unsigned int smodelIndexCount;
         unsigned int* smodelIndexes;
         unsigned int childCount;
@@ -1665,6 +1703,20 @@ namespace QOS
         char unknown[24];
     };
 
+    struct SunLightParseParams
+    {
+        char name[64];
+        float ambientScale;
+        float ambientColor[3];
+        float diffuseFraction;
+        float sunLight;
+        float sunColor[3];
+        float diffuseColor[3];
+        bool diffuseColorHasBeenSet;
+        char pad[3];
+        float angles[3];
+    };
+
     struct GfxWorld
     {
         const char* name;
@@ -1688,9 +1740,9 @@ namespace QOS
         GfxWorldVertexData vd;
         unsigned int vertexLayerDataSize;
         GfxWorldVertexLayerData vld;
-        char unknown2[128];
+        SunLightParseParams sunParse;
         GfxLight* sunLight;
-        char unknown3[12];
+        float sunColorFromBsp[3];
         unsigned int sunPrimaryLightIndex;
         unsigned int primaryLightCount;
         char unknown4[4];

@@ -703,9 +703,9 @@ namespace QOSXenon
     struct CollisionAabbTree
     {
         float origin[3];
+        float halfSize[3];
         unsigned short materialIndex;
         unsigned short childCount;
-        float halfSize[3];
         CollisionAabbTreeIndex u;
     };
 
@@ -733,11 +733,19 @@ namespace QOSXenon
         float (*verts)[3];
     };
 
+    struct GfxPlacement
+    {
+        float quat[4];
+        float origin[3];
+    };
+
     struct DynEntityDef
     {
-        unsigned char unknown0[32];
+        unsigned int type;
+        GfxPlacement pose;
         XModel* xModel;
-        unsigned char unknown1[4];
+        unsigned short brushModel;
+        unsigned short physicsBrushModel;
         FxEffectDef* destroyFx;
         XModelPieces* destroyPieces;
         PhysPreset* physPreset;
@@ -761,7 +769,11 @@ namespace QOSXenon
 
     struct DynEntityPhysConstraint
     {
-        unsigned char unknown[72];
+        unsigned int type;
+        unsigned short entityIds[2];
+        unsigned short enabled;
+        unsigned char entityCategories[2];
+        unsigned char unknown[60];
     };
 
     struct clipMap_t
@@ -814,7 +826,8 @@ namespace QOSXenon
         int unknown2;
         MapEnts* mapEnts;
         cbrush_t* box_brush;
-        unsigned char unknown1[74];
+        unsigned char unknown1[72];
+        unsigned short dynEntFirstRuntimeModel;
         unsigned short dynEntCount[4];
         DynEntityDef* dynEntDefList[2];
         DynEntityClient* dynEntClientList[2];
@@ -1108,9 +1121,17 @@ namespace QOSXenon
         int startSurfIndex;
     };
 
+    struct GfxPackedPlacement
+    {
+        float origin[3];
+        unsigned int axis[3];
+        float scale;
+    };
+
     struct type_align(4) GfxStaticModelDrawInst
     {
-        unsigned char unknown0[32];
+        float cullDist;
+        GfxPackedPlacement placement;
         XModel* model;
         unsigned int unknown36;
     };
@@ -1127,7 +1148,10 @@ namespace QOSXenon
 
     struct GfxAabbTree
     {
-        unsigned char unknown0[32];
+        float mins[3];
+        float maxs[3];
+        unsigned int surfaceCount;
+        unsigned int startSurfIndex;
         unsigned int smodelIndexCount;
         unsigned int* smodelIndexes;
         unsigned int childCount;
@@ -1275,6 +1299,20 @@ namespace QOSXenon
         unsigned char unknown0[24];
     };
 
+    struct SunLightParseParams
+    {
+        char name[64];
+        float ambientScale;
+        float ambientColor[3];
+        float diffuseFraction;
+        float sunLight;
+        float sunColor[3];
+        float diffuseColor[3];
+        bool diffuseColorHasBeenSet;
+        unsigned char pad[3];
+        float angles[3];
+    };
+
     struct GfxWorld
     {
         const char* name;
@@ -1300,7 +1338,7 @@ namespace QOSXenon
         GfxWorldVertexData vd;
         unsigned int vertexLayerDataSize;
         GfxWorldVertexLayerData vld;
-        unsigned char unknown204[128];
+        SunLightParseParams sunParse;
         GfxLight* sunLight;
         float sunColorFromBsp[3];
         unsigned int sunPrimaryLightIndex;

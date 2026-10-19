@@ -24,9 +24,9 @@ set reusable u::primeSnd;
 
 // QosMssSound
 use QosMssSound;
-set arraysize data dataSize;
-set condition unknownDataPtr0 never;
-set condition unknownDataPtr1 never;
+set arraysize data info::data_len;
+set condition info::data_ptr never;
+set condition info::initial_ptr never;
 
 // QosPrimedSound
 use QosPrimedSound;
