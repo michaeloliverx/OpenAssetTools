@@ -1,0 +1,52 @@
+// windowDef_t
+use windowDef_t;
+set string name indexed;
+set string group indexed;
+set string unknownString200 indexed;
+
+// ItemKeyHandler
+use ItemKeyHandler;
+set string action indexed;
+
+// listBoxDef_t
+use listBoxDef_t;
+set string doubleClick indexed;
+
+
+// multiDef_t
+use multiDef_t;
+set string dvarList indexed;
+set string dvarStr indexed;
+
+// itemDefData_t
+use itemDefData_t;
+set condition listBox itemDef_t::type == 6;
+set condition editField itemDef_t::type == 4 || itemDef_t::type == 9 || itemDef_t::type == 16 || itemDef_t::type == 18 || itemDef_t::type == 11 || itemDef_t::type == 14 || itemDef_t::type == 10 || itemDef_t::type == 0 || itemDef_t::type == 17;
+set condition multi itemDef_t::type == 12;
+set string enumDvarName indexed;
+set condition enumDvarName itemDef_t::type == 13;
+
+// itemDef_t
+use itemDef_t;
+set string unknownString660 indexed;
+set string unknownString672 indexed;
+set string unknownString676 indexed;
+set string unknownString680 indexed;
+set string unknownString684 indexed;
+set string unknownString688 indexed;
+set string unknownString692 indexed;
+set string unknownString696 indexed;
+set string unknownString700 indexed;
+set string unknownString704 indexed;
+set string unknownString708 indexed;
+set string unknownString716 indexed;
+
+// menuDef_t
+use menuDef_t;
+set block XFILE_BLOCK_TEMP;
+set string font indexed;
+set string unknownString580 indexed;
+set string unknownString584 indexed;
+set string unknownString588 indexed;
+set string unknownString596 indexed;
+set count items itemCount;

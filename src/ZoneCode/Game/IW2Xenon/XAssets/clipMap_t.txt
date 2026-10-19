@@ -1,0 +1,105 @@
+// cbrushside_t
+use cbrushside_t;
+set reusable plane;
+
+// cNode_t
+use cNode_t;
+set reusable plane;
+
+// cLeafBrushNodeLeaf_t
+use cLeafBrushNodeLeaf_t;
+set reusable brushes;
+set count brushes cLeafBrushNode_s::leafBrushCount;
+set allocalign brushes 2;
+
+
+// cLeafBrushNodeData_t
+use cLeafBrushNodeData_t;
+set condition leaf cLeafBrushNode_s::leafBrushCount > 0;
+
+
+// CollisionPartition
+use CollisionPartition;
+set reusable triangles;
+set reusable borders;
+
+// cbrush_t
+use cbrush_t;
+set reusable sides;
+
+// pathnode_constant_t
+use pathnode_constant_t;
+set scriptstring unknownScriptStrings6;
+set count Links totalLinkCount;
+
+
+// pathnode_ptr
+use pathnode_ptr;
+set reusable node;
+
+// pathnode_tree_nodes_t
+use pathnode_tree_nodes_t;
+set count nodes nodeCount;
+
+// pathnode_tree_info_t
+use pathnode_tree_info_t;
+set condition nodes pathnode_tree_t::axis < 0;
+set reusable children;
+
+
+// clipMap_t
+use clipMap_t;
+set block XFILE_BLOCK_TEMP;
+set string name indexed;
+set count staticModelList numStaticModels;
+set count materials numMaterials;
+set count brushsides numBrushSides;
+set count nodes numNodes;
+set count leafs numLeafs;
+set count leafbrushNodes leafbrushNodesCount;
+set count leafbrushes numLeafBrushes;
+set count leafsurfaces numLeafSurfaces;
+set count verts vertCount;
+set count edges edgeCount;
+set count triangles triCount;
+set count borders borderCount;
+set count partitions partitionCount;
+set count aabbTrees aabbTreeCount;
+set count cmodels numSubModels;
+set count brushes numBrushes;
+set allocalign brushes 16;
+set count visibility numClusters * clusterBytes;
+set count entityString numEntityChars;
+set reusable box_brush;
+set allocalign box_brush 16;
+set count pathNodes pathNodeCount;
+set count chainNodeForNode pathNodeCount;
+set count nodeForChainNode pathNodeCount;
+set count pathVis visBytes;
+set count nodeTree nodeTreeCount;
+reorder:
+    name
+    staticModelList
+    materials
+    brushsides
+    nodes
+    leafs
+    leafbrushes
+    leafbrushNodes
+    leafsurfaces
+    verts
+    edges
+    triangles
+    borders
+    partitions
+    aabbTrees
+    cmodels
+    brushes
+    visibility
+    entityString
+    box_brush
+    pathNodes
+    chainNodeForNode
+    nodeForChainNode
+    pathVis
+    nodeTree;

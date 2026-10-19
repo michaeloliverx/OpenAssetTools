@@ -1,0 +1,45 @@
+game IW2Xenon;
+wordsize 32;
+endianness big;
+
+asset XAnimParts AssetXAnim;
+asset XModel AssetXModel;
+asset Material AssetMaterial;
+asset GfxImage AssetImage;
+asset snd_alias_list_t AssetSound;
+asset SndCurve AssetSoundCurve;
+asset clipMap_t AssetClipMapMp;
+asset GfxWorld AssetGfxWorld;
+asset GfxLightDef AssetLightDef;
+asset Font_s AssetFont;
+asset MenuList AssetMenuList;
+asset menuDef_t AssetMenu;
+asset LocalizeEntry AssetLocalize;
+asset WeaponDef AssetWeapon;
+asset SndDriverGlobals AssetSoundDriverGlobals;
+asset EffectTemplate AssetFx;
+asset FxImpactTable AssetImpactFx;
+asset RawFile AssetRawFile;
+
+block temp XFILE_BLOCK_TEMP default;
+block normal XFILE_BLOCK_VIRTUAL default;
+block normal XFILE_BLOCK_PHYSICAL;
+
+#include "XAssets/XAnimParts.txt"
+#include "XAssets/XModel.txt"
+#include "XAssets/Material.txt"
+#include "XAssets/GfxImage.txt"
+#include "XAssets/snd_alias_list_t.txt"
+#include "XAssets/SndCurve.txt"
+#include "XAssets/clipMap_t.txt"
+#include "XAssets/GfxWorld.txt"
+#include "XAssets/GfxLightDef.txt"
+#include "XAssets/Font_s.txt"
+#include "XAssets/MenuList.txt"
+#include "XAssets/menuDef_t.txt"
+#include "XAssets/LocalizeEntry.txt"
+#include "XAssets/WeaponDef.txt"
+#include "XAssets/SndDriverGlobals.txt"
+#include "XAssets/EffectTemplate.txt"
+#include "XAssets/FxImpactTable.txt"
+#include "XAssets/RawFile.txt"

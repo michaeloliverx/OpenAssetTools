@@ -1,0 +1,99 @@
+// MaterialInfo
+use MaterialInfo;
+set string name indexed;
+set string unknownString4 indexed;
+
+
+// MaterialStateMapRuleSet
+use MaterialStateMapRuleSet;
+set arraysize rules ruleCount;
+
+// MaterialStateMap
+use MaterialStateMap;
+set string name indexed;
+set reusable ruleSets;
+
+
+
+// MaterialVertexDeclaration
+use MaterialVertexDeclaration;
+set reusable routing;
+set count routing streamCount;
+set allocalign routing 2;
+set allocalign declarations 1;
+
+// MaterialShader
+use MaterialShader;
+set string name indexed;
+set count program programSize * 4;
+set allocalign program 4;
+set condition runtimeShader never;
+
+
+// MaterialArgumentDef
+use MaterialArgumentDef;
+set reusable literalConst;
+set count literalConst 4;
+set allocalign literalConst 16;
+set condition literalConst MaterialShaderArgument::type == 0;
+set condition codeConst MaterialShaderArgument::type == 1;
+set condition codeSampler MaterialShaderArgument::type == 3;
+set string name indexed;
+set condition name MaterialShaderArgument::type != 0 && MaterialShaderArgument::type != 1 && MaterialShaderArgument::type != 3;
+
+
+// MaterialPassDx9
+use MaterialPassDx9;
+set reusable stateMap;
+set reusable vertexDecl alias;
+set reusable vertexShader;
+set reusable pixelShader;
+set reusable vertexArgs;
+set count vertexArgs vertexArgCount;
+set reusable pixelArgs;
+set count pixelArgs pixelArgCount;
+
+// MaterialTechnique
+use MaterialTechnique;
+set string name indexed;
+set arraysize passArray passCount;
+reorder:
+    passArray
+    name;
+
+// MaterialTechniqueSet
+use MaterialTechniqueSet;
+set string name indexed;
+set reusable techniques;
+
+
+// water_t
+use water_t;
+set count H0 N * M;
+set count wTerm N * M;
+
+// MaterialWaterDef
+use MaterialWaterDef;
+set reusable water;
+
+// MaterialTextureDefInfo
+use MaterialTextureDefInfo;
+set condition water MaterialTextureDef::semantic == 5;
+
+// MaterialTextureDef
+use MaterialTextureDef;
+set string name indexed;
+
+// MaterialConstantDef
+use MaterialConstantDef;
+set string name indexed;
+
+// Material
+use Material;
+set block XFILE_BLOCK_TEMP;
+set reusable techniqueSet;
+set reusable textureTable;
+set count textureTable textureCount;
+set reusable constantTable;
+set count constantTable constantCount;
+set allocalign constantTable 16;

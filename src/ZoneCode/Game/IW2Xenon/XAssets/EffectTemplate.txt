@@ -1,0 +1,27 @@
+// TMediaElement
+use TMediaElement;
+set condition model PrimitiveTemplate::type == 5;
+
+// TMediaList
+use TMediaList;
+set count items count;
+
+// FxList
+use FxList;
+set string names indexed;
+set count names count;
+set assetref names AssetFx;
+
+// FxCurve
+use FxCurve;
+set arraysize keys (dimension + 1) * keyCount;
+
+// FxChannel
+use FxChannel;
+set reusable curve;
+
+
+// EffectTemplate
+use EffectTemplate;
+set block XFILE_BLOCK_TEMP;
+set string name indexed;

@@ -1,0 +1,25 @@
+// GfxTexture
+use GfxTexture;
+set allocalign map 4;
+
+// GfxImageLoadDef
+use GfxImageLoadDef;
+set block XFILE_BLOCK_VIRTUAL;
+
+// GfxTextureLoad
+use GfxTextureLoad;
+set reusable loadDef;
+set block loadDef XFILE_BLOCK_TEMP;
+set action loadDef LoadImageData(GfxImageLoadDef, GfxImage);
+
+// GfxImage
+use GfxImage;
+set block XFILE_BLOCK_TEMP;
+set count pixels dataSize;
+set allocalign pixels 4096;
+set block pixels XFILE_BLOCK_PHYSICAL;
+set string name indexed;
+reorder:
+    name
+    pixels
+    texture;

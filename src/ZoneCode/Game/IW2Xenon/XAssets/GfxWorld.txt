@@ -1,0 +1,115 @@
+// mnode_node_t
+use mnode_node_t;
+set reusable plane;
+set reusable children;
+
+
+// mnode_info_t
+use mnode_info_t;
+set condition node mnode_t::contents == -1;
+
+// mnode_t
+use mnode_t;
+set reusable parent;
+reorder:
+    u
+    parent;
+
+// srfTriangles_t
+use srfTriangles_t;
+set count indices indexCount;
+set allocalign indices 32;
+
+
+
+
+
+
+
+
+
+// GfxWorldVertexData
+use GfxWorldVertexData;
+set count vertices GfxWorld::vertexCount;
+set allocalign vertices 4;
+set block vertices XFILE_BLOCK_PHYSICAL;
+
+
+
+// GfxAabbTree
+use GfxAabbTree;
+set reusable staticModelIndices;
+set count staticModelIndices staticModelCount;
+set count children childrenCount;
+
+// GfxPortal
+use GfxPortal;
+set reusable cell;
+set count vertices vertexCount * 3;
+
+// GfxOccluderEdge
+use GfxOccluderEdge;
+set reusable planes;
+set reusable vertices;
+
+// GfxOccluder
+use GfxOccluder;
+set count planes planeCount;
+set count edges edgeCount;
+set count vertices vertexCount * 3;
+reorder:
+    planes
+    vertices
+    edges;
+
+// GfxOccluderRef
+use GfxOccluderRef;
+set reusable occluder;
+
+// GfxCell
+use GfxCell;
+set count portals portalCount;
+set count cullGroups cullGroupCount;
+set count occluders occluderCount;
+
+
+// GfxLightGrid
+use GfxLightGrid;
+set count points pointCount;
+set count colors colorCount;
+
+
+
+// GfxWorld
+use GfxWorld;
+set block XFILE_BLOCK_TEMP;
+set string name indexed;
+set string baseName indexed;
+set count nodes nodeCount;
+set count surfaces surfaceCount;
+set count unknownIndices28 unknownCount24;
+set count cullGroups cullGroupCount;
+set count staticModels staticModelCount;
+set count cells cellCount;
+set count lightmaps lightmapCount;
+set count brushModels brushModelCount;
+set count materialMemory materialMemoryCount;
+reorder:
+    name
+    baseName
+    nodes
+    surfaces
+    unknownIndices28
+    skyImage
+    light
+    cullGroups
+    staticModels
+    cells
+    lightmaps
+    unknownImage284
+    lightGrid
+    brushModels
+    materialMemory
+    vertexData
+    sun
+    unknownImage520;

@@ -2,6 +2,7 @@
 
 #include "Game/GamePlatform.h"
 #include "Game/GameTarget.h"
+#include "Game/IW2Xenon/Zone/Definition/ZoneDefWriterIW2Xenon.h"
 #include "Game/IW3/Zone/Definition/ZoneDefWriterIW3.h"
 #include "Game/IW3Xenon/Zone/Definition/ZoneDefWriterIW3Xenon.h"
 #include "Game/IW4/Zone/Definition/ZoneDefWriterIW4.h"
@@ -68,6 +69,7 @@ const IZoneDefWriter* IZoneDefWriter::GetZoneDefWriterForGame(GameId game)
         new NX1::ZoneDefWriter(),
         new T5Xenon::ZoneDefWriter(),
         new QOSXenon::ZoneDefWriter(),
+        new IW2Xenon::ZoneDefWriter(),
     };
     static_assert(std::extent_v<decltype(zoneDefWriters)> == static_cast<unsigned>(GameId::COUNT));
 

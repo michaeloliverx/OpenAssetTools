@@ -1,0 +1,178 @@
+// WeaponDef
+use WeaponDef;
+set block XFILE_BLOCK_TEMP;
+set string name indexed;
+set string unknownString4 indexed;
+set string unknownString8 indexed;
+set string unknownString12 indexed;
+set string unknownString16 indexed;
+set string unknownString20 indexed;
+set string unknownString24 indexed;
+set string unknownString28 indexed;
+set string unknownString32 indexed;
+set string unknownString36 indexed;
+set string unknownString40 indexed;
+set string unknownString44 indexed;
+set string unknownString48 indexed;
+set string unknownString52 indexed;
+set string unknownString56 indexed;
+set string unknownString60 indexed;
+set string unknownString64 indexed;
+set string unknownString68 indexed;
+set string unknownString72 indexed;
+set string unknownString76 indexed;
+set string unknownString80 indexed;
+set string unknownString84 indexed;
+set string unknownString88 indexed;
+set string unknownString92 indexed;
+set string unknownString96 indexed;
+set string unknownString100 indexed;
+set string unknownString104 indexed;
+set string unknownString108 indexed;
+set string unknownString112 indexed;
+set string unknownString144 indexed;
+set string unknownString148 indexed;
+set string unknownString152 indexed;
+set string unknownString156 indexed;
+set string unknownString160 indexed;
+set string unknownString164 indexed;
+set string unknownString168 indexed;
+set string unknownString172 indexed;
+set string unknownString176 indexed;
+set string unknownString180 indexed;
+set string unknownString184 indexed;
+set string unknownString188 indexed;
+set string unknownString192 indexed;
+set string unknownString196 indexed;
+set string unknownString200 indexed;
+set string unknownString204 indexed;
+set string unknownString208 indexed;
+set string unknownString212 indexed;
+set string unknownString216 indexed;
+set string unknownString220 indexed;
+set string unknownString224 indexed;
+set string unknownString228 indexed;
+set string unknownString232 indexed;
+set string unknownString236 indexed;
+set string unknownString240 indexed;
+set string unknownString244 indexed;
+set string unknownString248 indexed;
+set string unknownString252 indexed;
+set string unknownString256 indexed;
+set string unknownString260 indexed;
+set string unknownString264 indexed;
+set string unknownString268 indexed;
+set string unknownString272 indexed;
+set string unknownString276 indexed;
+set string unknownString280 indexed;
+set string unknownString284 indexed;
+set string unknownString436 indexed;
+set string unknownString440 indexed;
+set string unknownString444 indexed;
+set string unknownString452 indexed;
+set string unknownString460 indexed;
+set string unknownString480 indexed;
+set string unknownString628 indexed;
+set string unknownString844 indexed;
+set string unknownString872 indexed;
+set string unknownString908 indexed;
+set string unknownString916 indexed;
+set string unknownString920 indexed;
+set string unknownString1112 indexed;
+set string unknownString1292 indexed;
+set string unknownString1296 indexed;
+set string unknownString1388 indexed;
+set string unknownString1392 indexed;
+set string unknownString1412 indexed;
+set string unknownString1532 indexed;
+set string unknownString1536 indexed;
+set count accuracyGraph0 accuracyGraphCount0;
+set count accuracyGraph1 accuracyGraphCount1;
+reorder:
+    name
+    unknownString4
+    unknownString8
+    unknownString12
+    unknownString16
+    unknownString20
+    unknownString24
+    unknownString28
+    unknownString32
+    unknownString36
+    unknownString40
+    unknownString44
+    unknownString48
+    unknownString52
+    unknownString56
+    unknownString60
+    unknownString64
+    unknownString68
+    unknownString72
+    unknownString76
+    unknownString80
+    unknownString84
+    unknownString88
+    unknownString92
+    unknownString96
+    unknownString100
+    unknownString104
+    unknownString108
+    unknownString112
+    unknownString144
+    unknownString148
+    unknownString152
+    unknownString156
+    unknownString160
+    unknownString164
+    unknownString168
+    unknownString172
+    unknownString176
+    unknownString180
+    unknownString184
+    unknownString188
+    unknownString192
+    unknownString196
+    unknownString200
+    unknownString204
+    unknownString208
+    unknownString212
+    unknownString216
+    unknownString220
+    unknownString224
+    unknownString228
+    unknownString232
+    unknownString236
+    unknownString240
+    unknownString244
+    unknownString248
+    unknownString252
+    unknownString256
+    unknownString260
+    unknownString264
+    unknownString268
+    unknownString272
+    unknownString276
+    unknownString280
+    unknownString284
+    unknownString436
+    unknownString440
+    unknownString444
+    unknownString452
+    unknownString460
+    unknownString480
+    unknownString628
+    unknownString844
+    unknownString872
+    unknownString908
+    unknownString916
+    unknownString920
+    unknownString1112
+    unknownString1292
+    accuracyGraph0
+    unknownString1296
+    accuracyGraph1
+    unknownString1388
+    unknownString1392
+    unknownString1412
+    unknownString1532
+    unknownString1536;

@@ -1,0 +1,5 @@
+// MenuList
+use MenuList;
+set block XFILE_BLOCK_TEMP;
+set string name indexed;
+set count menus menuCount;

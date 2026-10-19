@@ -1,0 +1,4 @@
+// GfxLightDef
+use GfxLightDef;
+set block XFILE_BLOCK_TEMP;
+set string name indexed;

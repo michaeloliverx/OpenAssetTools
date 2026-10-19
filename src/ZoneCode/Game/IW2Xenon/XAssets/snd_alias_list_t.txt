@@ -1,0 +1,49 @@
+// XaSeekTable
+use XaSeekTable;
+set count values count;
+
+// XAUDIOPACKET_ALIGNED
+use XAUDIOPACKET_ALIGNED;
+set count buffer size;
+set allocalign buffer 2048;
+set count unknownPointer84 1;
+
+
+// XaPrimedStream
+use XaPrimedStream;
+set arraysize buffer bufferSize;
+reorder:
+    buffer
+    seekTable;
+
+// XaSoundInfo
+use XaSoundInfo;
+set condition loaded SoundFile::type == 1;
+
+// SoundFile
+use SoundFile;
+set string name indexed;
+
+
+// XAUDIOCHANNELMAP
+use XAUDIOCHANNELMAP;
+set count entries entryCount;
+
+// SpeakerMap
+use SpeakerMap;
+set string name indexed;
+
+// snd_alias_t
+use snd_alias_t;
+set string aliasName indexed;
+set string unknownString4 indexed;
+set string unknownString8 indexed;
+set reusable soundFile;
+set reusable speakerMap;
+
+// snd_alias_list_t
+use snd_alias_list_t;
+set block XFILE_BLOCK_TEMP;
+set string name indexed;
+set reusable head;
+set count head count;

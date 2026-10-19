@@ -1,0 +1,105 @@
+// XAnimDynamicIndicesPartTrans
+use XAnimDynamicIndicesPartTrans;
+set condition _1 XAnimParts::numframes < 256;
+
+// XAnimDynamicIndicesPartQuat
+use XAnimDynamicIndicesPartQuat;
+set condition _1 XAnimParts::numframes < 256;
+
+// XAnimDynamicIndicesDeltaPartTrans
+use XAnimDynamicIndicesDeltaPartTrans;
+set condition _1 XAnimParts::numframes < 256;
+
+// XAnimDynamicIndicesDeltaPartQuat
+use XAnimDynamicIndicesDeltaPartQuat;
+set condition _1 XAnimParts::numframes < 256;
+
+// XAnimPartTransFrames
+use XAnimPartTransFrames;
+set count frames (XAnimPartTrans::size + 1) * (XAnimPartTrans::size != 0);
+set allocalign frames 4;
+reorder:
+    indices
+    frames;
+set arraysize indices::_1 (XAnimPartTrans::size + 1) * (XAnimPartTrans::size != XAnimParts::numframes);
+set arraysize indices::_2 (XAnimPartTrans::size + 1) * (XAnimPartTrans::size != XAnimParts::numframes);
+
+// XAnimPartTransData
+use XAnimPartTransData;
+set condition frames XAnimPartTrans::size > 0;
+
+
+// XAnimQuatFrames
+use XAnimQuatFrames;
+set count small (XAnimPartQuat::size + 1) * (XAnimPartQuat::size != 0);
+set allocalign small 4;
+set condition small (XAnimParts::bSmallQuat[(XAnimPart - XAnimParts::parts) / 8] & (1 << ((XAnimPart - XAnimParts::parts) % 8)));
+set count normal (XAnimPartQuat::size + 1) * (XAnimPartQuat::size != 0);
+set allocalign normal 4;
+
+// XAnimPartQuatFrames
+use XAnimPartQuatFrames;
+reorder:
+    indices
+    frames;
+set arraysize indices::_1 (XAnimPartQuat::size + 1) * (XAnimPartQuat::size != XAnimParts::numframes);
+set arraysize indices::_2 (XAnimPartQuat::size + 1) * (XAnimPartQuat::size != XAnimParts::numframes);
+
+// XAnimPartQuatData
+use XAnimPartQuatData;
+set condition frames XAnimPartQuat::size > 0;
+set condition frame0 !(XAnimParts::bSmallQuat[(XAnimPart - XAnimParts::parts) / 8] & (1 << ((XAnimPart - XAnimParts::parts) % 8)));
+
+
+// XAnimDeltaPartTransFrames
+use XAnimDeltaPartTransFrames;
+set count frames (XAnimDeltaPartTrans::size + 1) * (XAnimDeltaPartTrans::size != 0);
+set allocalign frames 4;
+reorder:
+    indices
+    frames;
+set arraysize indices::_1 (XAnimDeltaPartTrans::size + 1) * (XAnimDeltaPartTrans::size != XAnimParts::numframes);
+set arraysize indices::_2 (XAnimDeltaPartTrans::size + 1) * (XAnimDeltaPartTrans::size != XAnimParts::numframes);
+
+// XAnimDeltaPartTransData
+use XAnimDeltaPartTransData;
+set condition frames XAnimDeltaPartTrans::size > 0;
+
+
+// XAnimDeltaPartQuatFrames
+use XAnimDeltaPartQuatFrames;
+set count frames (XAnimDeltaPartQuat::size + 1) * (XAnimDeltaPartQuat::size != 0);
+set allocalign frames 4;
+reorder:
+    indices
+    frames;
+set arraysize indices::_1 (XAnimDeltaPartQuat::size + 1) * (XAnimDeltaPartQuat::size != XAnimParts::numframes);
+set arraysize indices::_2 (XAnimDeltaPartQuat::size + 1) * (XAnimDeltaPartQuat::size != XAnimParts::numframes);
+
+// XAnimDeltaPartQuatData
+use XAnimDeltaPartQuatData;
+set condition frames XAnimDeltaPartQuat::size > 0;
+
+
+
+
+// XAnimNotifyInfo
+use XAnimNotifyInfo;
+set scriptstring name;
+
+// XAnimParts
+use XAnimParts;
+set block XFILE_BLOCK_TEMP;
+set scriptstring names;
+set count names boneCount;
+set count bSmallQuat (boneCount + 7) / 8;
+set count parts boneCount;
+set count notify notifyCount;
+set string name indexed;
+reorder:
+    name
+    names
+    bSmallQuat
+    parts
+    notify
+    deltaPart;

@@ -7,6 +7,29 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 - ✅ = Supported
 - ⁉️ = Partial support
 
+## IW2 Xbox 360 (Call of Duty 2)
+
+| Asset Type         | Dumping Support | Loading Support | Notes |
+|--------------------|-----------------|-----------------|-------|
+| XAnimParts         | ❌              | ❌              |  |
+| XModel             | ❌              | ❌              |  |
+| Material           | ❌              | ❌              |  |
+| GfxImage           | ❌              | ❌              |  |
+| snd_alias_list_t   | ❌              | ❌              |  |
+| SndCurve           | ❌              | ❌              |  |
+| clipMap_t          | ❌              | ❌              |  |
+| GfxWorld           | ❌              | ❌              |  |
+| GfxLightDef        | ❌              | ❌              |  |
+| Font_s             | ❌              | ❌              |  |
+| MenuList           | ❌              | ❌              |  |
+| menuDef_t          | ❌              | ❌              |  |
+| LocalizeEntry      | ❌              | ❌              |  |
+| WeaponDef          | ❌              | ❌              |  |
+| SndDriverGlobals   | ❌              | ❌              |  |
+| EffectTemplate     | ❌              | ❌              |  |
+| FxImpactTable      | ❌              | ❌              |  |
+| RawFile            | ❌              | ❌              |  |
+
 ## IW3 (Call of Duty 4: Modern Warfare)
 
 | Asset Type           | Dumping Support | Loading Support | Notes                                                                        |

@@ -1,0 +1,77 @@
+// DSkel
+use DSkel;
+set arraysize mat XModelParts::numBones;
+
+// XBoneHierarchy
+use XBoneHierarchy;
+set scriptstring names;
+set count names XModelParts::numBones;
+set arraysize parentList XModelParts::numBones - XModelParts::numRootBones;
+reorder:
+    parentList
+    names;
+
+// XModelParts
+use XModelParts;
+set count quats (numBones - numRootBones) * 4;
+set count trans (numBones - numRootBones) * 4;
+set count partClassification numBones;
+reorder:
+    skel
+    hierarchy
+    quats
+    trans
+    partClassification;
+
+// XVertexBuffer
+use XVertexBuffer;
+set arraysize w blendCount;
+
+// XRigidSurface
+use XRigidSurface;
+set count verts XSurface::vertCount;
+set allocalign verts 16;
+set block verts XFILE_BLOCK_PHYSICAL;
+
+// XSurface
+use XSurface;
+set count triIndices triCount * 3;
+set allocalign triIndices 32;
+set block triIndices XFILE_BLOCK_PHYSICAL;
+set count verts vertCount;
+set allocalign verts 16;
+
+// XModelSurfs
+use XModelSurfs;
+set count surfs XModelLodInfo::numsurfs;
+
+// XModelLodInfo
+use XModelLodInfo;
+set string filename indexed;
+set scriptstring surfNames;
+set count surfNames numsurfs;
+set reusable surfs;
+
+// XModelCollSurf
+use XModelCollSurf;
+set count collTris numCollTris;
+
+// trXSkin_t
+use trXSkin_t;
+set count materials XModel::lodInfo[trXSkin_t - XModel::xskins]::numsurfs;
+
+// XModel
+use XModel;
+set block XFILE_BLOCK_TEMP;
+set reusable parts;
+set count collSurfs numCollSurfs;
+set count boneInfo parts::numBones;
+set count xskins numLods;
+set string name indexed;
+reorder:
+    name
+    parts
+    lodInfo
+    collSurfs
+    boneInfo
+    xskins;

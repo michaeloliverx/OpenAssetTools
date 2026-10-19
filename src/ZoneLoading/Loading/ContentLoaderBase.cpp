@@ -15,6 +15,7 @@ namespace
         switch (game)
         {
         case GameId::IW3Xenon:
+        case GameId::IW2Xenon:
         case GameId::T4Xenon:
         case GameId::IW4Xenon:
         case GameId::T5Xenon:

@@ -1,5 +1,6 @@
 #include "AutoSearchPaths.h"
 
+#include "IW2Xenon/AutoSearchPathsIW2Xenon.h"
 #include "IW3/AutoSearchPathsIW3.h"
 #include "IW3Xenon/AutoSearchPathsIW3Xenon.h"
 #include "IW4/AutoSearchPathsIW4.h"
@@ -93,6 +94,7 @@ AutoSearchPaths* AutoSearchPaths::GetForGame(GameId gameId)
         new AutoSearchPathsNX1(),
         new AutoSearchPathsT5Xenon(),
         new AutoSearchPathsQOSXenon(),
+        new AutoSearchPathsIW2Xenon(),
     };
     static_assert(std::extent_v<decltype(autoSearchPaths)> == static_cast<unsigned>(GameId::COUNT));
     assert(static_cast<unsigned>(gameId) < static_cast<unsigned>(GameId::COUNT));

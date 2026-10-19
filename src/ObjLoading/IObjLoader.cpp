@@ -1,5 +1,6 @@
 #include "IObjLoader.h"
 
+#include "Game/IW2Xenon/ObjLoaderIW2Xenon.h"
 #include "Game/IW3/ObjLoaderIW3.h"
 #include "Game/IW3Xenon/ObjLoaderIW3Xenon.h"
 #include "Game/IW4/ObjLoaderIW4.h"
@@ -32,6 +33,7 @@ const IObjLoader* IObjLoader::GetObjLoaderForGame(GameId game)
         new NX1::ObjLoader(),
         new T5Xenon::ObjLoader(),
         new QOSXenon::ObjLoader(),
+        new IW2Xenon::ObjLoader(),
     };
     static_assert(std::extent_v<decltype(zoneCreators)> == static_cast<unsigned>(GameId::COUNT));
 
