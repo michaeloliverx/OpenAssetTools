@@ -3,6 +3,7 @@
 #include "Asset/GlobalAssetPoolsLoader.h"
 #include "Game/IW2Xenon/AssetMarkerIW2Xenon.h"
 #include "Game/IW2Xenon/IW2Xenon.h"
+#include "Image/LoaderImageIW2Xenon.h"
 #include "Localize/AssetLoaderLocalizeIW2Xenon.h"
 #include "RawFile/AssetLoaderRawFileIW2Xenon.h"
 #include "Sound/LoaderSoundCurveIW2Xenon.h"
@@ -42,6 +43,7 @@ namespace
     void ConfigureLoaders(AssetCreatorCollection& collection, Zone& zone, ISearchPath& searchPath)
     {
         auto& memory = zone.Memory();
+        collection.AddAssetCreator(image::CreateLoaderIW2Xenon(memory, searchPath));
         collection.AddAssetCreator(localize::CreateLoaderIW2Xenon(memory, searchPath, zone));
         collection.AddAssetCreator(raw_file::CreateLoaderIW2Xenon(memory, searchPath));
         collection.AddAssetCreator(sound_curve::CreateLoaderIW2Xenon(memory, searchPath));

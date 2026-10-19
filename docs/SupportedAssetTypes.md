@@ -14,7 +14,7 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | XAnimParts         | ❌              | ❌              |  |
 | XModel             | ❌              | ❌              |  |
 | Material           | ❌              | ❌              |  |
-| GfxImage           | ❌              | ❌              |  |
+| GfxImage           | ✅              | ✅              | 2D and cube textures. |
 | snd_alias_list_t   | ❌              | ❌              |  |
 | SndCurve           | ✅              | ✅              |  |
 | clipMap_t          | ⁉️              | ❌              | Entity strings only. |
