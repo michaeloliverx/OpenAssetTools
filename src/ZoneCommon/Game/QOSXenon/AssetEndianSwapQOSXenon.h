@@ -527,9 +527,9 @@ namespace QOSXenon
     static inline void EndianSwap(QOSXenon::CollisionAabbTree& value, [[maybe_unused]] const EndianOperation operation)
     {
         EndianSwap(value.origin);
+        EndianSwap(value.halfSize);
         EndianSwap(value.materialIndex);
         EndianSwap(value.childCount);
-        EndianSwap(value.halfSize);
         EndianSwap(value.u.firstChildIndex);
     }
 
@@ -555,9 +555,19 @@ namespace QOSXenon
         EndianSwap(value.verts);
     }
 
+    static inline void EndianSwap(QOSXenon::GfxPlacement& value, [[maybe_unused]] const EndianOperation operation)
+    {
+        EndianSwap(value.quat);
+        EndianSwap(value.origin);
+    }
+
     static inline void EndianSwap(QOSXenon::DynEntityDef& value, [[maybe_unused]] const EndianOperation operation)
     {
+        EndianSwap(value.type);
+        EndianSwap(value.pose, operation);
         EndianSwap(value.xModel);
+        EndianSwap(value.brushModel);
+        EndianSwap(value.physicsBrushModel);
         EndianSwap(value.destroyFx);
         EndianSwap(value.destroyPieces);
         EndianSwap(value.physPreset);
@@ -569,7 +579,12 @@ namespace QOSXenon
 
     static inline void EndianSwap(QOSXenon::DynEntityColl& value, [[maybe_unused]] const EndianOperation operation) {}
 
-    static inline void EndianSwap(QOSXenon::DynEntityPhysConstraint& value, [[maybe_unused]] const EndianOperation operation) {}
+    static inline void EndianSwap(QOSXenon::DynEntityPhysConstraint& value, [[maybe_unused]] const EndianOperation operation)
+    {
+        EndianSwap(value.type);
+        EndianSwap(value.entityIds);
+        EndianSwap(value.enabled);
+    }
 
     static inline void EndianSwap(QOSXenon::clipMap_t& value, [[maybe_unused]] const EndianOperation operation)
     {
@@ -621,6 +636,7 @@ namespace QOSXenon
         EndianSwap(value.unknown2);
         EndianSwap(value.mapEnts);
         EndianSwap(value.box_brush);
+        EndianSwap(value.dynEntFirstRuntimeModel);
         EndianSwap(value.dynEntCount);
         EndianSwap(value.dynEntDefList);
         EndianSwap(value.dynEntClientList);
@@ -870,8 +886,17 @@ namespace QOSXenon
         EndianSwap(value.startSurfIndex);
     }
 
+    static inline void EndianSwap(QOSXenon::GfxPackedPlacement& value, [[maybe_unused]] const EndianOperation operation)
+    {
+        EndianSwap(value.origin);
+        EndianSwap(value.axis);
+        EndianSwap(value.scale);
+    }
+
     static inline void EndianSwap(QOSXenon::GfxStaticModelDrawInst& value, [[maybe_unused]] const EndianOperation operation)
     {
+        EndianSwap(value.cullDist);
+        EndianSwap(value.placement, operation);
         EndianSwap(value.model);
         EndianSwap(value.unknown36);
     }
@@ -886,6 +911,10 @@ namespace QOSXenon
 
     static inline void EndianSwap(QOSXenon::GfxAabbTree& value, [[maybe_unused]] const EndianOperation operation)
     {
+        EndianSwap(value.mins);
+        EndianSwap(value.maxs);
+        EndianSwap(value.surfaceCount);
+        EndianSwap(value.startSurfIndex);
         EndianSwap(value.smodelIndexCount);
         EndianSwap(value.smodelIndexes);
         EndianSwap(value.childCount);
@@ -1007,6 +1036,17 @@ namespace QOSXenon
 
     static inline void EndianSwap(QOSXenon::GfxLightRegion& value, [[maybe_unused]] const EndianOperation operation) {}
 
+    static inline void EndianSwap(QOSXenon::SunLightParseParams& value, [[maybe_unused]] const EndianOperation operation)
+    {
+        EndianSwap(value.ambientScale);
+        EndianSwap(value.ambientColor);
+        EndianSwap(value.diffuseFraction);
+        EndianSwap(value.sunLight);
+        EndianSwap(value.sunColor);
+        EndianSwap(value.diffuseColor);
+        EndianSwap(value.angles);
+    }
+
     static inline void EndianSwap(QOSXenon::GfxWorld& value, [[maybe_unused]] const EndianOperation operation)
     {
         EndianSwap(value.name);
@@ -1028,6 +1068,7 @@ namespace QOSXenon
         EndianSwap(value.vd, operation);
         EndianSwap(value.vertexLayerDataSize);
         EndianSwap(value.vld, operation);
+        EndianSwap(value.sunParse, operation);
         EndianSwap(value.sunLight);
         EndianSwap(value.sunColorFromBsp);
         EndianSwap(value.sunPrimaryLightIndex);
