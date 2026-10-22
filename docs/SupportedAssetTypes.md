@@ -81,23 +81,23 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | MaterialTechniqueSet | ❌               | ❌               |       |
 | GfxImage             | ❌               | ❌               |       |
 | snd_alias_list_t     | ❌               | ❌               |       |
-| SndCurve             | ❌               | ❌               |       |
+| SndCurve             | ✅               | ✅               |       |
 | clipMap_t            | ❌               | ❌               |       |
 | ComWorld             | ❌               | ❌               |       |
 | GameWorldSp          | ❌               | ❌               |       |
 | GameWorldMp          | ❌               | ❌               |       |
-| MapEnts              | ❌               | ❌               |       |
+| MapEnts              | ✅               | ✅               |       |
 | GfxWorld             | ❌               | ❌               |       |
 | GfxLightDef          | ❌               | ❌               |       |
 | Font_s               | ❌               | ❌               |       |
 | MenuList             | ❌               | ❌               |       |
 | menuDef_t            | ❌               | ❌               |       |
-| LocalizeEntry        | ❌               | ❌               |       |
+| LocalizeEntry        | ✅               | ✅               |       |
 | WeaponDef            | ❌               | ❌               |       |
 | SndDriverGlobals     | ❌               | ❌               |       |
 | FxEffectDef          | ❌               | ❌               |       |
 | FxImpactTable        | ❌               | ❌               |       |
-| RawFile              | ❌               | ❌               |       |
+| RawFile              | ✅               | ✅               |       |
 
 ## IW4 (Call of Duty: Modern Warfare 2)
 
