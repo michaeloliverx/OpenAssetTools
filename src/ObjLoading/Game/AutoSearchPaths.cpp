@@ -3,6 +3,7 @@
 #include "IW3/AutoSearchPathsIW3.h"
 #include "IW3Xenon/AutoSearchPathsIW3Xenon.h"
 #include "IW3Xenon253/AutoSearchPathsIW3Xenon253.h"
+#include "IW3Xenon270/AutoSearchPathsIW3Xenon270.h"
 #include "IW4/AutoSearchPathsIW4.h"
 #include "IW4/InfoString/InfoStringToStructConverter.h"
 #include "IW4Xenon/AutoSearchPathsIW4Xenon.h"
@@ -95,6 +96,7 @@ AutoSearchPaths* AutoSearchPaths::GetForGame(GameId gameId)
         new AutoSearchPathsT5Xenon(),
         new AutoSearchPathsQOSXenon(),
         new AutoSearchPathsIW3Xenon253(),
+        new AutoSearchPathsIW3Xenon270(),
     };
     static_assert(std::extent_v<decltype(autoSearchPaths)> == static_cast<unsigned>(GameId::COUNT));
     assert(static_cast<unsigned>(gameId) < static_cast<unsigned>(GameId::COUNT));

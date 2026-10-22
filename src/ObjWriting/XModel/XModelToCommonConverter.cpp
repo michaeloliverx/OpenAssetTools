@@ -3,6 +3,7 @@
 #include "Game/IW3/XModel/XModelToCommonConverterIW3.h"
 #include "Game/IW3Xenon/XModel/XModelToCommonConverterIW3Xenon.h"
 #include "Game/IW3Xenon253/XModel/XModelToCommonConverterIW3Xenon253.h"
+#include "Game/IW3Xenon270/XModel/XModelToCommonConverterIW3Xenon270.h"
 #include "Game/IW4/XModel/XModelToCommonConverterIW4.h"
 #include "Game/IW4Xenon/XModel/XModelToCommonConverterIW4Xenon.h"
 #include "Game/IW5/XModel/XModelToCommonConverterIW5.h"
@@ -36,6 +37,7 @@ namespace xmodel
             new ToCommonConverterT5Xenon(),
             new ToCommonConverterQOSXenon(),
             new ToCommonConverterIW3Xenon253(),
+            new ToCommonConverterIW3Xenon270(),
         };
         static_assert(std::extent_v<decltype(toCommonConverters)> == static_cast<unsigned>(GameId::COUNT));
         assert(static_cast<unsigned>(gameId) < static_cast<unsigned>(GameId::COUNT));
