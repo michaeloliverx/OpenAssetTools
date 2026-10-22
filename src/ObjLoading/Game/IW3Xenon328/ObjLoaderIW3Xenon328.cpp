@@ -3,6 +3,7 @@
 #include "Asset/GlobalAssetPoolsLoader.h"
 #include "Game/IW3Xenon328/AssetMarkerIW3Xenon328.h"
 #include "Game/IW3Xenon328/IW3Xenon328.h"
+#include "Image/LoaderImageIW3Xenon328.h"
 #include "Localize/AssetLoaderLocalizeIW3Xenon328.h"
 #include "Maps/MapEntsLoaderIW3Xenon328.h"
 #include "RawFile/AssetLoaderRawFileIW3Xenon328.h"
@@ -53,6 +54,7 @@ namespace
     void ConfigureLoaders(AssetCreatorCollection& collection, Zone& zone, ISearchPath& searchPath)
     {
         auto& memory = zone.Memory();
+        collection.AddAssetCreator(image::CreateLoaderIW3Xenon328(memory, searchPath));
         collection.AddAssetCreator(localize::CreateLoaderIW3Xenon328(memory, searchPath, zone));
         collection.AddAssetCreator(map_ents::CreateLoaderIW3Xenon328(memory, searchPath));
         collection.AddAssetCreator(raw_file::CreateLoaderIW3Xenon328(memory, searchPath));
