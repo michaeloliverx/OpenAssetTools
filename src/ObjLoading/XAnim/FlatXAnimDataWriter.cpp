@@ -194,6 +194,40 @@ namespace
 
 namespace xanim
 {
+    CompactXenonFlatData CreateCompactXenonFlatDataFromCommonXAnim(const CommonXAnimParts& parts)
+    {
+        CompactXenonFlatData result;
+        auto& data = result.m_data;
+        const auto useByteIndices = parts.m_num_frames < 256;
+
+        for (const auto& bone : parts.m_bone_tracks)
+        {
+            const auto& quat = bone.m_quat;
+            const auto keyed = quat.m_type == QuatType::HALF_QUAT || quat.m_type == QuatType::FULL_QUAT;
+            if (keyed)
+                WritePackedIndices(data, quat.m_indices, useByteIndices);
+
+            if (quat.m_type == QuatType::HALF_QUAT || quat.m_type == QuatType::HALF_QUAT_NO_SIZE)
+            {
+                auto& target = keyed ? data.m_random_data_short : data.m_data_short;
+                for (const auto& frame : quat.m_frames2)
+                    target.emplace_back(static_cast<int16_t>(xenon::PackQuat16(frame)));
+            }
+            else if (quat.m_type == QuatType::FULL_QUAT || quat.m_type == QuatType::FULL_QUAT_NO_SIZE)
+            {
+                auto& target = keyed ? result.m_random_data_int : data.m_data_int;
+                for (const auto& frame : quat.m_frames)
+                    target.emplace_back(static_cast<int32_t>(xenon::PackQuat32(frame)));
+            }
+        }
+
+        const auto transBoneOrder = parts.GetBoneTrackOrderForTrans();
+        for (const auto boneIndex : transBoneOrder)
+            ProcessTransTrack(data, parts.m_bone_tracks[boneIndex].m_trans, boneIndex, useByteIndices);
+
+        return result;
+    }
+
     FlatData CreateFlatDataFromCommonXAnim(const CommonXAnimParts& parts, const QuatEncoding quatEncoding)
     {
         FlatData writeCursor;

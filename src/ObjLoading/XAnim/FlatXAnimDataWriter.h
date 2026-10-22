@@ -19,4 +19,12 @@ namespace xanim
     };
 
     FlatData CreateFlatDataFromCommonXAnim(const CommonXAnimParts& parts, QuatEncoding quatEncoding = QuatEncoding::SIGNED_16);
+
+    struct CompactXenonFlatData
+    {
+        FlatData m_data;
+        std::vector<int32_t> m_random_data_int;
+    };
+
+    CompactXenonFlatData CreateCompactXenonFlatDataFromCommonXAnim(const CommonXAnimParts& parts);
 } // namespace xanim

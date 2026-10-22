@@ -32,10 +32,12 @@ namespace
         return result;
     }
 
-    uint64_t PackRatio(const float value)
+    uint64_t PackRatio(const float value, const unsigned bits)
     {
-        const auto quantized = std::clamp(static_cast<int>(std::lround(std::clamp(value, -1.0f, 1.0f) * 16383.0f)), -16384, 16383);
-        return static_cast<uint16_t>(quantized) & 0x7fffu;
+        const auto signBit = 1 << (bits - 1u);
+        const auto quantized =
+            std::clamp(static_cast<int>(std::lround(std::clamp(value, -1.0f, 1.0f) * static_cast<float>(signBit - 1))), -signBit, signBit - 1);
+        return static_cast<uint16_t>(quantized) & ((1u << bits) - 1u);
     }
 } // namespace
 
@@ -65,6 +67,33 @@ namespace xanim::xenon
                                (packed & (1ull << 47u)) != 0u);
     }
 
+    uint16_t PackQuat16(const CommonXQuat2& quat)
+    {
+        const auto droppedIndex = std::abs(static_cast<int>(quat.value[0])) > std::abs(static_cast<int>(quat.value[1])) ? 0u : 1u;
+        const auto dropped = static_cast<float>(quat.value[droppedIndex]);
+        if (dropped == 0.0f)
+            return 0;
+
+        return static_cast<uint16_t>(PackRatio(static_cast<float>(quat.value[1u - droppedIndex]) / dropped, 14u) | (droppedIndex == 0u ? 0x4000u : 0u)
+                                     | (dropped < 0.0f ? 0x8000u : 0u));
+    }
+
+    uint32_t PackQuat32(const CommonXQuat& quat)
+    {
+        auto droppedIndex = 0u;
+        for (auto i = 1u; i < 4u; ++i)
+            if (std::abs(static_cast<int>(quat.value[i])) > std::abs(static_cast<int>(quat.value[droppedIndex])))
+                droppedIndex = i;
+        const auto dropped = static_cast<float>(quat.value[droppedIndex]);
+        if (dropped == 0.0f)
+            return 0;
+
+        return static_cast<uint32_t>(PackRatio(static_cast<float>(quat.value[(droppedIndex + 1u) & 3u]) / dropped, 9u)
+                                     | (PackRatio(static_cast<float>(quat.value[(droppedIndex + 2u) & 3u]) / dropped, 10u) << 9u)
+                                     | (PackRatio(static_cast<float>(quat.value[(droppedIndex + 3u) & 3u]) / dropped, 10u) << 19u)
+                                     | (((3u - droppedIndex) & 3u) << 29u) | (dropped < 0.0f ? 0x80000000u : 0u));
+    }
+
     std::array<int16_t, 3> PackQuat48(const CommonXQuat& quat)
     {
         auto droppedIndex = 0u;
@@ -75,9 +104,9 @@ namespace xanim::xenon
         if (dropped == 0.0f)
             return {};
 
-        const auto packed = PackRatio(static_cast<float>(quat.value[(droppedIndex + 1u) & 3u]) / dropped)
-                            | (PackRatio(static_cast<float>(quat.value[(droppedIndex + 2u) & 3u]) / dropped) << 15u)
-                            | (PackRatio(static_cast<float>(quat.value[(droppedIndex + 3u) & 3u]) / dropped) << 30u)
+        const auto packed = PackRatio(static_cast<float>(quat.value[(droppedIndex + 1u) & 3u]) / dropped, 15u)
+                            | (PackRatio(static_cast<float>(quat.value[(droppedIndex + 2u) & 3u]) / dropped, 15u) << 15u)
+                            | (PackRatio(static_cast<float>(quat.value[(droppedIndex + 3u) & 3u]) / dropped, 15u) << 30u)
                             | (static_cast<uint64_t>((3u - droppedIndex) & 3u) << 45u) | (static_cast<uint64_t>(dropped < 0.0f) << 47u);
         return {static_cast<int16_t>(packed >> 32u), static_cast<int16_t>(packed >> 16u), static_cast<int16_t>(packed)};
     }
