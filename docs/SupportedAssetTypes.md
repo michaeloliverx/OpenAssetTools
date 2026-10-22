@@ -282,7 +282,7 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | Material                  | ❌               | ❌               |       |
 | MaterialPixelShader       | ❌               | ❌               |       |
 | MaterialTechniqueSet      | ❌               | ❌               |       |
-| GfxImage                  | ❌               | ❌               |       |
+| GfxImage                  | ✅               | ✅               |       |
 | snd_alias_list_t          | ❌               | ❌               |       |
 | SndCurve                  | ✅               | ✅               |       |
 | LoadedSound               | ❌               | ❌               |       |

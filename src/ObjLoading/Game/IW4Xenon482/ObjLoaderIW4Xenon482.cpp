@@ -4,6 +4,7 @@
 #include "Game/IW4Xenon482/AssetMarkerIW4Xenon482.h"
 #include "Game/IW4Xenon482/IW4Xenon482.h"
 #include "Game/IW4Xenon482/Maps/MapEntsLoaderIW4Xenon482.h"
+#include "Image/ImageStreamPostProcessorIW4Xenon482.h"
 #include "Localize/LoaderLocalizeIW4Xenon482.h"
 #include "RawFile/LoaderRawFileIW4Xenon482.h"
 #include "Sound/LoaderSoundCurveIW4Xenon482.h"
@@ -113,6 +114,8 @@ namespace
 
 void ObjLoader::ConfigureCreatorCollection(AssetCreatorCollection& collection, Zone& zone, ISearchPath& searchPath, IGdtQueryable& gdt) const
 {
+    collection.AddAssetPostProcessor(image::CreateStreamPostProcessorIW4Xenon482(zone, searchPath));
+
     ConfigureDefaultCreators(collection, zone);
     ConfigureLoaders(collection, zone, searchPath, gdt);
     ConfigureGlobalAssetPoolsLoaders(collection, zone);

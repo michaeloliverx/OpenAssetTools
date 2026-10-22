@@ -1,5 +1,10 @@
 #include "ObjCompilerIW4Xenon482.h"
 
+#include "Game/IW4Xenon482/Image/LoaderImageIW4Xenon482.h"
+#include "Utils/Logging/Log.h"
+
+#include <charconv>
+
 using namespace IW4Xenon482;
 
 void ObjCompiler::ConfigureCreatorCollection(AssetCreatorCollection& collection,
@@ -11,12 +16,19 @@ void ObjCompiler::ConfigureCreatorCollection(AssetCreatorCollection& collection,
                                              IOutputPath& outDir,
                                              IOutputPath& cacheDir) const
 {
-    (void)collection;
-    (void)zone;
-    (void)zoneDefinition;
-    (void)searchPath;
-    (void)gdt;
-    (void)zoneStates;
-    (void)outDir;
-    (void)cacheDir;
+    const auto& properties = zoneDefinition.m_zone_definition.m_properties.m_properties;
+    const auto imageFile = properties.find("imagefile");
+    if (imageFile == properties.end())
+        return;
+
+    unsigned index = 0u;
+    const auto& value = imageFile->second;
+    const auto [end, error] = std::from_chars(value.data(), value.data() + value.size(), index);
+    if (properties.count("imagefile") != 1u || error != std::errc() || end != value.data() + value.size() || index > 20u)
+    {
+        con::error("IW4 Xenon 482 requires a single >imagefile,<index> directive with an index from 0 to 20");
+        return;
+    }
+
+    collection.AddAssetCreator(image::CreateLoaderIW4Xenon482(zone.Memory(), searchPath, zone, outDir, index));
 }
