@@ -227,6 +227,24 @@ namespace IW3Xenon290
         void* data;
     };
 
+    enum XAnimPartType
+    {
+        PART_TYPE_NO_QUAT = 0x0,
+        PART_TYPE_SIMPLE_QUAT = 0x1,
+        PART_TYPE_NORMAL_QUAT = 0x2,
+        PART_TYPE_PRECISION_QUAT = 0x3,
+        PART_TYPE_SIMPLE_QUAT_NO_SIZE = 0x4,
+        PART_TYPE_NORMAL_QUAT_NO_SIZE = 0x5,
+        PART_TYPE_PRECISION_QUAT_NO_SIZE = 0x6,
+        PART_TYPE_SMALL_TRANS = 0x7,
+        PART_TYPE_TRANS = 0x8,
+        PART_TYPE_TRANS_NO_SIZE = 0x9,
+        PART_TYPE_NO_TRANS = 0xA,
+        PART_TYPE_ALL = 0xB,
+
+        PART_TYPE_COUNT
+    };
+
     struct XAnimParts
     {
         const char* name;
@@ -240,7 +258,7 @@ namespace IW3Xenon290
         unsigned __int16 numframes;
         bool bLoop;
         bool bDelta;
-        unsigned __int8 boneCount[12];
+        unsigned __int8 boneCount[PART_TYPE_COUNT];
         unsigned __int8 notifyCount;
         unsigned __int8 assetType;
         bool pad;

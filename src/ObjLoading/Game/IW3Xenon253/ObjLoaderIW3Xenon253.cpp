@@ -8,6 +8,7 @@
 #include "Maps/MapEntsLoaderIW3Xenon253.h"
 #include "RawFile/AssetLoaderRawFileIW3Xenon253.h"
 #include "Sound/LoaderSoundCurveIW3Xenon253.h"
+#include "XAnim/XAnimLoaderIW3Xenon253.h"
 
 using namespace IW3Xenon253;
 
@@ -56,6 +57,7 @@ namespace
         collection.AddAssetCreator(map_ents::CreateLoaderIW3Xenon253(memory, searchPath));
         collection.AddAssetCreator(raw_file::CreateLoaderIW3Xenon253(memory, searchPath));
         collection.AddAssetCreator(sound_curve::CreateLoaderIW3Xenon253(memory, searchPath));
+        collection.AddAssetCreator(xanim::CreateLoaderIW3Xenon253(memory, searchPath, zone));
     }
 
     void ConfigureGlobalAssetPoolsLoaders(AssetCreatorCollection& collection, Zone& zone)

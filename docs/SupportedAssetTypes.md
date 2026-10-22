@@ -74,7 +74,7 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | Asset Type           | Dumping Support | Loading Support | Notes |
 |----------------------|-----------------|-----------------|-------|
 | PhysPreset           | ❌               | ❌               |       |
-| XAnimParts           | ❌               | ❌               |       |
+| XAnimParts           | ✅               | ✅               | IW3 Mod Tools v17. |
 | XModel               | ❌               | ❌               |       |
 | Material             | ❌               | ❌               |       |
 | MaterialPixelShader  | ❌               | ❌               |       |
@@ -104,7 +104,7 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | Asset Type           | Dumping Support | Loading Support | Notes |
 |----------------------|-----------------|-----------------|-------|
 | PhysPreset           | ❌               | ❌               |       |
-| XAnimParts           | ❌               | ❌               |       |
+| XAnimParts           | ✅               | ✅               | IW3 Mod Tools v17. |
 | XModel               | ❌               | ❌               |       |
 | Material             | ❌               | ❌               |       |
 | MaterialPixelShader  | ❌               | ❌               |       |
@@ -135,7 +135,7 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | Asset Type           | Dumping Support | Loading Support | Notes |
 |----------------------|-----------------|-----------------|-------|
 | PhysPreset           | ❌               | ❌               |       |
-| XAnimParts           | ❌               | ❌               |       |
+| XAnimParts           | ✅               | ✅               | IW3 Mod Tools v17. Compact quaternions used when required by 16-bit pool limits. |
 | XModel               | ❌               | ❌               |       |
 | Material             | ❌               | ❌               |       |
 | MaterialPixelShader  | ❌               | ❌               |       |
@@ -166,7 +166,7 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | Asset Type           | Dumping Support | Loading Support | Notes |
 |----------------------|-----------------|-----------------|-------|
 | PhysPreset           | ❌               | ❌               |       |
-| XAnimParts           | ❌               | ❌               |       |
+| XAnimParts           | ✅               | ✅               | IW3 Mod Tools v17. |
 | XModel               | ❌               | ❌               |       |
 | Material             | ❌               | ❌               |       |
 | MaterialPixelShader  | ❌               | ❌               |       |

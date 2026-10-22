@@ -9,6 +9,7 @@
 #include "RawFile/AssetLoaderRawFileIW3Xenon290.h"
 #include "Sound/LoaderSoundCurveIW3Xenon290.h"
 #include "StringTable/LoaderStringTableIW3Xenon290.h"
+#include "XAnim/XAnimLoaderIW3Xenon290.h"
 
 using namespace IW3Xenon290;
 
@@ -59,6 +60,7 @@ namespace
         collection.AddAssetCreator(raw_file::CreateLoaderIW3Xenon290(memory, searchPath));
         collection.AddAssetCreator(sound_curve::CreateLoaderIW3Xenon290(memory, searchPath));
         collection.AddAssetCreator(string_table::CreateLoaderIW3Xenon290(memory, searchPath));
+        collection.AddAssetCreator(xanim::CreateLoaderIW3Xenon290(memory, searchPath, zone));
     }
 
     void ConfigureGlobalAssetPoolsLoaders(AssetCreatorCollection& collection, Zone& zone)
