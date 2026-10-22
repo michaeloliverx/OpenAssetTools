@@ -17,6 +17,7 @@ namespace
         case GameId::IW3Xenon253:
         case GameId::IW3Xenon270:
         case GameId::IW3Xenon290:
+        case GameId::IW3Xenon328:
         case GameId::T4Xenon:
         case GameId::IW4Xenon:
         case GameId::T5Xenon:

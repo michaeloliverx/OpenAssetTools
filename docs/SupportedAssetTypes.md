@@ -161,6 +161,37 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | RawFile              | ✅               | ✅               |       |
 | StringTable          | ✅               | ✅               |       |
 
+## IW3 Xbox 360 build 328 (Call of Duty 4: Modern Warfare pre-alpha)
+
+| Asset Type           | Dumping Support | Loading Support | Notes |
+|----------------------|-----------------|-----------------|-------|
+| PhysPreset           | ❌               | ❌               |       |
+| XAnimParts           | ❌               | ❌               |       |
+| XModel               | ❌               | ❌               |       |
+| Material             | ❌               | ❌               |       |
+| MaterialPixelShader  | ❌               | ❌               |       |
+| MaterialTechniqueSet | ❌               | ❌               |       |
+| GfxImage             | ❌               | ❌               |       |
+| snd_alias_list_t     | ❌               | ❌               |       |
+| SndCurve             | ❌               | ❌               |       |
+| clipMap_t            | ❌               | ❌               |       |
+| ComWorld             | ❌               | ❌               |       |
+| GameWorldSp          | ❌               | ❌               |       |
+| GameWorldMp          | ❌               | ❌               |       |
+| MapEnts              | ❌               | ❌               |       |
+| GfxWorld             | ❌               | ❌               |       |
+| GfxLightDef          | ❌               | ❌               |       |
+| Font_s               | ❌               | ❌               |       |
+| MenuList             | ❌               | ❌               |       |
+| menuDef_t            | ❌               | ❌               |       |
+| LocalizeEntry        | ❌               | ❌               |       |
+| WeaponDef            | ❌               | ❌               |       |
+| SndDriverGlobals     | ❌               | ❌               |       |
+| FxEffectDef          | ❌               | ❌               |       |
+| FxImpactTable        | ❌               | ❌               |       |
+| RawFile              | ❌               | ❌               |       |
+| StringTable          | ❌               | ❌               |       |
+
 ## IW4 (Call of Duty: Modern Warfare 2)
 
 | Asset Type                | Dumping Support | Loading Support | Notes                                                                        |
