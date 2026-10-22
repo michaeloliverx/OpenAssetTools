@@ -4,6 +4,7 @@
 #include "Game/IW3Xenon/ObjCompilerIW3Xenon.h"
 #include "Game/IW3Xenon253/ObjCompilerIW3Xenon253.h"
 #include "Game/IW3Xenon270/ObjCompilerIW3Xenon270.h"
+#include "Game/IW3Xenon290/ObjCompilerIW3Xenon290.h"
 #include "Game/IW4/ObjCompilerIW4.h"
 #include "Game/IW4Xenon/ObjCompilerIW4Xenon.h"
 #include "Game/IW5/ObjCompilerIW5.h"
@@ -36,6 +37,7 @@ const IObjCompiler* IObjCompiler::GetObjCompilerForGame(GameId game)
         new QOSXenon::ObjCompiler(),
         new IW3Xenon253::ObjCompiler(),
         new IW3Xenon270::ObjCompiler(),
+        new IW3Xenon290::ObjCompiler(),
     };
     static_assert(std::extent_v<decltype(objCompilers)> == static_cast<unsigned>(GameId::COUNT));
 

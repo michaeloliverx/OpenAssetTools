@@ -22,6 +22,7 @@ namespace
         case GameId::NX1:
         case GameId::IW3Xenon253:
         case GameId::IW3Xenon270:
+        case GameId::IW3Xenon290:
             return GamePlatform::XBOX;
 
         default:

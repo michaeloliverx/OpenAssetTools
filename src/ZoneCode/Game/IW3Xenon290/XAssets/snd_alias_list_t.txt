@@ -1,0 +1,43 @@
+// snd_alias_list_t
+
+use snd_alias_list_t;
+set block XFILE_BLOCK_TEMP;
+set string aliasName;
+set reusable head;
+set count head count;
+
+// snd_alias_t
+use snd_alias_t;
+set string aliasName;
+set string subtitle;
+set string secondaryAliasName;
+set string chainAliasName;
+set reusable soundFile;
+set reusable speakerMap;
+
+// SoundFile
+use SoundFile;
+set string dir;
+set string name;
+
+// XaSound
+use XaSound;
+
+set block packet::pBuffer XFILE_BLOCK_LARGE;
+set allocalign packet::pBuffer 2048;
+set count packet::pBuffer packet::BufferSize;
+
+set block packet::pContext XFILE_BLOCK_VIRTUAL;
+set count packet::pContext 1;
+
+set block seekTable::data XFILE_BLOCK_VIRTUAL;
+set count seekTable::data seekTable::size;
+
+// SpeakerMap
+use SpeakerMap;
+set string name;
+
+// XAUDIOCHANNELMAP
+use XAUDIOCHANNELMAP;
+set allocalign paEntries 4;
+set count paEntries EntryCount;

@@ -4,6 +4,7 @@
 #include "Game/IW3Xenon/ObjWriterIW3Xenon.h"
 #include "Game/IW3Xenon253/ObjWriterIW3Xenon253.h"
 #include "Game/IW3Xenon270/ObjWriterIW3Xenon270.h"
+#include "Game/IW3Xenon290/ObjWriterIW3Xenon290.h"
 #include "Game/IW4/ObjWriterIW4.h"
 #include "Game/IW4Xenon/ObjWriterIW4Xenon.h"
 #include "Game/IW5/ObjWriterIW5.h"
@@ -66,6 +67,7 @@ IObjWriter* IObjWriter::GetObjWriterForGame(GameId game)
         new QOSXenon::ObjWriter(),
         new IW3Xenon253::ObjWriter(),
         new IW3Xenon270::ObjWriter(),
+        new IW3Xenon290::ObjWriter(),
     };
     static_assert(std::extent_v<decltype(objWriters)> == static_cast<unsigned>(GameId::COUNT));
 

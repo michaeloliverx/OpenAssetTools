@@ -4,6 +4,7 @@
 #include "Game/IW3Xenon/ZoneWriterFactoryIW3Xenon.h"
 #include "Game/IW3Xenon253/ZoneWriterFactoryIW3Xenon253.h"
 #include "Game/IW3Xenon270/ZoneWriterFactoryIW3Xenon270.h"
+#include "Game/IW3Xenon290/ZoneWriterFactoryIW3Xenon290.h"
 #include "Game/IW4/ZoneWriterFactoryIW4.h"
 #include "Game/IW4Xenon/ZoneWriterFactoryIW4Xenon.h"
 #include "Game/IW5/ZoneWriterFactoryIW5.h"
@@ -36,6 +37,7 @@ const IZoneWriterFactory* IZoneWriterFactory::GetZoneWriterFactoryForGame(GameId
         new QOSXenon::ZoneWriterFactory(),
         new IW3Xenon253::ZoneWriterFactory(),
         new IW3Xenon270::ZoneWriterFactory(),
+        new IW3Xenon290::ZoneWriterFactory(),
     };
     static_assert(std::extent_v<decltype(zoneCreators)> == static_cast<unsigned>(GameId::COUNT));
 

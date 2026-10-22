@@ -1,0 +1,127 @@
+// GfxWorld
+use GfxWorld;
+set block XFILE_BLOCK_TEMP;
+set string name;
+set string baseName;
+set reusable planes;
+set count planes planeCount;
+set count nodes nodeCount;
+set count indices indexCount;
+set condition indexBuffer never;
+set count skyStartSurfs skySurfCount;
+set reusable sunLight;
+set count smodelDrawInsts smodelCount;
+set count reflectionProbes reflectionProbeCount;
+set block reflectionProbeTextures XFILE_BLOCK_RUNTIME;
+set count reflectionProbeTextures reflectionProbeCount;
+set count cells cellCount;
+set count lightmaps lightmapCount;
+set block lightmapPrimaryTextures XFILE_BLOCK_RUNTIME;
+set count lightmapPrimaryTextures lightmapCount;
+set block lightmapSecondaryTextures XFILE_BLOCK_RUNTIME;
+set count lightmapSecondaryTextures lightmapCount;
+set count models modelCount;
+set count materialMemory materialMemoryCount;
+reorder:
+    ...
+    materialMemory
+    vd
+    vld;
+set block surfaceMaterials XFILE_BLOCK_RUNTIME;
+set allocalign surfaceMaterials 4;
+set count surfaceMaterials models::surfaceCount;
+set block surfaceCastsSunShadow XFILE_BLOCK_RUNTIME;
+set allocalign surfaceCastsSunShadow 4;
+set count surfaceCastsSunShadow models::surfaceCount / 32 + 1;
+set block cellCasterBits XFILE_BLOCK_RUNTIME;
+set allocalign cellCasterBits 4;
+set count cellCasterBits cellCount * ((cellCount + 31) / 32);
+set block sceneEntCellBits XFILE_BLOCK_RUNTIME;
+set count sceneEntCellBits cellCount * 0x100;
+set block sceneDynModel XFILE_BLOCK_RUNTIME;
+set allocalign sceneDynModel 4;
+set count sceneDynModel dpvsDyn::dynEntClientCount[0];
+set block sceneDynBrush XFILE_BLOCK_RUNTIME;
+set allocalign sceneDynBrush 4;
+set count sceneDynBrush dpvsDyn::dynEntClientCount[1];
+set block primaryLightEntityShadowVis XFILE_BLOCK_RUNTIME;
+set allocalign primaryLightEntityShadowVis 4;
+set count primaryLightEntityShadowVis (primaryLightCount - sunPrimaryLightIndex - 1) * 0x1000;
+set block primaryLightDynEntShadowVis XFILE_BLOCK_RUNTIME;
+set allocalign primaryLightDynEntShadowVis 4;
+set count primaryLightDynEntShadowVis[0] dpvsDyn::dynEntClientCount[0] * (primaryLightCount - sunPrimaryLightIndex - 1);
+set count primaryLightDynEntShadowVis[1] dpvsDyn::dynEntClientCount[1] * (primaryLightCount - sunPrimaryLightIndex - 1);
+set count shadowGeom primaryLightCount;
+
+// GfxAabbTree
+use GfxAabbTree;
+set reusable smodelIndexes;
+set allocalign smodelIndexes 2;
+set count smodelIndexes smodelIndexCount;
+
+// GfxPortal
+use GfxPortal;
+set condition writable never;
+set reusable cell;
+set count vertices vertexCount;
+
+// GfxCell
+use GfxCell;
+set count aabbTree aabbTreeCount;
+set count portals portalCount;
+set count cullGroups cullGroupCount;
+
+// GfxLightGrid
+use GfxLightGrid;
+set count rowDataStart maxs[rowAxis] - mins[rowAxis] + 1;
+set count rawRowData rawRowDataSize;
+set allocalign entries 4;
+set count entries entryCount;
+set allocalign colors 4;
+set count colors colorCount;
+
+// GfxWorldStreamInfo
+use GfxWorldStreamInfo;
+set count aabbTrees aabbTreeCount;
+set count leafRefs leafRefCount;
+
+// GfxWorldVertexData
+use GfxWorldVertexData;
+set count vertices GfxWorld::vertexCount;
+set condition worldVb never;
+
+// GfxWorldVertexLayerData
+use GfxWorldVertexLayerData;
+set count data GfxWorld::vertexLayerDataSize;
+set condition layerVb never;
+
+// GfxShadowGeometry
+use GfxShadowGeometry;
+set count sortedSurfIndex surfaceCount;
+set count smodelIndex smodelCount;
+
+// GfxWorldDpvsStatic
+use GfxWorldDpvsStatic;
+set block smodelVisData XFILE_BLOCK_RUNTIME;
+set count smodelVisData GfxWorld::smodelCount;
+set block surfaceVisData XFILE_BLOCK_RUNTIME;
+set count surfaceVisData GfxWorld::models::surfaceCount;
+set allocalign sortedSurfIndex 2;
+set count sortedSurfIndex GfxWorld::models::surfaceCount;
+set count smodelInsts GfxWorld::smodelCount;
+set count surfaces GfxWorld::surfaceCount;
+set count cullGroups GfxWorld::cullGroupCount;
+
+// GfxWorldDpvsDynamic
+use GfxWorldDpvsDynamic;
+set block dynEntCellBits XFILE_BLOCK_RUNTIME;
+set count dynEntCellBits[0] dynEntClientWordCount[0] * GfxWorld::cellCount;
+set count dynEntCellBits[1] dynEntClientWordCount[1] * GfxWorld::cellCount;
+set block dynEntVisData XFILE_BLOCK_RUNTIME;
+set allocalign dynEntVisData 16;
+set count dynEntVisData[0][0] 32 * dynEntClientWordCount[0];
+set count dynEntVisData[1][0] 32 * dynEntClientWordCount[1];
+set count dynEntVisData[0][1] 32 * dynEntClientWordCount[0];
+set count dynEntVisData[1][1] 32 * dynEntClientWordCount[1];
+set count dynEntVisData[0][2] 32 * dynEntClientWordCount[0];
+set count dynEntVisData[1][2] 32 * dynEntClientWordCount[1];
