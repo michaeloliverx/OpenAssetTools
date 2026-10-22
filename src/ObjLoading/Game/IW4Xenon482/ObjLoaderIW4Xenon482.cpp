@@ -3,6 +3,11 @@
 #include "Asset/GlobalAssetPoolsLoader.h"
 #include "Game/IW4Xenon482/AssetMarkerIW4Xenon482.h"
 #include "Game/IW4Xenon482/IW4Xenon482.h"
+#include "Game/IW4Xenon482/Maps/MapEntsLoaderIW4Xenon482.h"
+#include "Localize/LoaderLocalizeIW4Xenon482.h"
+#include "RawFile/LoaderRawFileIW4Xenon482.h"
+#include "Sound/LoaderSoundCurveIW4Xenon482.h"
+#include "StringTable/LoaderStringTableIW4Xenon482.h"
 
 using namespace IW4Xenon482;
 
@@ -94,10 +99,21 @@ namespace
         collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetAddonMapEnts>>(zone));
     }
 
+    void ConfigureLoaders(AssetCreatorCollection& collection, Zone& zone, ISearchPath& searchPath, IGdtQueryable& gdt)
+    {
+        auto& memory = zone.Memory();
+
+        collection.AddAssetCreator(sound_curve::CreateLoaderIW4Xenon482(memory, searchPath));
+        collection.AddAssetCreator(map_ents::CreateLoaderIW4Xenon482(memory, searchPath));
+        collection.AddAssetCreator(localize::CreateLoaderIW4Xenon482(memory, searchPath, zone));
+        collection.AddAssetCreator(raw_file::CreateLoaderIW4Xenon482(memory, searchPath));
+        collection.AddAssetCreator(string_table::CreateLoaderIW4Xenon482(memory, searchPath));
+    }
 } // namespace
 
 void ObjLoader::ConfigureCreatorCollection(AssetCreatorCollection& collection, Zone& zone, ISearchPath& searchPath, IGdtQueryable& gdt) const
 {
     ConfigureDefaultCreators(collection, zone);
+    ConfigureLoaders(collection, zone, searchPath, gdt);
     ConfigureGlobalAssetPoolsLoaders(collection, zone);
 }

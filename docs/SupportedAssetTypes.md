@@ -284,31 +284,31 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | MaterialTechniqueSet      | ❌               | ❌               |       |
 | GfxImage                  | ❌               | ❌               |       |
 | snd_alias_list_t          | ❌               | ❌               |       |
-| SndCurve                  | ❌               | ❌               |       |
+| SndCurve                  | ✅               | ✅               |       |
 | LoadedSound               | ❌               | ❌               |       |
 | clipMap_t                 | ❌               | ❌               |       |
 | ComWorld                  | ❌               | ❌               |       |
 | GameWorldSp               | ❌               | ❌               |       |
 | GameWorldMp               | ❌               | ❌               |       |
-| MapEnts                   | ❌               | ❌               |       |
+| MapEnts                   | ✅               | ✅               |       |
 | FxWorld                   | ❌               | ❌               |       |
 | GfxWorld                  | ❌               | ❌               |       |
 | GfxLightDef               | ❌               | ❌               |       |
 | Font_s                    | ❌               | ❌               |       |
 | MenuList                  | ❌               | ❌               |       |
 | menuDef_t                 | ❌               | ❌               |       |
-| LocalizeEntry             | ❌               | ❌               |       |
+| LocalizeEntry             | ✅               | ✅               |       |
 | WeaponCompleteDef         | ❌               | ❌               |       |
 | SndDriverGlobals          | ❌               | ❌               |       |
 | FxEffectDef               | ❌               | ❌               |       |
 | FxImpactTable             | ❌               | ❌               |       |
-| RawFile                   | ❌               | ❌               |       |
-| StringTable               | ❌               | ❌               |       |
+| RawFile                   | ✅               | ✅               |       |
+| StringTable               | ✅               | ✅               |       |
 | LeaderboardDef            | ❌               | ❌               |       |
 | StructuredDataDefSet      | ❌               | ❌               |       |
 | TracerDef                 | ❌               | ❌               |       |
 | VehicleDef                | ❌               | ❌               |       |
-| AddonMapEnts              | ❌               | ❌               |       |
+| AddonMapEnts              | ⁉️              | ❌               | Entity string only. |
 
 ## IW5 (Call of Duty: Modern Warfare 3)
 
