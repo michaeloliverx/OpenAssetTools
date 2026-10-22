@@ -1,6 +1,34 @@
 ZoneCode = {}
 
 ZoneCode.Assets = {
+    IW3Xenon253 = {
+        "PhysPreset",
+        "XAnimParts",
+        "XModel",
+        "Material",
+        "MaterialPixelShader",
+        "MaterialTechniqueSet",
+        "GfxImage",
+        "snd_alias_list_t",
+        "SndCurve",
+        "clipMap_t",
+        "ComWorld",
+        "GameWorldSp",
+        "GameWorldMp",
+        "MapEnts",
+        "GfxWorld",
+        "GfxLightDef",
+        "Font_s",
+        "MenuList",
+        "menuDef_t",
+        "LocalizeEntry",
+        "WeaponDef",
+        "SndDriverGlobals",
+        "FxEffectDef",
+        "FxImpactTable",
+        "RawFile",
+    },
+
     IW3 = {
         "PhysPreset",
         "XAnimParts",
