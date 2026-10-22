@@ -3,6 +3,11 @@
 #include "Asset/GlobalAssetPoolsLoader.h"
 #include "Game/IW3Xenon328/AssetMarkerIW3Xenon328.h"
 #include "Game/IW3Xenon328/IW3Xenon328.h"
+#include "Localize/AssetLoaderLocalizeIW3Xenon328.h"
+#include "Maps/MapEntsLoaderIW3Xenon328.h"
+#include "RawFile/AssetLoaderRawFileIW3Xenon328.h"
+#include "Sound/LoaderSoundCurveIW3Xenon328.h"
+#include "StringTable/LoaderStringTableIW3Xenon328.h"
 
 using namespace IW3Xenon328;
 
@@ -45,6 +50,16 @@ namespace
         collection.AddDefaultAssetCreator(std::make_unique<DefaultAssetCreator<AssetStringTable>>(memory));
     }
 
+    void ConfigureLoaders(AssetCreatorCollection& collection, Zone& zone, ISearchPath& searchPath)
+    {
+        auto& memory = zone.Memory();
+        collection.AddAssetCreator(localize::CreateLoaderIW3Xenon328(memory, searchPath, zone));
+        collection.AddAssetCreator(map_ents::CreateLoaderIW3Xenon328(memory, searchPath));
+        collection.AddAssetCreator(raw_file::CreateLoaderIW3Xenon328(memory, searchPath));
+        collection.AddAssetCreator(sound_curve::CreateLoaderIW3Xenon328(memory, searchPath));
+        collection.AddAssetCreator(string_table::CreateLoaderIW3Xenon328(memory, searchPath));
+    }
+
     void ConfigureGlobalAssetPoolsLoaders(AssetCreatorCollection& collection, Zone& zone)
     {
         collection.AddAssetCreator(std::make_unique<GlobalAssetPoolsLoader<AssetPhysPreset>>(zone));
@@ -80,5 +95,6 @@ namespace
 void ObjLoader::ConfigureCreatorCollection(AssetCreatorCollection& collection, Zone& zone, ISearchPath& searchPath, IGdtQueryable& gdt) const
 {
     ConfigureDefaultCreators(collection, zone);
+    ConfigureLoaders(collection, zone, searchPath);
     ConfigureGlobalAssetPoolsLoaders(collection, zone);
 }
