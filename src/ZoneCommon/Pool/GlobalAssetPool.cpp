@@ -214,6 +214,7 @@ GameGlobalAssetPools* GameGlobalAssetPools::GetGlobalPoolsForGame(GameId gameId)
         new GameGlobalAssetPools(GameId::IW3Xenon270),
         new GameGlobalAssetPools(GameId::IW3Xenon290),
         new GameGlobalAssetPools(GameId::IW3Xenon328),
+        new GameGlobalAssetPools(GameId::IW4Xenon482),
     };
     static_assert(std::extent_v<decltype(globalAssetPools)> == static_cast<unsigned>(GameId::COUNT));
 

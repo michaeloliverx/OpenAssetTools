@@ -8,6 +8,7 @@
 #include "Game/IW3Xenon328/ObjLoaderIW3Xenon328.h"
 #include "Game/IW4/ObjLoaderIW4.h"
 #include "Game/IW4Xenon/ObjLoaderIW4Xenon.h"
+#include "Game/IW4Xenon482/ObjLoaderIW4Xenon482.h"
 #include "Game/IW5/ObjLoaderIW5.h"
 #include "Game/NX1/ObjLoaderNX1.h"
 #include "Game/QOS/ObjLoaderQOS.h"
@@ -40,6 +41,7 @@ const IObjLoader* IObjLoader::GetObjLoaderForGame(GameId game)
         new IW3Xenon270::ObjLoader(),
         new IW3Xenon290::ObjLoader(),
         new IW3Xenon328::ObjLoader(),
+        new IW4Xenon482::ObjLoader(),
     };
     static_assert(std::extent_v<decltype(zoneCreators)> == static_cast<unsigned>(GameId::COUNT));
 

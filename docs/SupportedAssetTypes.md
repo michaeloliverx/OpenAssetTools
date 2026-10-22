@@ -271,6 +271,45 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | VehicleDef                | ❌               | ❌               |                                                                              |
 | AddonMapEnts              | ⁉️              | ❌               | Entity string can be exported. Binary data currently not.                    |
 
+## IW4 Xbox 360 alpha build 482 (Call of Duty: Modern Warfare 2)
+
+| Asset Type                | Dumping Support | Loading Support | Notes |
+|---------------------------|-----------------|-----------------|-------|
+| PhysPreset                | ❌               | ❌               |       |
+| PhysCollmap               | ❌               | ❌               |       |
+| XAnimParts                | ❌               | ❌               |       |
+| XModel                    | ❌               | ❌               |       |
+| Material                  | ❌               | ❌               |       |
+| MaterialPixelShader       | ❌               | ❌               |       |
+| MaterialTechniqueSet      | ❌               | ❌               |       |
+| GfxImage                  | ❌               | ❌               |       |
+| snd_alias_list_t          | ❌               | ❌               |       |
+| SndCurve                  | ❌               | ❌               |       |
+| LoadedSound               | ❌               | ❌               |       |
+| clipMap_t                 | ❌               | ❌               |       |
+| ComWorld                  | ❌               | ❌               |       |
+| GameWorldSp               | ❌               | ❌               |       |
+| GameWorldMp               | ❌               | ❌               |       |
+| MapEnts                   | ❌               | ❌               |       |
+| FxWorld                   | ❌               | ❌               |       |
+| GfxWorld                  | ❌               | ❌               |       |
+| GfxLightDef               | ❌               | ❌               |       |
+| Font_s                    | ❌               | ❌               |       |
+| MenuList                  | ❌               | ❌               |       |
+| menuDef_t                 | ❌               | ❌               |       |
+| LocalizeEntry             | ❌               | ❌               |       |
+| WeaponCompleteDef         | ❌               | ❌               |       |
+| SndDriverGlobals          | ❌               | ❌               |       |
+| FxEffectDef               | ❌               | ❌               |       |
+| FxImpactTable             | ❌               | ❌               |       |
+| RawFile                   | ❌               | ❌               |       |
+| StringTable               | ❌               | ❌               |       |
+| LeaderboardDef            | ❌               | ❌               |       |
+| StructuredDataDefSet      | ❌               | ❌               |       |
+| TracerDef                 | ❌               | ❌               |       |
+| VehicleDef                | ❌               | ❌               |       |
+| AddonMapEnts              | ❌               | ❌               |       |
+
 ## IW5 (Call of Duty: Modern Warfare 3)
 
 | Asset Type                | Dumping Support | Loading Support | Notes                                                                                                         |

@@ -1,0 +1,12 @@
+// GfxImage
+use GfxImage;
+set block XFILE_BLOCK_TEMP;
+set action StoreImageStreamFiles(GfxImage);
+set string name;
+reorder:
+    name
+    pixels;
+
+set allocalign pixels 4096;
+set count pixels cardMemory::platform[0];
+set conditional block pixels semantic == TS_WATER_MAP XFILE_BLOCK_RUNTIME XFILE_BLOCK_PHYSICAL;

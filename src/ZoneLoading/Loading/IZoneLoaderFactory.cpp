@@ -8,6 +8,7 @@
 #include "Game/IW3Xenon328/ZoneLoaderFactoryIW3Xenon328.h"
 #include "Game/IW4/ZoneLoaderFactoryIW4.h"
 #include "Game/IW4Xenon/ZoneLoaderFactoryIW4Xenon.h"
+#include "Game/IW4Xenon482/ZoneLoaderFactoryIW4Xenon482.h"
 #include "Game/IW5/ZoneLoaderFactoryIW5.h"
 #include "Game/NX1/ZoneLoaderFactoryNX1.h"
 #include "Game/QOS/ZoneLoaderFactoryQOS.h"
@@ -40,6 +41,7 @@ const IZoneLoaderFactory* IZoneLoaderFactory::GetZoneLoaderFactoryForGame(GameId
         new IW3Xenon270::ZoneLoaderFactory(),
         new IW3Xenon290::ZoneLoaderFactory(),
         new IW3Xenon328::ZoneLoaderFactory(),
+        new IW4Xenon482::ZoneLoaderFactory(),
     };
     static_assert(std::extent_v<decltype(zoneCreators)> == static_cast<unsigned>(GameId::COUNT));
 

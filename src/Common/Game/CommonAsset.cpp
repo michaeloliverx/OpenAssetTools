@@ -8,6 +8,7 @@
 #include "IW3Xenon328/CommonAssetIW3Xenon328.h"
 #include "IW4/CommonAssetIW4.h"
 #include "IW4Xenon/CommonAssetIW4Xenon.h"
+#include "IW4Xenon482/CommonAssetIW4Xenon482.h"
 #include "IW5/CommonAssetIW5.h"
 #include "NX1/CommonAssetNX1.h"
 #include "QOS/CommonAssetQOS.h"
@@ -40,6 +41,7 @@ ICommonAssetTypeMapper* ICommonAssetTypeMapper::GetCommonAssetMapperByGame(GameI
         new IW3Xenon270::CommonAssetTypeMapper(),
         new IW3Xenon290::CommonAssetTypeMapper(),
         new IW3Xenon328::CommonAssetTypeMapper(),
+        new IW4Xenon482::CommonAssetTypeMapper(),
     };
     static_assert(std::extent_v<decltype(assetTypeMappers)> == static_cast<unsigned>(GameId::COUNT));
 
