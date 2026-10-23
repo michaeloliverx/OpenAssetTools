@@ -1,5 +1,6 @@
 #include "ObjWriterIW3Xenon253.h"
 
+#include "Font/FontDumperIW3Xenon253.h"
 #include "Image/ImageDumperIW3Xenon253.h"
 #include "Localize/LocalizeDumperIW3Xenon253.h"
 #include "Maps/MapEntsDumperIW3Xenon253.h"
@@ -14,6 +15,7 @@ void ObjWriter::RegisterAssetDumpers(AssetDumpingContext& context)
 {
     RegisterAssetDumper(std::make_unique<xmodel::DumperIW3Xenon253>());
     RegisterAssetDumper(std::make_unique<image::DumperIW3Xenon253>());
+    RegisterAssetDumper(std::make_unique<font::JsonDumperIW3Xenon253>());
     RegisterAssetDumper(std::make_unique<localize::DumperIW3Xenon253>());
     RegisterAssetDumper(std::make_unique<map_ents::DumperIW3Xenon253>());
     RegisterAssetDumper(std::make_unique<raw_file::DumperIW3Xenon253>());

@@ -89,7 +89,7 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | MapEnts              | ✅               | ✅               |       |
 | GfxWorld             | ❌               | ❌               |       |
 | GfxLightDef          | ❌               | ❌               |       |
-| Font_s               | ❌               | ❌               |       |
+| Font_s               | ✅               | ❌               |       |
 | MenuList             | ❌               | ❌               |       |
 | menuDef_t            | ❌               | ❌               |       |
 | LocalizeEntry        | ✅               | ✅               |       |
@@ -119,7 +119,7 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | MapEnts              | ✅               | ✅               |       |
 | GfxWorld             | ❌               | ❌               |       |
 | GfxLightDef          | ❌               | ❌               |       |
-| Font_s               | ❌               | ❌               |       |
+| Font_s               | ✅               | ❌               |       |
 | MenuList             | ❌               | ❌               |       |
 | menuDef_t            | ❌               | ❌               |       |
 | LocalizeEntry        | ✅               | ✅               |       |
@@ -150,7 +150,7 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | MapEnts              | ✅               | ✅               |       |
 | GfxWorld             | ❌               | ❌               |       |
 | GfxLightDef          | ❌               | ❌               |       |
-| Font_s               | ❌               | ❌               |       |
+| Font_s               | ✅               | ❌               |       |
 | MenuList             | ❌               | ❌               |       |
 | menuDef_t            | ❌               | ❌               |       |
 | LocalizeEntry        | ✅               | ✅               |       |
@@ -181,7 +181,7 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | MapEnts              | ✅               | ✅               |       |
 | GfxWorld             | ❌               | ❌               |       |
 | GfxLightDef          | ❌               | ❌               |       |
-| Font_s               | ❌               | ❌               |       |
+| Font_s               | ✅               | ❌               |       |
 | MenuList             | ❌               | ❌               |       |
 | menuDef_t            | ❌               | ❌               |       |
 | LocalizeEntry        | ✅               | ✅               |       |
@@ -294,7 +294,7 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | FxWorld                   | ❌               | ❌               |       |
 | GfxWorld                  | ❌               | ❌               |       |
 | GfxLightDef               | ❌               | ❌               |       |
-| Font_s                    | ❌               | ❌               |       |
+| Font_s                    | ✅               | ❌               |       |
 | MenuList                  | ❌               | ❌               |       |
 | menuDef_t                 | ❌               | ❌               |       |
 | LocalizeEntry             | ✅               | ✅               |       |
