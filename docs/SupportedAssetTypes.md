@@ -278,7 +278,7 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | PhysPreset                | ❌               | ❌               |       |
 | PhysCollmap               | ❌               | ❌               |       |
 | XAnimParts                | ❌               | ❌               |       |
-| XModel                    | ❌               | ❌               |       |
+| XModel                    | ✅               | ✅               |       |
 | Material                  | ❌               | ❌               |       |
 | MaterialPixelShader       | ❌               | ❌               |       |
 | MaterialTechniqueSet      | ❌               | ❌               |       |

@@ -9,6 +9,7 @@
 #include "RawFile/LoaderRawFileIW4Xenon482.h"
 #include "Sound/LoaderSoundCurveIW4Xenon482.h"
 #include "StringTable/LoaderStringTableIW4Xenon482.h"
+#include "XModel/LoaderXModelIW4Xenon482.h"
 
 using namespace IW4Xenon482;
 
@@ -104,6 +105,7 @@ namespace
     {
         auto& memory = zone.Memory();
 
+        collection.AddAssetCreator(xmodel::CreateLoaderIW4Xenon482(memory, searchPath, zone));
         collection.AddAssetCreator(sound_curve::CreateLoaderIW4Xenon482(memory, searchPath));
         collection.AddAssetCreator(map_ents::CreateLoaderIW4Xenon482(memory, searchPath));
         collection.AddAssetCreator(localize::CreateLoaderIW4Xenon482(memory, searchPath, zone));

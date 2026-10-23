@@ -7,11 +7,13 @@
 #include "RawFile/RawFileDumperIW4Xenon482.h"
 #include "Sound/SndCurveDumperIW4Xenon482.h"
 #include "StringTable/StringTableDumperIW4Xenon482.h"
+#include "XModel/XModelDumperIW4Xenon482.h"
 
 using namespace IW4Xenon482;
 
 void ObjWriter::RegisterAssetDumpers(AssetDumpingContext& context)
 {
+    RegisterAssetDumper(std::make_unique<xmodel::DumperIW4Xenon482>());
     RegisterAssetDumper(std::make_unique<image::DumperIW4Xenon482>());
     RegisterAssetDumper(std::make_unique<sound_curve::DumperIW4Xenon482>());
     RegisterAssetDumper(std::make_unique<map_ents::DumperIW4Xenon482>());
