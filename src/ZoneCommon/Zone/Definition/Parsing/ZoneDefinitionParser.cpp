@@ -15,16 +15,16 @@ namespace
         switch (game)
         {
         case GameId::IW3Xenon:
-        case GameId::T4Xenon:
-        case GameId::IW4Xenon:
-        case GameId::QOSXenon:
-        case GameId::T5Xenon:
-        case GameId::NX1:
         case GameId::IW3Xenon253:
         case GameId::IW3Xenon270:
         case GameId::IW3Xenon290:
         case GameId::IW3Xenon328:
+        case GameId::IW4Xenon:
         case GameId::IW4Xenon482:
+        case GameId::QOSXenon:
+        case GameId::T4Xenon:
+        case GameId::T5Xenon:
+        case GameId::NX1:
             return GamePlatform::XBOX;
 
         default:
