@@ -7,11 +7,13 @@
 #include "Sound/SndCurveDumperIW3Xenon290.h"
 #include "StringTable/StringTableDumperIW3Xenon290.h"
 #include "XAnim/XAnimDumperIW3Xenon290.h"
+#include "XModel/XModelDumperIW3Xenon290.h"
 
 using namespace IW3Xenon290;
 
 void ObjWriter::RegisterAssetDumpers(AssetDumpingContext& context)
 {
+    RegisterAssetDumper(std::make_unique<xmodel::DumperIW3Xenon290>());
     RegisterAssetDumper(std::make_unique<image::DumperIW3Xenon290>());
     RegisterAssetDumper(std::make_unique<localize::DumperIW3Xenon290>());
     RegisterAssetDumper(std::make_unique<map_ents::DumperIW3Xenon290>());

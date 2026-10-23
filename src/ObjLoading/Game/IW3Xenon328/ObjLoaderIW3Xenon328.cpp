@@ -10,6 +10,7 @@
 #include "Sound/LoaderSoundCurveIW3Xenon328.h"
 #include "StringTable/LoaderStringTableIW3Xenon328.h"
 #include "XAnim/XAnimLoaderIW3Xenon328.h"
+#include "XModel/LoaderXModelIW3Xenon328.h"
 
 using namespace IW3Xenon328;
 
@@ -59,6 +60,7 @@ namespace
         collection.AddAssetCreator(localize::CreateLoaderIW3Xenon328(memory, searchPath, zone));
         collection.AddAssetCreator(map_ents::CreateLoaderIW3Xenon328(memory, searchPath));
         collection.AddAssetCreator(raw_file::CreateLoaderIW3Xenon328(memory, searchPath));
+        collection.AddAssetCreator(xmodel::CreateLoaderIW3Xenon328(memory, searchPath, zone));
         collection.AddAssetCreator(sound_curve::CreateLoaderIW3Xenon328(memory, searchPath));
         collection.AddAssetCreator(string_table::CreateLoaderIW3Xenon328(memory, searchPath));
         collection.AddAssetCreator(xanim::CreateLoaderIW3Xenon328(memory, searchPath, zone));

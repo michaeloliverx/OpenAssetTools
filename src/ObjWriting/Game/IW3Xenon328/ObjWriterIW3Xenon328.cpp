@@ -7,11 +7,13 @@
 #include "Sound/SndCurveDumperIW3Xenon328.h"
 #include "StringTable/StringTableDumperIW3Xenon328.h"
 #include "XAnim/XAnimDumperIW3Xenon328.h"
+#include "XModel/XModelDumperIW3Xenon328.h"
 
 using namespace IW3Xenon328;
 
 void ObjWriter::RegisterAssetDumpers(AssetDumpingContext& context)
 {
+    RegisterAssetDumper(std::make_unique<xmodel::DumperIW3Xenon328>());
     RegisterAssetDumper(std::make_unique<image::DumperIW3Xenon328>());
     RegisterAssetDumper(std::make_unique<localize::DumperIW3Xenon328>());
     RegisterAssetDumper(std::make_unique<map_ents::DumperIW3Xenon328>());
