@@ -2,12 +2,14 @@
 
 #include "Utils/FileToZlibWrapper.h"
 #include "Utils/Logging/Log.h"
+#include "Utils/StringUtils.h"
 
 #include <algorithm>
 #include <cassert>
 #include <filesystem>
 #include <format>
 #include <fstream>
+#include <functional>
 #include <map>
 #include <memory>
 #include <unzip.h>
@@ -189,6 +191,14 @@ namespace
         }
     };
 
+    struct IwdEntryNameLess
+    {
+        bool operator()(const std::string& lhs, const std::string& rhs) const
+        {
+            return std::ranges::lexicographical_compare(lhs, rhs, std::less{}, utils::CharToLowerAscii, utils::CharToLowerAscii);
+        }
+    };
+
     class Iwd final : public ISearchPath, public IwdFile::IParent
     {
     public:
@@ -237,6 +247,7 @@ namespace
                 unzGetCurrentFileInfo64(m_unz_file, &info, fileNameBuffer, sizeof(fileNameBuffer), nullptr, 0, nullptr, 0);
 
                 std::string fileName(fileNameBuffer);
+                std::ranges::replace(fileName, '\\', '/');
                 fs::path path(fileName);
 
                 if (path.has_filename())
@@ -328,7 +339,7 @@ namespace
         unzFile m_unz_file;
         bool m_has_open_file;
 
-        std::map<std::string, IwdEntry> m_entry_map;
+        std::map<std::string, IwdEntry, IwdEntryNameLess> m_entry_map;
     };
 } // namespace
 

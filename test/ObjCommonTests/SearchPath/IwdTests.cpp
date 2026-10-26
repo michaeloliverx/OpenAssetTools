@@ -4,10 +4,14 @@
 
 #include <array>
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/generators/catch_generators.hpp>
 #include <cstdint>
 #include <filesystem>
 #include <fstream>
+#include <iterator>
+#include <string>
 #include <string_view>
+#include <vector>
 #include <zip.h>
 
 namespace fs = std::filesystem;
@@ -53,5 +57,57 @@ namespace
         REQUIRE(stream.gcount() == static_cast<std::streamsize>(buffer.size()));
         REQUIRE(std::string_view{buffer.data(), buffer.size()} == CONTENTS);
         REQUIRE(stream.get() == std::char_traits<char>::eof());
+    }
+
+    TEST_CASE("Iwd: Opens entries regardless of path case or separators", "[searchpath][iwd]")
+    {
+        const auto* entryName =
+            GENERATE("sound/sfx/levels/test.wav", "sound/SFX/Levels/test.wav", "sound\\sfx\\levels\\test.wav", "sound\\SFX\\Levels\\test.wav");
+        const auto* requestedName =
+            GENERATE("sound/sfx/levels/test.wav", "SOUND/SFX/LEVELS/TEST.WAV", "sound\\sfx\\levels\\test.wav", "SOUND\\SFX\\LEVELS\\TEST.WAV");
+        constexpr auto CONTENTS = "IWD path test";
+        CAPTURE(entryName, requestedName);
+
+        const auto tempDirectory = oat::paths::GetTempDirectory("iwd-paths");
+        fs::create_directories(tempDirectory);
+        const auto iwdPath = tempDirectory / "test.iwd";
+        {
+            std::ofstream stream(iwdPath, std::ios::out | std::ios::binary);
+            WriteIwd(stream, entryName, CONTENTS);
+        }
+
+        const auto searchPath = iwd::LoadFromFile(iwdPath.string());
+        REQUIRE(searchPath);
+        const auto file = searchPath->Open(requestedName);
+        REQUIRE(file.IsOpen());
+        const std::string contents{std::istreambuf_iterator<char>(*file.m_stream), std::istreambuf_iterator<char>()};
+        REQUIRE(contents == CONTENTS);
+    }
+
+    TEST_CASE("Iwd: Find preserves entry case and returns an openable path", "[searchpath][iwd]")
+    {
+        const auto* entryName = GENERATE("sound/SFX/Levels/test.wav", "sound\\SFX\\Levels\\test.wav");
+        constexpr auto CONTENTS = "IWD find test";
+        const auto tempDirectory = oat::paths::GetTempDirectory("iwd-find");
+        fs::create_directories(tempDirectory);
+        const auto iwdPath = tempDirectory / "test.iwd";
+        {
+            std::ofstream stream(iwdPath, std::ios::out | std::ios::binary);
+            WriteIwd(stream, entryName, CONTENTS);
+        }
+
+        const auto searchPath = iwd::LoadFromFile(iwdPath.string());
+        REQUIRE(searchPath);
+        std::vector<std::string> found;
+        searchPath->Find(SearchPathSearchOptions().IncludeSubdirectories(true),
+                         [&found](const std::string& name)
+                         {
+                             found.emplace_back(name);
+                         });
+        REQUIRE(found == std::vector<std::string>{"sound/SFX/Levels/test.wav"});
+        const auto file = searchPath->Open(found.front());
+        REQUIRE(file.IsOpen());
+        const std::string contents{std::istreambuf_iterator<char>(*file.m_stream), std::istreambuf_iterator<char>()};
+        REQUIRE(contents == CONTENTS);
     }
 } // namespace
