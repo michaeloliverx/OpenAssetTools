@@ -17,6 +17,7 @@ set count leafbrushNodes leafbrushNodesCount;
 set count leafbrushes numLeafBrushes;
 set count leafsurfaces numLeafSurfaces;
 set count verts vertCount;
+set reusable brushVerts;
 set count brushVerts numBrushVerts;
 set count uinds nuinds;
 set count triIndices 3 * triCount;
