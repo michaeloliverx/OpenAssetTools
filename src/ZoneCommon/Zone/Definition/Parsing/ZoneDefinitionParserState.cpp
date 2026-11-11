@@ -31,8 +31,8 @@ namespace
 bool ZoneDefinitionParserState::SetGame(const GameId gameId)
 {
     m_definition->m_game = gameId;
-    if ((gameId == GameId::IW3Xenon253 || gameId == GameId::IW3Xenon270 || gameId == GameId::IW3Xenon290 || gameId == GameId::IW3Xenon328
-         || gameId == GameId::IW4Xenon482 || gameId == GameId::NX1)
+    if ((gameId == GameId::IW3Xenon253 || gameId == GameId::IW3Xenon269 || gameId == GameId::T4Xenon204 || gameId == GameId::IW3Xenon270 || gameId == GameId::IW3Xenon290
+         || gameId == GameId::IW3Xenon328 || gameId == GameId::IW4Xenon482 || gameId == GameId::T4Xenon302 || gameId == GameId::NX1)
         && !m_explicit_platform)
         m_definition->m_platform = GamePlatform::XBOX;
     return UpdateResolvedGame(*m_definition, m_game);

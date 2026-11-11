@@ -1,0 +1,101 @@
+// XModel
+use XModel;
+set block XFILE_BLOCK_TEMP;
+set string name;
+set scriptstring boneNames;
+set reusable boneNames;
+set count boneNames numBones;
+set reusable parentList;
+set count parentList numBones - numRootBones;
+set reusable quats;
+set count quats (numBones - numRootBones) * 4;
+set reusable trans;
+set count trans (numBones - numRootBones) * 4;
+set reusable partClassification;
+set count partClassification numBones;
+set reusable baseMat;
+set count baseMat numBones;
+set count collSurfs numCollSurfs;
+set count boneInfo numBones;
+set reusable materials;
+
+use XModelLodInfo;
+set string unknownName;
+set reusable materialNames;
+set scriptstring materialNames;
+set count materialNames numsurfs;
+set reusable surfs;
+set count surfs numsurfs;
+
+use XModelSurfs;
+set reusable surfs;
+set count surfs XModelLodInfo::numsurfs;
+
+// XModelStreamInfo
+use XModelStreamInfo;
+set count highMipBounds XModel::lodInfo[0]::numsurfs;
+
+// PhysGeomList
+use PhysGeomList;
+set count geoms count;
+
+// PhysGeomInfo
+use PhysGeomInfo;
+set reusable brush;
+
+// BrushWrapper
+use BrushWrapper;
+set count sides numsides;
+set count baseAdjacentSide totalEdgeCount;
+set reusable planes;
+set count planes numsides;
+
+// cbrushside_t
+set reusable cbrushside_t::plane;
+
+// XSurface
+use XSurface;
+set reusable verts;
+set count verts vertCount;
+set count vertList vertListCount;
+set reusable triIndices;
+set count triIndices triCount * 3;
+
+set allocalign XSurface::verts 16;
+set allocalign XSurface::triIndices 2;
+
+// XSurfaceVertexInfo
+use XSurfaceVertexInfo;
+set reusable vertsBlend;
+set count vertsBlend vertCount[0]
+						+ 3 * vertCount[1]
+						+ 5 * vertCount[2]
+						+ 7 * vertCount[3];
+
+use XModelLodMaterials;
+set condition count1 XModel::numLods == 1;
+set arraysize count1 1;
+set condition count2 XModel::numLods == 2;
+set arraysize count2 1;
+set condition count3 XModel::numLods == 3;
+set arraysize count3 1;
+set condition count4 XModel::numLods == 4;
+set arraysize count4 1;
+
+use XModelLodMaterials1;
+set count lod0 XModel::lodInfo[0]::numsurfs;
+
+use XModelLodMaterials2;
+set count lod0 XModel::lodInfo[0]::numsurfs;
+set count lod1 XModel::lodInfo[1]::numsurfs;
+
+use XModelLodMaterials3;
+set count lod0 XModel::lodInfo[0]::numsurfs;
+set count lod1 XModel::lodInfo[1]::numsurfs;
+set count lod2 XModel::lodInfo[2]::numsurfs;
+
+use XModelLodMaterials4;
+set count lod0 XModel::lodInfo[0]::numsurfs;
+set count lod1 XModel::lodInfo[1]::numsurfs;
+set count lod2 XModel::lodInfo[2]::numsurfs;
+set count lod3 XModel::lodInfo[3]::numsurfs;

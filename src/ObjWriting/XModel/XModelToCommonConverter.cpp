@@ -29,6 +29,8 @@ namespace xmodel
             new ToCommonConverterIW3(),
             new ToCommonConverterIW3Xenon(),
             new ToCommonConverterIW3Xenon253(),
+            nullptr, // IW3Xenon269
+            nullptr, // T4Xenon204
             new ToCommonConverterIW3Xenon270(),
             new ToCommonConverterIW3Xenon290(),
             new ToCommonConverterIW3Xenon328(),
@@ -40,6 +42,7 @@ namespace xmodel
             new ToCommonConverterQOSXenon(),
             new ToCommonConverterT4(),
             new ToCommonConverterT4Xenon(),
+            nullptr, // T4Xenon302
             new ToCommonConverterT5(),
             new ToCommonConverterT5Xenon(),
             new ToCommonConverterT6(),

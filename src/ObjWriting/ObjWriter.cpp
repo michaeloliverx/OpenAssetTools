@@ -3,6 +3,8 @@
 #include "Game/IW3/ObjWriterIW3.h"
 #include "Game/IW3Xenon/ObjWriterIW3Xenon.h"
 #include "Game/IW3Xenon253/ObjWriterIW3Xenon253.h"
+#include "Game/IW3Xenon269/ObjWriterIW3Xenon269.h"
+#include "Game/T4Xenon204/ObjWriterT4Xenon204.h"
 #include "Game/IW3Xenon270/ObjWriterIW3Xenon270.h"
 #include "Game/IW3Xenon290/ObjWriterIW3Xenon290.h"
 #include "Game/IW3Xenon328/ObjWriterIW3Xenon328.h"
@@ -15,6 +17,7 @@
 #include "Game/QOSXenon/ObjWriterQOSXenon.h"
 #include "Game/T4/ObjWriterT4.h"
 #include "Game/T4Xenon/ObjWriterT4Xenon.h"
+#include "Game/T4Xenon302/ObjWriterT4Xenon302.h"
 #include "Game/T5/ObjWriterT5.h"
 #include "Game/T5Xenon/ObjWriterT5Xenon.h"
 #include "Game/T6/ObjWriterT6.h"
@@ -57,6 +60,8 @@ IObjWriter* IObjWriter::GetObjWriterForGame(GameId game)
         new IW3::ObjWriter(),
         new IW3Xenon::ObjWriter(),
         new IW3Xenon253::ObjWriter(),
+        new IW3Xenon269::ObjWriter(),
+        new T4Xenon204::ObjWriter(),
         new IW3Xenon270::ObjWriter(),
         new IW3Xenon290::ObjWriter(),
         new IW3Xenon328::ObjWriter(),
@@ -68,6 +73,7 @@ IObjWriter* IObjWriter::GetObjWriterForGame(GameId game)
         new QOSXenon::ObjWriter(),
         new T4::ObjWriter(),
         new T4Xenon::ObjWriter(),
+        new T4Xenon302::ObjWriter(),
         new T5::ObjWriter(),
         new T5Xenon::ObjWriter(),
         new T6::ObjWriter(),

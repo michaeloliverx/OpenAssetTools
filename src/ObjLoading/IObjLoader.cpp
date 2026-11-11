@@ -3,6 +3,8 @@
 #include "Game/IW3/ObjLoaderIW3.h"
 #include "Game/IW3Xenon/ObjLoaderIW3Xenon.h"
 #include "Game/IW3Xenon253/ObjLoaderIW3Xenon253.h"
+#include "Game/IW3Xenon269/ObjLoaderIW3Xenon269.h"
+#include "Game/T4Xenon204/ObjLoaderT4Xenon204.h"
 #include "Game/IW3Xenon270/ObjLoaderIW3Xenon270.h"
 #include "Game/IW3Xenon290/ObjLoaderIW3Xenon290.h"
 #include "Game/IW3Xenon328/ObjLoaderIW3Xenon328.h"
@@ -15,6 +17,7 @@
 #include "Game/QOSXenon/ObjLoaderQOSXenon.h"
 #include "Game/T4/ObjLoaderT4.h"
 #include "Game/T4Xenon/ObjLoaderT4Xenon.h"
+#include "Game/T4Xenon302/ObjLoaderT4Xenon302.h"
 #include "Game/T5/ObjLoaderT5.h"
 #include "Game/T5Xenon/ObjLoaderT5Xenon.h"
 #include "Game/T6/ObjLoaderT6.h"
@@ -27,6 +30,8 @@ const IObjLoader* IObjLoader::GetObjLoaderForGame(GameId game)
         new IW3::ObjLoader(),
         new IW3Xenon::ObjLoader(),
         new IW3Xenon253::ObjLoader(),
+        new IW3Xenon269::ObjLoader(),
+        new T4Xenon204::ObjLoader(),
         new IW3Xenon270::ObjLoader(),
         new IW3Xenon290::ObjLoader(),
         new IW3Xenon328::ObjLoader(),
@@ -38,6 +43,7 @@ const IObjLoader* IObjLoader::GetObjLoaderForGame(GameId game)
         new QOSXenon::ObjLoader(),
         new T4::ObjLoader(),
         new T4Xenon::ObjLoader(),
+        new T4Xenon302::ObjLoader(),
         new T5::ObjLoader(),
         new T5Xenon::ObjLoader(),
         new T6::ObjLoader(),

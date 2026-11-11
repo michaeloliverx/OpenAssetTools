@@ -3,6 +3,8 @@
 #include "IW3/CommonAssetIW3.h"
 #include "IW3Xenon/CommonAssetIW3Xenon.h"
 #include "IW3Xenon253/CommonAssetIW3Xenon253.h"
+#include "IW3Xenon269/CommonAssetIW3Xenon269.h"
+#include "T4Xenon204/CommonAssetT4Xenon204.h"
 #include "IW3Xenon270/CommonAssetIW3Xenon270.h"
 #include "IW3Xenon290/CommonAssetIW3Xenon290.h"
 #include "IW3Xenon328/CommonAssetIW3Xenon328.h"
@@ -15,6 +17,7 @@
 #include "QOSXenon/CommonAssetQOSXenon.h"
 #include "T4/CommonAssetT4.h"
 #include "T4Xenon/CommonAssetT4Xenon.h"
+#include "T4Xenon302/CommonAssetT4Xenon302.h"
 #include "T5/CommonAssetT5.h"
 #include "T5Xenon/CommonAssetT5Xenon.h"
 #include "T6/CommonAssetT6.h"
@@ -27,6 +30,8 @@ ICommonAssetTypeMapper* ICommonAssetTypeMapper::GetCommonAssetMapperByGame(GameI
         new IW3::CommonAssetTypeMapper(),
         new IW3Xenon::CommonAssetTypeMapper(),
         new IW3Xenon253::CommonAssetTypeMapper(),
+        new IW3Xenon269::CommonAssetTypeMapper(),
+        new T4Xenon204::CommonAssetTypeMapper(),
         new IW3Xenon270::CommonAssetTypeMapper(),
         new IW3Xenon290::CommonAssetTypeMapper(),
         new IW3Xenon328::CommonAssetTypeMapper(),
@@ -38,6 +43,7 @@ ICommonAssetTypeMapper* ICommonAssetTypeMapper::GetCommonAssetMapperByGame(GameI
         new QOSXenon::CommonAssetTypeMapper(),
         new T4::CommonAssetTypeMapper(),
         new T4Xenon::CommonAssetTypeMapper(),
+        new T4Xenon302::CommonAssetTypeMapper(),
         new T5::CommonAssetTypeMapper(),
         new T5Xenon::CommonAssetTypeMapper(),
         new T6::CommonAssetTypeMapper(),

@@ -5,6 +5,8 @@
 #include "Game/IW3/Zone/Definition/ZoneDefWriterIW3.h"
 #include "Game/IW3Xenon/Zone/Definition/ZoneDefWriterIW3Xenon.h"
 #include "Game/IW3Xenon253/Zone/Definition/ZoneDefWriterIW3Xenon253.h"
+#include "Game/IW3Xenon269/Zone/Definition/ZoneDefWriterIW3Xenon269.h"
+#include "Game/T4Xenon204/Zone/Definition/ZoneDefWriterT4Xenon204.h"
 #include "Game/IW3Xenon270/Zone/Definition/ZoneDefWriterIW3Xenon270.h"
 #include "Game/IW3Xenon290/Zone/Definition/ZoneDefWriterIW3Xenon290.h"
 #include "Game/IW3Xenon328/Zone/Definition/ZoneDefWriterIW3Xenon328.h"
@@ -17,6 +19,7 @@
 #include "Game/QOSXenon/Zone/Definition/ZoneDefWriterQOSXenon.h"
 #include "Game/T4/Zone/Definition/ZoneDefWriterT4.h"
 #include "Game/T4Xenon/Zone/Definition/ZoneDefWriterT4Xenon.h"
+#include "Game/T4Xenon302/Zone/Definition/ZoneDefWriterT4Xenon302.h"
 #include "Game/T5/Zone/Definition/ZoneDefWriterT5.h"
 #include "Game/T5Xenon/Zone/Definition/ZoneDefWriterT5Xenon.h"
 #include "Game/T6/Zone/Definition/ZoneDefWriterT6.h"
@@ -63,6 +66,8 @@ const IZoneDefWriter* IZoneDefWriter::GetZoneDefWriterForGame(GameId game)
         new IW3::ZoneDefWriter(),
         new IW3Xenon::ZoneDefWriter(),
         new IW3Xenon253::ZoneDefWriter(),
+        new IW3Xenon269::ZoneDefWriter(),
+        new T4Xenon204::ZoneDefWriter(),
         new IW3Xenon270::ZoneDefWriter(),
         new IW3Xenon290::ZoneDefWriter(),
         new IW3Xenon328::ZoneDefWriter(),
@@ -74,6 +79,7 @@ const IZoneDefWriter* IZoneDefWriter::GetZoneDefWriterForGame(GameId game)
         new QOSXenon::ZoneDefWriter(),
         new T4::ZoneDefWriter(),
         new T4Xenon::ZoneDefWriter(),
+        new T4Xenon302::ZoneDefWriter(),
         new T5::ZoneDefWriter(),
         new T5Xenon::ZoneDefWriter(),
         new T6::ZoneDefWriter(),

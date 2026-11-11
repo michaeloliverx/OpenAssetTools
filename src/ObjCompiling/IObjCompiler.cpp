@@ -3,6 +3,8 @@
 #include "Game/IW3/ObjCompilerIW3.h"
 #include "Game/IW3Xenon/ObjCompilerIW3Xenon.h"
 #include "Game/IW3Xenon253/ObjCompilerIW3Xenon253.h"
+#include "Game/IW3Xenon269/ObjCompilerIW3Xenon269.h"
+#include "Game/T4Xenon204/ObjCompilerT4Xenon204.h"
 #include "Game/IW3Xenon270/ObjCompilerIW3Xenon270.h"
 #include "Game/IW3Xenon290/ObjCompilerIW3Xenon290.h"
 #include "Game/IW3Xenon328/ObjCompilerIW3Xenon328.h"
@@ -15,6 +17,7 @@
 #include "Game/QOSXenon/ObjCompilerQOSXenon.h"
 #include "Game/T4/ObjCompilerT4.h"
 #include "Game/T4Xenon/ObjCompilerT4Xenon.h"
+#include "Game/T4Xenon302/ObjCompilerT4Xenon302.h"
 #include "Game/T5/ObjCompilerT5.h"
 #include "Game/T5Xenon/ObjCompilerT5Xenon.h"
 #include "Game/T6/ObjCompilerT6.h"
@@ -27,6 +30,8 @@ const IObjCompiler* IObjCompiler::GetObjCompilerForGame(GameId game)
         new IW3::ObjCompiler(),
         new IW3Xenon::ObjCompiler(),
         new IW3Xenon253::ObjCompiler(),
+        new IW3Xenon269::ObjCompiler(),
+        new T4Xenon204::ObjCompiler(),
         new IW3Xenon270::ObjCompiler(),
         new IW3Xenon290::ObjCompiler(),
         new IW3Xenon328::ObjCompiler(),
@@ -38,6 +43,7 @@ const IObjCompiler* IObjCompiler::GetObjCompilerForGame(GameId game)
         new QOSXenon::ObjCompiler(),
         new T4::ObjCompiler(),
         new T4Xenon::ObjCompiler(),
+        new T4Xenon302::ObjCompiler(),
         new T5::ObjCompiler(),
         new T5Xenon::ObjCompiler(),
         new T6::ObjCompiler(),

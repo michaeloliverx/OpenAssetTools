@@ -1,0 +1,88 @@
+// GfxWorld
+use GfxWorld;
+set block XFILE_BLOCK_TEMP;
+set string name;
+set string baseName;
+set count nodes nodeCount;
+set count indices indexCount;
+set count surfaces surfaceCount;
+set count skyStartSurfs skySurfCount;
+set reusable sunLight;
+set count cullGroups cullGroupCount;
+set count smodelDrawInsts smodelCount;
+set count reflectionProbes reflectionProbeCount;
+set count cells cellCount;
+set count lightmaps lightmapCount;
+set count models modelCount;
+set count materialMemory materialMemoryCount;
+reorder:
+    ...
+    materialMemory
+    vd
+    vld;
+set block smodelVisData XFILE_BLOCK_RUNTIME;
+set count smodelVisData smodelCount;
+set block surfaceVisData XFILE_BLOCK_RUNTIME;
+set count surfaceVisData models::surfaceCount;
+// GfxAabbTree
+use GfxAabbTree;
+set reusable smodelIndexes;
+set count smodelIndexes smodelIndexCount;
+set count children childCount;
+
+// GfxPortal
+use GfxPortal;
+set condition writable never;
+set reusable cell;
+set count vertices vertexCount;
+
+// GfxCell
+use GfxCell;
+set count portals portalCount;
+set count cullGroups cullGroupCount;
+
+// GfxLightGrid
+use GfxLightGrid;
+set allocalign entries 4;
+set count entries entryCount;
+set allocalign colors 4;
+set count colors colorCount;
+
+// GfxWorldStreamInfo
+use GfxWorldStreamInfo;
+set count aabbTrees aabbTreeCount;
+set count leafRefs leafRefCount;
+
+// GfxWorldVertexData
+use GfxWorldVertexData;
+set count vertices GfxWorld::vertexCount;
+set condition worldVb never;
+
+// GfxWorldVertexLayerData
+use GfxWorldVertexLayerData;
+set count data GfxWorld::vertexLayerDataSize;
+set condition layerVb never;
+
+// GfxShadowGeometry
+use GfxShadowGeometry;
+set count sortedSurfIndex surfaceCount;
+set count smodelIndex smodelCount;
+
+
+use GfxBspNode;
+set reusable parent;
+set condition data::branch unknownNodeType == -1;
+use GfxBspNodeBranch;
+set reusable plane;
+set reusable children;
+
+use srfTriangles_t;
+set reusable indices;
+set count indices indexCount;
+
+use GfxWorld;
+set allocalign sortedSurfIndex 2;
+set count sortedSurfIndex models::surfaceCount;
+reorder:
+    ...
+    sortedSurfIndex;

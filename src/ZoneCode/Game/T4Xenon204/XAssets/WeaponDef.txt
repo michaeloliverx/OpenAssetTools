@@ -1,0 +1,45 @@
+// Inferred pointer order and graph counts from descent.ff.
+use WeaponDef;
+set string unknownString_0x1dc;
+set string unknownString_0x1e4;
+set string unknownString_0x1f8;
+set string unknownString_0x398;
+set string unknownString_0x5dc;
+set string unknownString_0x5e0;
+set string unknownString_0x5f4;
+set string unknownString_0x66c;
+set string unknownString_0x670;
+
+set block XFILE_BLOCK_TEMP;
+set string szInternalName;
+set string szDisplayName;
+set string szOverlayName;
+set string szXAnims;
+set string szModeName;
+set string aiVsAiAccuracyGraphName;
+set string aiVsPlayerAccuracyGraphName;
+set assetref szXAnims AssetXAnim;
+set reusable bounceSound;
+set count bounceSound 29;
+set reusable aiVsAiAccuracyGraphKnots;
+set count aiVsAiAccuracyGraphKnots aiVsAiAccuracyGraphKnotCount;
+set reusable aiVsPlayerAccuracyGraphKnots;
+set count aiVsPlayerAccuracyGraphKnots aiVsPlayerAccuracyGraphKnotCount;
+set reusable originalAiVsAiAccuracyGraphKnots;
+set count originalAiVsAiAccuracyGraphKnots originalAiVsAiAccuracyGraphKnotCount;
+set reusable originalAiVsPlayerAccuracyGraphKnots;
+set count originalAiVsPlayerAccuracyGraphKnots originalAiVsPlayerAccuracyGraphKnotCount;
+reorder:
+    ...
+    aiVsAiAccuracyGraphName
+    aiVsAiAccuracyGraphKnots
+    originalAiVsAiAccuracyGraphKnots
+    aiVsPlayerAccuracyGraphName
+    aiVsPlayerAccuracyGraphKnots
+    originalAiVsPlayerAccuracyGraphKnots;
+
+use SndAliasCustom;
+set count name 1;
+set reusable name;
+set condition sound never;
+set string snd_alias_list_name::soundName;

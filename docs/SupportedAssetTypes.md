@@ -99,6 +99,26 @@ are supported to be dumped to disk (using `Unlinker`) and loaded from disk (usin
 | FxImpactTable        | ❌               | ❌               |       |
 | RawFile              | ✅               | ✅               |       |
 
+## T4 Xbox 360 fastfile version 204 (experimental Descent)
+
+`T4Xenon204` parses every root and inline dependency in the supplied version-204
+`descent.ff`. Its render-world dumper reconstructs CoD4 PC IBSP v22 with collision,
+lightmaps, entities and recovery sidecars. The optional helper supplies Radiant's
+simple geometry lumps. The legacy packed light grid is converted to PC rows and
+directional colors; model-volume lighting remains preserved in sidecars.
+Individual asset disk formats and fastfile writing are not
+supported; families absent from this single file are not validated. See the
+[format, export and validation notes](T4Xenon204.md).
+
+## IW3 Xbox 360 fastfile version 269 (experimental Embassy)
+
+All 5,219 top-level asset records in the supplied `embassy.ff` parse, including
+inline dependencies, with exact payload consumption. Its `GfxWorld` dumper exports
+[CoD4 PC d3dbsp files](IW3Xenon269D3DBsp.md), with collision, lightmaps and model
+placement. The older packed light grid is retained separately. Other object
+dumpers and disk asset loaders remain unsupported. See [the format and validation notes](IW3Xenon269.md)
+for recovered layouts, tested families and limits of the single-file corpus.
+
 ## IW3 Xbox 360 build 270 (Call of Duty 4: Modern Warfare pre-alpha)
 
 | Asset Type           | Dumping Support | Loading Support | Notes |

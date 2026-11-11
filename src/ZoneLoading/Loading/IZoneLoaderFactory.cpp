@@ -3,6 +3,8 @@
 #include "Game/IW3/ZoneLoaderFactoryIW3.h"
 #include "Game/IW3Xenon/ZoneLoaderFactoryIW3Xenon.h"
 #include "Game/IW3Xenon253/ZoneLoaderFactoryIW3Xenon253.h"
+#include "Game/IW3Xenon269/ZoneLoaderFactoryIW3Xenon269.h"
+#include "Game/T4Xenon204/ZoneLoaderFactoryT4Xenon204.h"
 #include "Game/IW3Xenon270/ZoneLoaderFactoryIW3Xenon270.h"
 #include "Game/IW3Xenon290/ZoneLoaderFactoryIW3Xenon290.h"
 #include "Game/IW3Xenon328/ZoneLoaderFactoryIW3Xenon328.h"
@@ -15,6 +17,7 @@
 #include "Game/QOSXenon/ZoneLoaderFactoryQOSXenon.h"
 #include "Game/T4/ZoneLoaderFactoryT4.h"
 #include "Game/T4Xenon/ZoneLoaderFactoryT4Xenon.h"
+#include "Game/T4Xenon302/ZoneLoaderFactoryT4Xenon302.h"
 #include "Game/T5/ZoneLoaderFactoryT5.h"
 #include "Game/T5Xenon/ZoneLoaderFactoryT5Xenon.h"
 #include "Game/T6/ZoneLoaderFactoryT6.h"
@@ -27,6 +30,8 @@ const IZoneLoaderFactory* IZoneLoaderFactory::GetZoneLoaderFactoryForGame(GameId
         new IW3::ZoneLoaderFactory(),
         new IW3Xenon::ZoneLoaderFactory(),
         new IW3Xenon253::ZoneLoaderFactory(),
+        new IW3Xenon269::ZoneLoaderFactory(),
+        new T4Xenon204::ZoneLoaderFactory(),
         new IW3Xenon270::ZoneLoaderFactory(),
         new IW3Xenon290::ZoneLoaderFactory(),
         new IW3Xenon328::ZoneLoaderFactory(),
@@ -38,6 +43,7 @@ const IZoneLoaderFactory* IZoneLoaderFactory::GetZoneLoaderFactoryForGame(GameId
         new QOSXenon::ZoneLoaderFactory(),
         new T4::ZoneLoaderFactory(),
         new T4Xenon::ZoneLoaderFactory(),
+        new T4Xenon302::ZoneLoaderFactory(),
         new T5::ZoneLoaderFactory(),
         new T5Xenon::ZoneLoaderFactory(),
         new T6::ZoneLoaderFactory(),

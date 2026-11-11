@@ -3,6 +3,8 @@
 #include "IW3/AutoSearchPathsIW3.h"
 #include "IW3Xenon/AutoSearchPathsIW3Xenon.h"
 #include "IW3Xenon253/AutoSearchPathsIW3Xenon253.h"
+#include "IW3Xenon269/AutoSearchPathsIW3Xenon269.h"
+#include "T4Xenon204/AutoSearchPathsT4Xenon204.h"
 #include "IW3Xenon270/AutoSearchPathsIW3Xenon270.h"
 #include "IW3Xenon290/AutoSearchPathsIW3Xenon290.h"
 #include "IW3Xenon328/AutoSearchPathsIW3Xenon328.h"
@@ -88,6 +90,8 @@ AutoSearchPaths* AutoSearchPaths::GetForGame(GameId gameId)
         new AutoSearchPathsIW3(),
         new AutoSearchPathsIW3Xenon(),
         new AutoSearchPathsIW3Xenon253(),
+        new AutoSearchPathsIW3Xenon269(),
+        new AutoSearchPathsT4Xenon204(),
         new AutoSearchPathsIW3Xenon270(),
         new AutoSearchPathsIW3Xenon290(),
         new AutoSearchPathsIW3Xenon328(),
@@ -98,6 +102,7 @@ AutoSearchPaths* AutoSearchPaths::GetForGame(GameId gameId)
         new AutoSearchPathsQOS(),
         new AutoSearchPathsQOSXenon(),
         new AutoSearchPathsT4(),
+        new AutoSearchPathsT4Xenon(),
         new AutoSearchPathsT4Xenon(),
         new AutoSearchPathsT5(),
         new AutoSearchPathsT5Xenon(),

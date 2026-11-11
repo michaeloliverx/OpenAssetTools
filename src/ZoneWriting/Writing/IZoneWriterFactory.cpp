@@ -3,6 +3,8 @@
 #include "Game/IW3/ZoneWriterFactoryIW3.h"
 #include "Game/IW3Xenon/ZoneWriterFactoryIW3Xenon.h"
 #include "Game/IW3Xenon253/ZoneWriterFactoryIW3Xenon253.h"
+#include "Game/IW3Xenon269/ZoneWriterFactoryIW3Xenon269.h"
+#include "Game/T4Xenon204/ZoneWriterFactoryT4Xenon204.h"
 #include "Game/IW3Xenon270/ZoneWriterFactoryIW3Xenon270.h"
 #include "Game/IW3Xenon290/ZoneWriterFactoryIW3Xenon290.h"
 #include "Game/IW3Xenon328/ZoneWriterFactoryIW3Xenon328.h"
@@ -15,6 +17,7 @@
 #include "Game/QOSXenon/ZoneWriterFactoryQOSXenon.h"
 #include "Game/T4/ZoneWriterFactoryT4.h"
 #include "Game/T4Xenon/ZoneWriterFactoryT4Xenon.h"
+#include "Game/T4Xenon302/ZoneWriterFactoryT4Xenon302.h"
 #include "Game/T5/ZoneWriterFactoryT5.h"
 #include "Game/T5Xenon/ZoneWriterFactoryT5Xenon.h"
 #include "Game/T6/ZoneWriterFactoryT6.h"
@@ -27,6 +30,8 @@ const IZoneWriterFactory* IZoneWriterFactory::GetZoneWriterFactoryForGame(GameId
         new IW3::ZoneWriterFactory(),
         new IW3Xenon::ZoneWriterFactory(),
         new IW3Xenon253::ZoneWriterFactory(),
+        new IW3Xenon269::ZoneWriterFactory(),
+        new T4Xenon204::ZoneWriterFactory(),
         new IW3Xenon270::ZoneWriterFactory(),
         new IW3Xenon290::ZoneWriterFactory(),
         new IW3Xenon328::ZoneWriterFactory(),
@@ -38,6 +43,7 @@ const IZoneWriterFactory* IZoneWriterFactory::GetZoneWriterFactoryForGame(GameId
         new QOSXenon::ZoneWriterFactory(),
         new T4::ZoneWriterFactory(),
         new T4Xenon::ZoneWriterFactory(),
+        new T4Xenon302::ZoneWriterFactory(),
         new T5::ZoneWriterFactory(),
         new T5Xenon::ZoneWriterFactory(),
         new T6::ZoneWriterFactory(),

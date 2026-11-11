@@ -3,6 +3,8 @@
 #include "IW3/GameIW3.h"
 #include "IW3Xenon/GameIW3Xenon.h"
 #include "IW3Xenon253/GameIW3Xenon253.h"
+#include "IW3Xenon269/GameIW3Xenon269.h"
+#include "T4Xenon204/GameT4Xenon204.h"
 #include "IW3Xenon270/GameIW3Xenon270.h"
 #include "IW3Xenon290/GameIW3Xenon290.h"
 #include "IW3Xenon328/GameIW3Xenon328.h"
@@ -15,6 +17,7 @@
 #include "QOSXenon/GameQOSXenon.h"
 #include "T4/GameT4.h"
 #include "T4Xenon/GameT4Xenon.h"
+#include "T4Xenon302/GameT4Xenon302.h"
 #include "T5/GameT5.h"
 #include "T5Xenon/GameT5Xenon.h"
 #include "T6/GameT6.h"
@@ -28,6 +31,8 @@ IGame* IGame::GetGameById(GameId gameId)
         new IW3::Game(),
         new IW3Xenon::Game(),
         new IW3Xenon253::Game(),
+        new IW3Xenon269::Game(),
+        new T4Xenon204::Game(),
         new IW3Xenon270::Game(),
         new IW3Xenon290::Game(),
         new IW3Xenon328::Game(),
@@ -39,6 +44,7 @@ IGame* IGame::GetGameById(GameId gameId)
         new QOSXenon::Game(),
         new T4::Game(),
         new T4Xenon::Game(),
+        new T4Xenon302::Game(),
         new T5::Game(),
         new T5Xenon::Game(),
         new T6::Game(),

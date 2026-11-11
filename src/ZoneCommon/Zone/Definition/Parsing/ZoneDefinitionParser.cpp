@@ -16,6 +16,8 @@ namespace
         {
         case GameId::IW3Xenon:
         case GameId::IW3Xenon253:
+        case GameId::IW3Xenon269:
+        case GameId::T4Xenon204:
         case GameId::IW3Xenon270:
         case GameId::IW3Xenon290:
         case GameId::IW3Xenon328:
@@ -23,6 +25,7 @@ namespace
         case GameId::IW4Xenon482:
         case GameId::QOSXenon:
         case GameId::T4Xenon:
+        case GameId::T4Xenon302:
         case GameId::T5Xenon:
         case GameId::NX1:
             return GamePlatform::XBOX;

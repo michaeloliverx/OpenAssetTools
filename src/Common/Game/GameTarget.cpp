@@ -9,8 +9,8 @@ namespace game_target
         if (game == GameId::COUNT || GetPublicGameId(game) != game)
             return std::nullopt;
 
-        if (game == GameId::IW3Xenon253 || game == GameId::IW3Xenon270 || game == GameId::IW3Xenon290 || game == GameId::IW3Xenon328
-            || game == GameId::IW4Xenon482 || game == GameId::NX1)
+        if (game == GameId::IW3Xenon253 || game == GameId::IW3Xenon269 || game == GameId::T4Xenon204 || game == GameId::IW3Xenon270 || game == GameId::IW3Xenon290
+            || game == GameId::IW3Xenon328 || game == GameId::IW4Xenon482 || game == GameId::T4Xenon302 || game == GameId::NX1)
             return platform == GamePlatform::XBOX ? std::make_optional(game) : std::nullopt;
 
         if (platform == GamePlatform::PC)
