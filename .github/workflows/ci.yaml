@@ -181,6 +181,7 @@ jobs:
       - name: Build
         working-directory: ${{ github.workspace }}
         run: |
+          Write-Output '::add-matcher::.github/matchers/msvc.json'
           msbuild /m /p:TrackFileAccess=false /p:UseMultiToolTask=true "/p:CLToolExe=$env:SCCACHE_CL_WRAPPER" /p:Configuration=Release /p:Platform=${{ matrix.msbuild_config }} build
 
       - name: Test
