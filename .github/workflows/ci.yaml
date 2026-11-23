@@ -126,8 +126,24 @@ jobs:
         with:
           node-version: 24
 
-      - name: Add MSBuild to PATH
-        uses: microsoft/setup-msbuild@v3.0.0
+      - name: Install Visual Studio 2026 Build Tools 18.11.3
+        shell: pwsh
+        run: |
+          # Fixed-version bootstrapper for the Visual Studio release on the last green runner image.
+          $bootstrapper = Join-Path $env:RUNNER_TEMP "vs_BuildTools.exe"
+          $installationPath = Join-Path $env:RUNNER_TEMP "vs-build-tools-18.11.3"
+          Invoke-WebRequest -Uri "https://download.visualstudio.microsoft.com/download/pr/5f474104-723f-4007-bf4c-92e42a23dcc6/ea54b67bfac576b6dd097f84eeaf6893780d2a613f90448ff038e8a2777a0afb/vs_BuildTools.exe" -OutFile $bootstrapper
+          $installer = Start-Process -FilePath $bootstrapper -ArgumentList @(
+            "--quiet", "--wait", "--norestart",
+            "--installPath", "`"$installationPath`"",
+            "--add", "Microsoft.VisualStudio.Workload.VCTools",
+            "--add", "Microsoft.VisualStudio.Component.VC.Tools.x86.x64"
+          ) -WindowStyle Hidden -Wait -PassThru
+          if ($installer.ExitCode -notin 0, 3010) {
+            throw "Visual Studio Build Tools installation exited with code $($installer.ExitCode)"
+          }
+
+          "VS_BUILD_TOOLS_PATH=$installationPath" >> $env:GITHUB_ENV
 
       - name: Set up sccache
         uses: mozilla-actions/sccache-action@v0.0.11
@@ -137,14 +153,12 @@ jobs:
       - name: Configure sccache for MSBuild
         shell: pwsh
         run: |
-          $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
-          $installationPath = & $vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
-          if (-not $installationPath) {
-            throw "Could not locate the Visual C++ tools"
-          }
-
+          $installationPath = $env:VS_BUILD_TOOLS_PATH
           $toolsVersionFile = Join-Path $installationPath "VC\Auxiliary\Build\Microsoft.VCToolsVersion.default.txt"
           $toolsVersion = (Get-Content -Raw -LiteralPath $toolsVersionFile).Trim()
+          if ($toolsVersion -ne "14.51.36231") {
+            throw "Expected MSVC 14.51.36231, found $toolsVersion"
+          }
           $targetArchitecture = "${{ matrix.build_arch }}"
           $compilerDirectory = Join-Path $installationPath "VC\Tools\MSVC\$toolsVersion\bin\Hostx86\$targetArchitecture"
           $compilerPath = Join-Path $compilerDirectory "cl.exe"
@@ -181,7 +195,7 @@ jobs:
       - name: Build
         working-directory: ${{ github.workspace }}
         run: |
-          msbuild /m /p:TrackFileAccess=false /p:UseMultiToolTask=true "/p:CLToolExe=$env:SCCACHE_CL_WRAPPER" /p:Configuration=Release /p:Platform=${{ matrix.msbuild_config }} build
+          & "$env:VS_BUILD_TOOLS_PATH\MSBuild\Current\Bin\MSBuild.exe" /m /p:TrackFileAccess=false /p:UseMultiToolTask=true "/p:CLToolExe=$env:SCCACHE_CL_WRAPPER" /p:Configuration=Release /p:Platform=${{ matrix.msbuild_config }} build
 
       - name: Test
         working-directory: ${{ github.workspace }}/build/lib/Release_${{ matrix.build_arch }}/tests
